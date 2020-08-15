@@ -1,0 +1,25 @@
+$results-list-bg: rgba(0, 0, 0, 0.567) !default;
+$toolbar-btn-bg: rgba(0, 0, 0, 0.2) !default;
+$toolbar-btn-hover: rgba(255, 255, 255, 0.3) !default;
+
+body {
+    background-color: $results-list-bg;
+    font-family: Verdana, "Lucida Sans Unicode", sans-serif;
+}
+
+.toolbar {
+    background-color: $toolbar-btn-bg;
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 15px 0;
+    font-size: 12px;
+    .btn {
+        color: #fffcff;
+        padding: 15px;
+        text-decoration: none;
+    }
+    .btn:hover {
+        background-color: $toolbar-btn-hover;
+    }
+}

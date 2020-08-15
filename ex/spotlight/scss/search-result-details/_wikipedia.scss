@@ -1,9 +1,9 @@
 .ng-spotlight-results-detail-wikipedia {
-  padding: 10px;
+  padding: 22px;
 
   .title {
     text-align: left;
-	  font-size: 32px;
+    font-size: 32px;
   }
 
   .description {
@@ -12,6 +12,8 @@
     padding: 15px 0;
     margin-bottom: 15px;
     border-bottom: 1px solid $searchbar-border-color;
+    line-height: 20px;
+    font-size: 13px;
   }
 
   .footer {

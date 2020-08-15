@@ -1,7 +1,7 @@
 // Le background colors
-$alpha: 0.867;
+$alpha: 0.97;
 $results-list-bg: rgba(40, 40, 40, $alpha) !default;
-$results-detail-bg: rgba(55, 55, 55, $alpha) !default;
+$results-detail-bg: rgba(45, 45, 45, $alpha) !default;
 $searchbar-bg: rgba(40, 40, 40, $alpha) !default;
 $result-list-header-bg: rgba(25, 25, 25, $alpha) !default;
 $scroll-track-bar-bg: rgba(40, 40, 40, $alpha) !default;
@@ -22,7 +22,10 @@ $searchbar-border-color: #515253 !default;
 $results-list-border-color: #515253 !default;
 $overlay-border-color: none !default;
 
-$font-family: Verdana, 'Lucida Sans Unicode', sans-serif !default;
+// Widths
+$ng-spotlight-w: 800px;
+
+$font-family: Verdana, Geneva, Tahoma, sans-serif !default;
 
 // Responsive
 $spotlight-responsive-width: 680px;
@@ -64,8 +67,8 @@ $spotlight-responsive-width: 680px;
 
     @media only screen and (min-width: $spotlight-responsive-width) {
       left: 50%;
-      margin-left: -340px;
-      width: 680px;
+      margin-left: (-$ng-spotlight-w/2);
+      width: $ng-spotlight-w;
     }
 
     .ng-spotlight-searchbar {
@@ -203,6 +206,8 @@ $spotlight-responsive-width: 680px;
           font-size: 12px;
           color: $result-list-item-font-color;
           padding: 6px 0 6px 25px;
+          word-wrap: break-word;
+          max-width: 260px;
           cursor: pointer;
 
           &.open-search-page {
@@ -233,7 +238,7 @@ $spotlight-responsive-width: 680px;
       .ng-spotlight-results-detail {
         display: none;
         margin-left: 290px;
-        width: 390px;
+        width: ($ng-spotlight-w - 290);
         height: 375px;
         color: $results-detail-font-color;
         background-color: $results-detail-bg;
