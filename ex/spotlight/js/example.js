@@ -17,7 +17,7 @@ $(function() {
                 background: ''
             },
             dark: {
-                style: 'css/darkTheme.css',
+                style: 'css/darkTheme.min.css',
                 background: ''
             },
             light: {

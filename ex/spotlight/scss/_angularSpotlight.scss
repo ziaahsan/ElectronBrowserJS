@@ -1,0 +1,256 @@
+// Le background colors
+$alpha: 0.867;
+$results-list-bg: rgba(40, 40, 40, $alpha) !default;
+$results-detail-bg: rgba(55, 55, 55, $alpha) !default;
+$searchbar-bg: rgba(40, 40, 40, $alpha) !default;
+$result-list-header-bg: rgba(25, 25, 25, $alpha) !default;
+$scroll-track-bar-bg: rgba(40, 40, 40, $alpha) !default;
+$scroll-track-bar: rgba(30, 30, 30, $alpha) !default;
+$active-active-list-item-bg: #337ef1 !default;
+$icon-magnifier-color: #a6a6a6 !default;
+
+// Font colors
+$results-detail-font-color: #ffffff !default;
+$searchbar-input-font-color: #ffffff !default;
+$result-list-header-font-color: #ffffff !default;
+$placeholder-font-color: #a6a6a6 !default;
+$result-list-item-font-color: #ffffff !default;
+$result-list-item-hover-font-color: #ffffff !default;
+
+// Colors for borders
+$searchbar-border-color: #515253 !default;
+$results-list-border-color: #515253 !default;
+$overlay-border-color: none !default;
+
+$font-family: Verdana, 'Lucida Sans Unicode', sans-serif !default;
+
+// Responsive
+$spotlight-responsive-width: 680px;
+
+::-webkit-scrollbar {
+  background-color: transparent;
+  width: 8px
+}
+
+::-webkit-scrollbar-track {
+  background-color: $scroll-track-bar-bg;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: $scroll-track-bar;
+  border-radius: 16px;
+  border: 16px solid $scroll-track-bar;
+}
+
+.ng-spotlight {
+  &.ng-spotlight-overlay {
+    position: absolute;
+    top: 20%;
+    left: 1%;
+    z-index: 2147483647; // Le Max Int32 ;)
+    width: 98%;
+    display: none;
+    font-size: 12px;
+    letter-spacing: 0.3px;
+
+    @if $overlay-border-color != "none" {
+      border: 1px solid $overlay-border-color;
+    }
+
+    font-family: $font-family;
+    box-shadow: 0 12px 15px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19);
+    border-radius: 6px;
+    overflow: hidden;
+
+    @media only screen and (min-width: $spotlight-responsive-width) {
+      left: 50%;
+      margin-left: -340px;
+      width: 680px;
+    }
+
+    .ng-spotlight-searchbar {
+      z-index: 10;
+      position: relative;
+      height: 55px;
+      background-color: $searchbar-bg;
+
+      .ng-spotlight-icon {
+        $magnifier-height: 22px;
+        $magnifier-margin: (55 - $magnifier-height) / 2;
+
+        position: absolute;
+        height: 22px;
+        width: 22px;
+        margin: $magnifier-margin;
+        background-size: cover;
+
+        @media only screen and (min-width: $spotlight-responsive-width) {
+          position: static;
+          float: left;
+        }
+
+        svg {
+          fill: $icon-magnifier-color;
+        }
+      }
+
+      .ng-spotlight-input {
+        background-color: transparent;
+        font-size: 1.7em;
+        padding: 0;
+        margin: 0;
+        outline: none !important;
+        height: 55px;
+        max-width: 100% !important;
+        border: none !important;
+        color: $searchbar-input-font-color;
+        font-weight: 100;
+        padding-left: 55px;
+        padding-right: 50px;
+        box-sizing: border-box;
+        &.empty {
+          width: 100% !important;
+        }
+
+        @media only screen and (min-width: $spotlight-responsive-width) {
+          float: left;
+          max-width: 350px !important;
+          box-sizing: content-box;
+          padding: 0;
+          &.empty {
+            width: 400px !important;
+          }
+        }
+
+        &:-ms-input-placeholder {
+          color: $placeholder-font-color;
+        }
+        &:-moz-placeholder {
+          color: $placeholder-font-color;
+        }
+        &::-moz-placeholder {
+          color: $placeholder-font-color;
+        }
+        &::-webkit-input-placeholder {
+          color: $placeholder-font-color;
+        }
+      }
+
+      .ng-spotlight-input-after {
+        display: none;
+        color: $placeholder-font-color;
+        line-height: 55px;
+        @media only screen and (min-width: $spotlight-responsive-width) {
+          display: block;
+        }
+      }
+
+      .ng-spotlight-results-icon {
+        display: none;
+        position: absolute;
+        top: (55px - 32px)/2;
+        right: 20px;
+        line-height: 31px;
+        height: 32px;
+        width: 32px;
+        font-size: 31px;
+        color: $result-list-item-font-color;
+        background-size: cover;
+
+        @media only screen and (min-width: $spotlight-responsive-width) {
+          display: block;
+        }
+      }
+    }
+    .ng-spotlight-results-panel {
+      min-height: 375px;
+      border-top: 1px solid $searchbar-border-color;
+
+      .ng-spotlight-results-list {
+        border-right: 1px solid $results-list-border-color;
+        position: absolute;
+        width: 100%;
+        height: calc(100% - 55px);
+        overflow: hidden;
+        overflow-y: auto;
+        user-select: none;
+        background-color: $results-list-bg;
+
+        @media only screen and (min-width: $spotlight-responsive-width) {
+          width: 290px;
+        }
+
+        ul {
+          min-height: calc(100% - 55px);
+        }
+
+        ul, li {
+          width: 100%;
+          margin: 0;
+          padding: 0;
+          list-style-type: none;
+        }
+
+        .ng-spotlight-results-list-header {
+          font-size: 12px;
+          background-color: $result-list-header-bg;
+          color: $result-list-header-font-color;
+          text-transform: uppercase;
+          padding: 4px 0 4px 25px;
+        }
+
+        .ng-spotlight-results-list-item {
+          font-size: 12px;
+          color: $result-list-item-font-color;
+          padding: 6px 0 6px 25px;
+          cursor: pointer;
+
+          &.open-search-page {
+            border-top: 1px solid $searchbar-border-color;
+          }
+
+          .ng-spotlight-item-icon {
+            margin: 0 10px 0 0;
+            float: left;
+            height: 16px;
+            width: 16px;
+            font-size: 15px;
+            text-align: center;
+            color: $result-list-item-font-color;
+          }
+
+          &.active {
+            color: $result-list-item-hover-font-color;
+            background-color: $active-active-list-item-bg;
+          }
+
+          .info {
+            margin-left: 5px;
+            color: $placeholder-font-color;
+          }
+        }
+      }
+      .ng-spotlight-results-detail {
+        display: none;
+        margin-left: 290px;
+        width: 390px;
+        height: 375px;
+        color: $results-detail-font-color;
+        background-color: $results-detail-bg;
+
+        @media only screen and (min-width: $spotlight-responsive-width) {
+          display: block;
+        }
+
+        a {
+          color: $results-detail-font-color;
+        }
+
+        @import "search-result-details/vcard";
+        @import "search-result-details/wikipedia";
+        @import "search-result-details/default";
+      }
+    }
+  }
+}
+

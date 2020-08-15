@@ -1,0 +1,25 @@
+// Le background colors
+$alpha: 0.867;
+$searchbar-bg: rgba(#e6e7e8, $alpha);
+$results-list-bg: rgba(#e5e7e8, $alpha);
+$results-detail-bg: rgba(rgb(229, 230, 232), $alpha);
+$result-list-header-bg: rgba(200, 200, 200, $alpha);
+$scroll-track-bar-bg: rgba(#e5e7e8, $alpha) !default;
+$scroll-track-bar: rgba(185, 185, 185, $alpha) !default;
+$active-active-list-item-bg: #337ef1;
+$icon-magnifier-color: #635d5c;
+
+// Font colors
+$results-detail-font-color: #333435;
+$searchbar-input-font-color: #333435;
+$result-list-header-font-color: #333435;
+$placeholder-font-color: #606162;
+$result-list-item-font-color: #333435;
+$result-list-item-hover-font-color: #ffffff;
+
+// Colors for borders
+$searchbar-border-color: #cccecf;
+$results-list-border-color: #d6d7d9;
+$overlay-border-color: rgba(#333435, 0.1);
+
+@import "_angularSpotlight";
