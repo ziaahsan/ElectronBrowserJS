@@ -209,7 +209,7 @@ angular.module('de.devjs.angular.spotlight', [])
                     } else if ($scope.searchResultsCount === 0) {
                         $scope.searchInputInfo = AngularSpotlight.getSearchInputInfoNoResults();
                     } else if ($scope.selectedItem) {
-                        $scope.searchInputInfo = $scope.selectedItem.name + " - " + categoryName;
+                        $scope.searchInputInfo = $scope.selectedItem.name.substr(0, 55) + " - " + categoryName;
                     }
                 }
 
@@ -357,7 +357,7 @@ angular.module("de.devjs.angular.spotlight").run([
                                     <li class="ng-spotlight-results-list-item"\n ng-repeat="resultItem in searchResult.items"\n ng-class="{\'active\': resultItem.active === true}"\n ng-click="showResultItem(searchResult.name, $index)"\n ng-dblclick="openResultItem()">\n\n\
                                     <img ng-if="getIconForType(resultItem.type).type == \'url\'" class="ng-spotlight-item-icon" ng-src="{{getIconForType(resultItem.type).data}}">\n\
                                     <div ng-if="getIconForType(resultItem.type).type == \'css\'" class="ng-spotlight-item-icon {{getIconForType(resultItem.type).data}}"></div>\n\n\
-                                        {{resultItem.name}}\n\n\
+                                        {{resultItem.name.substr(0, 55)}}\n\n\
                                         <span class="info" ng-if="resultItem.info">\n\
                                             &ndash; {{resultItem.info}}\n\
                                         </span>\n\
