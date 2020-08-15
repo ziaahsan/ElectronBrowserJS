@@ -1,22 +1,23 @@
 {
-  "name": "electron-quick-start",
+  "name": "ex",
   "version": "1.0.0",
-  "description": "A minimal Electron application",
+  "description": "Ex",
   "main": "main.js",
   "scripts": {
     "start": "electron ."
   },
-  "repository": "https://github.com/electron/electron-quick-start",
+  "repository": "https://github.com/ziaahsan/electron-apps/tree/master/ex",
   "keywords": [
-    "Electron",
-    "quick",
-    "start",
-    "tutorial",
-    "demo"
+    "Ex"
   ],
-  "author": "GitHub",
-  "license": "CC0-1.0",
+  "author": "",
+  "license": "",
   "devDependencies": {
     "electron": "^9.2.0"
+  },
+  "dependencies": {
+    "angular": "^1.8.0",
+    "jquery": "^3.5.1",
+    "tasklist": "^4.0.1"
   }
 }
