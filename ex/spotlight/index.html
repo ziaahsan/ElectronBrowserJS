@@ -2,11 +2,23 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta
+        http-equiv="Content-Security-Policy"
+        content="
+            default-src 'self' https://api.github.com https://en.wikipedia.org https://api.stackexchange.com;
+            style-src 'self' 'sha256-1PxuDsPyGK6n+LZsMv0gG4lMX3i3XigG6h0CzPIjwrE=';
+            img-src 'self' data:;
+            font-src 'self';
+            connect-src 'self' https://api.github.com https://en.wikipedia.org https://api.stackexchange.com;
+            script-src 'self';
+        "
+    >
+
     <title>Angular Spotlight Directive | Examples</title>
 
     <!-- Required Dependencies -->
     <script src="../node_modules/jquery/dist/jquery.min.js"></script>
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" type="text/css" rel="stylesheet">
+    <link href="../node_modules/font-awesome/css/font-awesome.min.css" type="text/css" rel="stylesheet">
 
     <!-- Angular Spotlight -->
     <link href="css/darkTheme.min.css" type="text/css" rel="stylesheet" id="angular-theme">

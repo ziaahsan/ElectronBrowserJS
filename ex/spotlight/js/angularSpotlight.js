@@ -157,7 +157,7 @@ angular.module('de.devjs.angular.spotlight', [])
                 $scope.openResultItem = function () {
                     if($scope.selectedItem.href) {
                         window.location.href = $scope.selectedItem.href;
-                        $ngSpotlightOverlay.hide();
+                        // $ngSpotlightOverlay.hide();
                     }
                 };
 
