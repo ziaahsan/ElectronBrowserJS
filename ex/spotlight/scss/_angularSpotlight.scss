@@ -29,7 +29,8 @@ $default-tag-color: rgba(25, 25, 25, 0.97) !default;
 // Widths
 $ng-spotlight-w: 800px;
 
-$font-family: Verdana, Geneva, Tahoma, sans-serif !default;
+// Font Change
+$font-family: SF-Regular !default;
 
 // Responsive
 $spotlight-responsive-width: 680px;
@@ -199,7 +200,7 @@ $spotlight-responsive-width: 680px;
         }
 
         .ng-spotlight-results-list-header {
-          font-size: 12px;
+          font-size: 13px;
           background-color: $result-list-header-bg;
           color: $result-list-header-font-color;
           text-transform: uppercase;
@@ -207,11 +208,11 @@ $spotlight-responsive-width: 680px;
         }
 
         .ng-spotlight-results-list-item {
-          font-size: 12px;
+          font-size: 13px;
           color: $result-list-item-font-color;
           padding: 6px 0 6px 25px;
           word-wrap: break-word;
-          max-width: 264px;
+          max-width: 265px;
           cursor: pointer;
 
           &.open-search-page {
@@ -231,6 +232,11 @@ $spotlight-responsive-width: 680px;
           &.active {
             color: $result-list-item-hover-font-color;
             background-color: $active-active-list-item-bg;
+          }
+
+          .ng-spotlight-item-name {
+            display: flex;
+            width: 85%;
           }
 
           .info {

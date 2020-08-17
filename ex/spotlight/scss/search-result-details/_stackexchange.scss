@@ -9,15 +9,15 @@
     }
     .title {
       text-align: left;
-      font-size: 24px;
+      font-size: 22px;
     }
     .answer {
         font-size: 12px;
         display: block;
         position: relative;
-        padding-top: 6px;
+        padding: 6px 0;
         .answered {
-            color: darken($results-detail-font-color, 10);
+            color: darken($results-detail-font-color, 20);
         }
         .count {
             color: darken($results-detail-font-color, 20);
@@ -26,7 +26,7 @@
     .body {
       color: darken($results-detail-font-color, 20);
       text-align: left;
-      padding: 15px 0;
+      padding: 6px 0;
       margin-bottom: 15px;
       border-bottom: 1px solid $searchbar-border-color;
       line-height: 20px;

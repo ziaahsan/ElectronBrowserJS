@@ -3,20 +3,22 @@
 
   .title {
     text-align: left;
-    font-size: 32px;
+    font-size: 22px;
   }
 
   .description {
     color: darken($results-detail-font-color, 20);
     text-align: left;
-    padding: 15px 0;
+    padding: 6px 0;
     margin-bottom: 15px;
     border-bottom: 1px solid $searchbar-border-color;
     line-height: 20px;
     font-size: 13px;
   }
 
-  .footer {
-    font-size: 10px;
+  .link {
+    color: darken($results-detail-font-color, 20);
+    text-transform: capitalize;
+    font-size: 12px;
   }
 }

@@ -1,10 +1,18 @@
+
+// Import Fonts
+$font-family: SF-Regular !default;
+@font-face {
+    font-family: $font-family;
+    src: url("../fonts/SF/otf/SFNSText-RegularG1.otf");
+}
+
 $results-list-bg: rgba(0, 0, 0, 0.567) !default;
 $toolbar-btn-bg: rgba(0, 0, 0, 0.2) !default;
 $toolbar-btn-hover: rgba(255, 255, 255, 0.3) !default;
 
 body {
     background-color: $results-list-bg;
-    font-family: Verdana, "Lucida Sans Unicode", sans-serif;
+    font-family: $font-family;
 }
 
 .toolbar {

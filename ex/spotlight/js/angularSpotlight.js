@@ -62,7 +62,6 @@
 })(jQuery);
 angular.module('de.devjs.angular.spotlight', [])
     .directive('spotlightOverlay', ['$timeout', '$http', '$compile', 'AngularSpotlight', function ($timeout, $http, $compile, AngularSpotlight) {
-
         const KEY = {
             UP: 38,
             DOWN: 40,
@@ -85,8 +84,10 @@ angular.module('de.devjs.angular.spotlight', [])
                 $scope.searchInputInfo = AngularSpotlight.getSearchInputInfoSearching();
                 $scope.spotlightPlaceholder = AngularSpotlight.getSpotlightPlaceholder();
 
-                $scope.search = function () {
+                $scope.search = async function () {
                     if ($scope.searchTerm.length > 0) {
+                        $scope.postMessage("RunningApps");
+
                         AngularSpotlight.search($scope.searchTerm)
                             .then(function setSearchResult(resp) {
                                 $scope.searchResults = resp;
@@ -102,6 +103,45 @@ angular.module('de.devjs.angular.spotlight', [])
                                 selectItemAtIndex(0);
                             });
                     }
+                };
+
+                $scope.postMessage = function (requestName) {
+                    window.postMessage({type: "BG_REQUEST", name: requestName});
+                }
+
+                $scope.recieveMessage = function () {
+                    window.addEventListener('message', event => {
+                        //@todo: Add COOP
+                        if (event.source != window) return;
+                        if (event.data.type == null || event.data.type == undefined || event.data.type != "NG_RESPONSE") return;
+                        if (event.data.results == null || event.data.results == undefined) return;
+                        if (event.data.results.length === 0) return;
+
+                        switch (event.data.name) {
+                          case 'RunningApps':
+                            var data = event.data.results;
+                            var category = {name: 'apps', items: []};
+                            data.apps.forEach(function (result) {
+                                var item = extractRunningAppsData(result)
+                                category.items.push(item);
+                            });
+
+                            if (category.items.length > 0) {
+                                $scope.searchResults.push(category);
+                            }
+
+                            function extractRunningAppsData(result) {
+                                return {
+                                    name: result.imageName,
+                                    type: 'apps',
+                                    href: '#'
+                                }
+                            }
+                            console.log($scope.searchResults.length)
+                            $scope.$apply();
+                            break;
+                        }
+                    }, false);
                 };
 
                 $scope.getIconForType = function (type) {
@@ -156,7 +196,7 @@ angular.module('de.devjs.angular.spotlight', [])
 
                 $scope.openResultItem = function () {
                     if($scope.selectedItem.href) {
-                        window.location.href = $scope.selectedItem.href;
+                        // window.location.href = $scope.selectedItem.href;
                         // $ngSpotlightOverlay.hide();
                     }
                 };
@@ -274,6 +314,7 @@ angular.module('de.devjs.angular.spotlight', [])
                     }
                 })
                 .ready(function() {
+                    scope.recieveMessage();
                     toggleOverlay();
                 });
 
@@ -357,10 +398,10 @@ angular.module("de.devjs.angular.spotlight").run([
                                     <li class="ng-spotlight-results-list-item"\n ng-repeat="resultItem in searchResult.items"\n ng-class="{\'active\': resultItem.active === true}"\n ng-click="showResultItem(searchResult.name, $index)"\n ng-dblclick="openResultItem()">\n\n\
                                     <img ng-if="getIconForType(resultItem.type).type == \'url\'" class="ng-spotlight-item-icon" ng-src="{{getIconForType(resultItem.type).data}}">\n\
                                     <div ng-if="getIconForType(resultItem.type).type == \'css\'" class="ng-spotlight-item-icon {{getIconForType(resultItem.type).data}}"></div>\n\n\
-                                        {{resultItem.name.substr(0, 55)}}\n\n\
-                                        <span class="info" ng-if="resultItem.info">\n\
-                                            &ndash; {{resultItem.info}}\n\
-                                        </span>\n\
+                                    <span class="ng-spotlight-item-name">{{resultItem.name.substr(0, 55)}}</span>\n\n\
+                                    <span class="info" ng-if="resultItem.info">\n\
+                                        &ndash; {{resultItem.info}}\n\
+                                    </span>\n\
                                     </li>\n\
                                 </ul>\n\
                             </li>\n\
@@ -401,12 +442,14 @@ angular.module('de.devjs.angular.spotlight')
                     getSearchInputInfoSearching: _defaultSpotlightConfig.getSearchInputInfoSearching,
                     getSearchInputInfoNoResults: _defaultSpotlightConfig.getSearchInputInfoNoResults,
                     getSpotlightPlaceholder: _defaultSpotlightConfig.getSpotlightPlaceholder,
-                    getSpotlightToggleCtrlKey: _defaultSpotlightConfig.getSpotlightToggleCtrlKey
+                    getSpotlightToggleCtrlKey: _defaultSpotlightConfig.getSpotlightToggleCtrlKey,
+                    getSpotlightCommandDelimiter: _defaultSpotlightConfig.getSpotlightCommandDelimiter,
+                    getSpotlightCommands: _defaultSpotlightConfig.getSpotlightCommands
                 };
             }]
         };
 
-        // === LE HELPER ====================
+        // Helpers
         function iconConfig() {
             var icons = {
                 'default': ''
@@ -476,6 +519,12 @@ angular.module('de.devjs.angular.spotlight')
             var searchInputInfoNoResults = 'Keine Ergebnisse';
             var spotlightPlaceholder = 'Spotlight-Suche';
             var spotlightToggleCtrlKey = KEY_SPACE;
+            var spotlightCommandDelimiter = ':';
+            var spotlightCommands = {
+                git: ['github'],
+                coding: ['stackexchange'],
+                wiki: ['wikipedia']
+            };
 
             function setSearchInputInfoSearching(text) {
                 searchInputInfoSearching = text;
@@ -509,6 +558,14 @@ angular.module('de.devjs.angular.spotlight')
                 return spotlightToggleCtrlKey;
             }
 
+            function getSpotlightCommandDelimiter() {
+                return spotlightCommandDelimiter;
+            }
+
+            function getSpotlightCommands() {
+                return spotlightCommands;
+            }
+
             return {
                 setSearchInputInfoSearching: setSearchInputInfoSearching,
                 getSearchInputInfoSearching: getSearchInputInfoSearching,
@@ -517,7 +574,9 @@ angular.module('de.devjs.angular.spotlight')
                 setSpotlightPlaceholder: setSpotlightPlaceholder,
                 getSpotlightPlaceholder: getSpotlightPlaceholder,
                 setSpotlightToggleCtrlKey: setSpotlightToggleCtrlKey,
-                getSpotlightToggleCtrlKey: getSpotlightToggleCtrlKey
+                getSpotlightToggleCtrlKey: getSpotlightToggleCtrlKey,
+                getSpotlightCommandDelimiter: getSpotlightCommandDelimiter,
+                getSpotlightCommands: getSpotlightCommands
             }
         }
     });

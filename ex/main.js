@@ -1,9 +1,7 @@
 // Modules to control application life and create native browser window
 const {app, BrowserWindow} = require('electron')
+const isDev = require('electron-is-dev');
 const path = require('path')
-// const tasklist = require('tasklist');
-// (async () => {console.log(await tasklist({services: false}));})();
-
 
 function createWindow () {
   // Create the browser window.
@@ -22,7 +20,9 @@ function createWindow () {
   mainWindow.maximize()
   
   // Open the DevTools.
-  mainWindow.webContents.openDevTools()
+  if (isDev) {
+    mainWindow.webContents.openDevTools()
+  }
 }
 
 // This method will be called when Electron has finished
