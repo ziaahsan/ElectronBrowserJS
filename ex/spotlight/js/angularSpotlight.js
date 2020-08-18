@@ -90,10 +90,10 @@ angular.module('de.devjs.angular.spotlight', [])
                         $scope.searchResults = []
                         
                         // Number of requests counted before their execution
-                        $scope.requestCounter+=1;
+                        // $scope.requestCounter+=0;
 
                         // Request 1
-                        $scope.postMessage("RunningApps");
+                        // $scope.postMessage("RunningApps");
 
                         // Request 2
                         // AngularSpotlight
@@ -104,10 +104,8 @@ angular.module('de.devjs.angular.spotlight', [])
 
                 $scope.setSearchResult = function () {
                     $scope.requestCounter--;
-                    if ($scope.requestCounter < 0) throw "Requests went to a negative integer?";
+                    if ($scope.requestCounter < 0) throw "Requests went to negatives :?";
                     if ($scope.requestCounter != 0) return;
-
-                    console.log ("Here...");
 
                     $scope.searchResultsCount = $scope.searchResults
                         .map(function (category) {

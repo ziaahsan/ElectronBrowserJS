@@ -1,29 +1,22 @@
+"use strict";
 // Modules to control application life and create native browser window
 const {app, BrowserWindow} = require('electron')
 const isDev = require('electron-is-dev');
 const path = require('path')
 
-function createWindow () {
-  // Create the browser window.
-  const mainWindow = new BrowserWindow({
-    frame: false,
-    transparent: true,
-    worldSafeExecuteJavaScript: true,
-    // skipTaskbar: true,
-    webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
-    }
-  })
-
-  // and load the index.html of the app.
-  mainWindow.loadFile('spotlight/index.html')
-  mainWindow.maximize()
-  
-  // Open the DevTools.
-  if (isDev) {
-    mainWindow.webContents.openDevTools()
+// C# connection
+const { ConnectionBuilder } = require("electron-cgi");
+const connection = new ConnectionBuilder()
+    .connectTo("C:\\Program Files\\dotnet\\dotnet", "run", "--project", ".\\core\\app")
+    .build()
+connection.onDisconnect = () => { console.log("Connection Disconnected") }
+connection.send('greetings', 'Mom', (error, response) => {
+  if (error) {
+    console.log(error); //serialized exception from the .NET handler
+    return;
   }
-}
+  console.log(response);
+});
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -31,6 +24,26 @@ function createWindow () {
 app.whenReady().then(() => {
   // Initiate creating a window
   createWindow()
+  function createWindow ()  {
+    // Create the browser window.
+    const mainWindow = new BrowserWindow({
+      frame: false,
+      transparent: true,
+      // skipTaskbar: true,
+      webPreferences: {
+        preload: path.join(__dirname, 'preload.js'),
+      }
+    })
+
+    // and load the index.html of the app.
+    mainWindow.loadFile('spotlight/index.html')
+    mainWindow.maximize()
+    
+    // Open the DevTools.
+    if (isDev) {
+      mainWindow.webContents.openDevTools()
+    }
+  }
   
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the

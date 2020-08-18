@@ -1,0 +1,2 @@
+# I find it useful to commit the .vscode directory so every user doesn't need to configure their own tasks.json and launch.json files.
+# @https://gist.github.com/vmandic/ac2ecc9c24f6899ee0ec46e4ce444a0e

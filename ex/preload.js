@@ -1,6 +1,8 @@
 // All of the Node.js APIs are available in the preload process.
 // It has the same sandbox as a Chrome extension.
 const isDev = require('electron-is-dev');
+const { ipcRenderer } = require('electron');
+
 const tasklist = require('tasklist');
 
 process.once('loaded', () => {
@@ -14,7 +16,9 @@ process.once('loaded', () => {
             return await tasklist()
           })().then((apps) => {
             if (isDev) console.log("[Dev] Sending APPS Request...")
-            window.postMessage({type: 'NG_RESPONSE', name: 'RunningApps', results: {apps}});
+            ipcRenderer.on("greeting", ()=>{console.log("AD")});
+            console.log()
+            window.postMessage({type: 'NG_RESPONSE', name: 'RunningApps', results: {apps}})
           })
         break
     }
