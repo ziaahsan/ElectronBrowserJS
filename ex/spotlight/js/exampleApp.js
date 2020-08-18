@@ -14,14 +14,14 @@
             search();
             function search() {
                 AngularSpotlightProvider.search = function ($http, $q) {
-                    return function (term) {
+                    return function (term, searchResults) {
                         // var github = $http.get('https://api.github.com/search/repositories?sort=stars&order=desc&q=' + term);
                         // var stackexchange = $http.get('https://api.stackexchange.com/2.2/search/excerpts?pagesize=12&order=desc&sort=relevance&q='+term+'&site=stackoverflow')
                         var wikipedia = $http.get('https://en.wikipedia.org/w/api.php?format=json&action=query&list=search&srsearch=' + term);
 
+                        console.log("Querying wiki data...")
                         return $q.all([wikipedia])
                             .then(function (responses) {
-                                var searchResults = [];
                                 processWikiSearch(responses[0], searchResults);
                                 return searchResults;
                             });

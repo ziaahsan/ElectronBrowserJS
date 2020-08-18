@@ -70,7 +70,6 @@ angular.module('de.devjs.angular.spotlight', [])
         };
 
         var $ngSpotlightOverlay;
-
         return {
             restrict: 'E',
             replace: true,
@@ -84,34 +83,50 @@ angular.module('de.devjs.angular.spotlight', [])
                 $scope.searchInputInfo = AngularSpotlight.getSearchInputInfoSearching();
                 $scope.spotlightPlaceholder = AngularSpotlight.getSpotlightPlaceholder();
 
-                $scope.search = async function () {
-                    if ($scope.searchTerm.length > 0) {
+                $scope.requestCounter = 0;
+
+                $scope.search = function () {
+                    if ($scope.searchTerm.length > 0 && $scope.requestCounter == 0) {
+                        $scope.searchResults = []
+                        
+                        // Number of requests counted before their execution
+                        $scope.requestCounter+=1;
+
+                        // Request 1
                         $scope.postMessage("RunningApps");
 
-                        AngularSpotlight.search($scope.searchTerm)
-                            .then(function setSearchResult(resp) {
-                                $scope.searchResults = resp;
-                                $scope.searchResultsCount = $scope.searchResults
-                                    .map(function (category) {
-                                        return category.items.length;
-                                    })
-                                    .reduce(function (prev, cur) {
-                                        return prev + cur;
-                                    }, 0);
-
-                                setSearchInputInfo();
-                                selectItemAtIndex(0);
-                            });
+                        // Request 2
+                        // AngularSpotlight
+                        //     .search($scope.searchTerm, $scope.searchResults)
+                        //     .then($scope.setSearchResult);
                     }
                 };
 
+                $scope.setSearchResult = function () {
+                    $scope.requestCounter--;
+                    if ($scope.requestCounter < 0) throw "Requests went to a negative integer?";
+                    if ($scope.requestCounter != 0) return;
+
+                    console.log ("Here...");
+
+                    $scope.searchResultsCount = $scope.searchResults
+                        .map(function (category) {
+                            return category.items.length;
+                        })
+                        .reduce(function (prev, cur) {
+                            return prev + cur;
+                        }, 0);
+
+                    setSearchInputInfo();
+                    selectItemAtIndex(0);
+                }
+
                 $scope.postMessage = function (requestName) {
-                    window.postMessage({type: "BG_REQUEST", name: requestName});
+                    window.postMessage({type: "BG_REQUEST", name: requestName, q:$scope.searchTerm});
                 }
 
                 $scope.recieveMessage = function () {
                     window.addEventListener('message', event => {
-                        //@todo: Add COOP
                         if (event.source != window) return;
                         if (event.data.type == null || event.data.type == undefined || event.data.type != "NG_RESPONSE") return;
                         if (event.data.results == null || event.data.results == undefined) return;
@@ -137,10 +152,12 @@ angular.module('de.devjs.angular.spotlight', [])
                                     href: '#'
                                 }
                             }
-                            console.log($scope.searchResults.length)
-                            $scope.$apply();
+                            console.log($scope.searchResults.length);
                             break;
                         }
+
+                        $scope.setSearchResult();
+                        $scope.$apply();
                     }, false);
                 };
 
