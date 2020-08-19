@@ -1,7 +1,7 @@
 "use strict";
-const { BrowserWindow } = require('glasstron')
-
 const isDev = require('electron-is-dev');
+
+const { BrowserWindow } = require('glasstron')
 const path = require('path')
 
 module.exports = (app) => {

@@ -4,14 +4,14 @@ using System.Diagnostics;
 
 namespace App.Local {
     class Events {
-        Process[] processes = Process.GetProcesses();
 
-        public Events() {
+        public static readonly String[] VALID_NAMES = {
+            "RunningApps"
+        };
 
-        }
-
-        public List<String> OnRunningApplications {
+        public static List<String> OnRunningApplications {
             get {
+                Process[] processes = Process.GetProcesses();
                 List<String> titles = new List<String>();
                 foreach(Process p in processes) {
                     if(!String.IsNullOrEmpty(p.MainWindowTitle)) {

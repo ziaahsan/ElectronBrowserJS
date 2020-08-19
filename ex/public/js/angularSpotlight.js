@@ -90,10 +90,10 @@ angular.module('de.devjs.angular.spotlight', [])
                         $scope.searchResults = []
                         
                         // Number of requests counted before their execution
-                        // $scope.requestCounter+=0;
+                        $scope.requestCounter+=1;
 
                         // Request 1
-                        // $scope.postMessage("RunningApps");
+                        $scope.postMessage("RunningApps");
 
                         // Request 2
                         // AngularSpotlight
@@ -126,7 +126,7 @@ angular.module('de.devjs.angular.spotlight', [])
                 $scope.recieveMessage = function () {
                     window.addEventListener('message', event => {
                         if (event.source != window) return;
-                        if (event.data.type == null || event.data.type == undefined || event.data.type != "NG_RESPONSE") return;
+                        if (event.data.type == null || event.data.type == undefined || event.data.type != "NG_REQUEST") return;
                         if (event.data.results == null || event.data.results == undefined) return;
                         if (event.data.results.length === 0) return;
 
