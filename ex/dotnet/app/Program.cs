@@ -6,10 +6,9 @@ using App.Local;
 
 namespace App {
     class Program {
-        Events events = new Events();
-
         static void Main(String[] args) {
-            NodeConnection.SetupRecievingRequest();
+            // Cache by default when connection builds
+            Events.CacheInstalledApplications();
         }
     }
 }

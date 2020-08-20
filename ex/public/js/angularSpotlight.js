@@ -93,12 +93,12 @@ angular.module('de.devjs.angular.spotlight', [])
                         $scope.requestCounter+=1;
 
                         // Request 1
-                        $scope.postMessage("RunningApps");
+                        // $scope.postMessage("RunningApps");
 
                         // Request 2
-                        // AngularSpotlight
-                        //     .search($scope.searchTerm, $scope.searchResults)
-                        //     .then($scope.setSearchResult);
+                        AngularSpotlight
+                            .search($scope.searchTerm, $scope.searchResults)
+                            .then($scope.setSearchResult);
                     }
                 };
 
@@ -133,7 +133,7 @@ angular.module('de.devjs.angular.spotlight', [])
                         switch (event.data.name) {
                           case 'RunningApps':
                             var data = event.data.results;
-                            var category = {name: 'apps', items: []};
+                            var category = {name: 'running', items: []};
                             data.apps.forEach(function (result) {
                                 var item = extractRunningAppsData(result)
                                 category.items.push(item);
@@ -146,7 +146,7 @@ angular.module('de.devjs.angular.spotlight', [])
                             function extractRunningAppsData(result) {
                                 return {
                                     name: result.imageName,
-                                    type: 'apps',
+                                    type: 'running',
                                     href: '#'
                                 }
                             }

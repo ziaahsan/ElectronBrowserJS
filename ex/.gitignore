@@ -31,5 +31,6 @@ msbuild.log
 msbuild.err
 msbuild.wrn
 
-### .Node ###
+### Dir ###
 node_modules
+cache/*

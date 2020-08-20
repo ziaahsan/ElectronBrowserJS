@@ -21,7 +21,7 @@ namespace App.Local {
                 String results = "";
                 switch(name) {
                     case "RunningApps":
-                        results = JsonConvert.SerializeObject(Events.OnRunningApplications);
+                        results = Events.OnRunningApplications;
                         break;
                 }
                 return results;

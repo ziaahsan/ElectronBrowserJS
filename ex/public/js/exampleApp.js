@@ -17,18 +17,50 @@
                     return function (term, searchResults) {
                         // var github = $http.get('https://api.github.com/search/repositories?sort=stars&order=desc&q=' + term);
                         // var stackexchange = $http.get('https://api.stackexchange.com/2.2/search/excerpts?pagesize=12&order=desc&sort=relevance&q='+term+'&site=stackoverflow')
-                        var wikipedia = $http.get('https://en.wikipedia.org/w/api.php?format=json&action=query&list=search&srsearch=' + term);
+                        // var wikipedia = $http.get('https://en.wikipedia.org/w/api.php?format=json&action=query&list=search&srsearch=' + term);
+                        var applications = $http.get('../cache/applications.json');
 
-                        console.log("Querying wiki data...")
-                        return $q.all([wikipedia])
+                        console.log("Querying data...")
+                        return $q.all([applications])
                             .then(function (responses) {
-                                processWikiSearch(responses[0], searchResults);
+                                processAppSearch(responses[0], term, searchResults);
+                                // processWikiSearch(responses[1], searchResults);
                                 return searchResults;
                             });
+                            
+                            function processAppSearch(resp, term, searchResults) {
+                                if (resp.data.apps) {
+                                    var category = {name: 'apps', items: []};
+                                    resp.data.apps.forEach(function (result) {
+                                        var item = extractAppData(result);
+                                        if (item.name.toLowerCase().indexOf(term.toLowerCase()) != -1) {
+                                            category.items.push(item);
+                                        }
+                                    });
+    
+                                    if (category.items.length > 0) {
+                                        searchResults.push(category);
+                                    }
+                                }
+    
+                                function extractAppData(result) {
+                                    return {
+                                        name: result.name,
+                                        description: "App",
+                                        icon: result.iconPath,
+                                        timestamp: result.installedDate,
+                                        location: result.installedLoction,
+                                        publiser: result.publiser,
+                                        version: result.version,
+                                        type: 'apps',
+                                        href: '#'
+                                    }
+                                }
+                            }
 
                         function processWikiSearch(resp, searchResults) {
                             if (resp.data.query) {
-                                var category = {name: 'Wikipedia', items: []};
+                                var category = {name: 'wikipedia', items: []};
                                 resp.data.query.search.forEach(function (result) {
                                     var item = extractWikipediaData(result);
                                     category.items.push(item);
