@@ -4,6 +4,7 @@
   "description": "Ex",
   "main": "main.js",
   "scripts": {
+    "package-win": "electron-packager . ex --overwrite --asar=true --platform=win32 --arch=ia32 --icon=assets/icons/win/icon.ico --prune=true --out=release-builds --version-string.CompanyName=AI --version-string.FileDescription=AI --version-string.ProductName=\"Ex\"",
     "start": "electron ."
   },
   "repository": "https://github.com/ziaahsan/electron-apps/tree/master/ex",
@@ -19,6 +20,7 @@
     "angular": "^1.8.0",
     "electron-cgi": "^1.0.5",
     "electron-is-dev": "^1.2.0",
+    "electron-packager": "^15.0.0",
     "font-awesome": "^4.7.0",
     "glasstron": "0.0.4",
     "jquery": "^3.5.1"

@@ -89,22 +89,23 @@ angular.module('de.devjs.angular.spotlight', [])
                     if ($scope.searchTerm.length > 0 && $scope.requestCounter == 0) {
                         $scope.searchResults = []
                         
-                        // Number of requests counted before their execution
-                        $scope.requestCounter+=1;
+                        //@todo: Set time out on cancelling the request you dont want to be waiting forever...
 
                         // Request 1
-                        // $scope.postMessage("RunningApps");
+                        $scope.requestCounter++;
+                        $scope.postMessage("select-directories");
 
                         // Request 2
-                        AngularSpotlight
-                            .search($scope.searchTerm, $scope.searchResults)
-                            .then($scope.setSearchResult);
+                        // $scope.requestCounter++;
+                        // AngularSpotlight
+                        //     .search($scope.searchTerm, $scope.searchResults)
+                        //     .then($scope.setSearchResult);
                     }
                 };
 
                 $scope.setSearchResult = function () {
-                    $scope.requestCounter--;
                     if ($scope.requestCounter < 0) throw "Requests went to negatives :?";
+                    $scope.requestCounter--;
                     if ($scope.requestCounter != 0) return;
 
                     $scope.searchResultsCount = $scope.searchResults
@@ -119,8 +120,8 @@ angular.module('de.devjs.angular.spotlight', [])
                     selectItemAtIndex(0);
                 }
 
-                $scope.postMessage = function (requestName) {
-                    window.postMessage({type: "BG_REQUEST", name: requestName, q:$scope.searchTerm});
+                $scope.postMessage = function (requestType) {
+                    window.postMessage({type: requestType, q:$scope.searchTerm});
                 }
 
                 $scope.recieveMessage = function () {
@@ -131,11 +132,11 @@ angular.module('de.devjs.angular.spotlight', [])
                         if (event.data.results.length === 0) return;
 
                         switch (event.data.name) {
-                          case 'RunningApps':
-                            var data = event.data.results;
-                            var category = {name: 'running', items: []};
-                            data.apps.forEach(function (result) {
-                                var item = extractRunningAppsData(result)
+                          case 'select-directories':
+                            var data = JSON.parse(event.data.results);
+                            var category = {name: 'apps & folders', items: []};
+                            data.forEach(function (result) {
+                                var item = extractAppsAndFolders(result)
                                 category.items.push(item);
                             });
 
@@ -143,14 +144,15 @@ angular.module('de.devjs.angular.spotlight', [])
                                 $scope.searchResults.push(category);
                             }
 
-                            function extractRunningAppsData(result) {
+                            function extractAppsAndFolders(result) {
                                 return {
-                                    name: result.imageName,
-                                    type: 'running',
+                                    name: result.name,
+                                    type: result.type,
+                                    path: result.path,
+                                    type: 'apps & folders',
                                     href: '#'
                                 }
                             }
-                            console.log($scope.searchResults.length);
                             break;
                         }
 

@@ -4,17 +4,17 @@ const isDev = require('electron-is-dev');
 const conn = require('./connect')
 conn.build()
 
+const validRequestTypes = ['select-directories']
+
 process.once('loaded', () => {
   window.addEventListener('message', event => {
     //@todo: Add COOP
     if (event.source != window) return
-    if (event.data.type == null || event.data.type == undefined || event.data.type != "BG_REQUEST") return
-    if (!event.data.name || event.data.name.length < 1) return
+    if (event.data.type == null || event.data.type == undefined || !validRequestTypes.includes(event.data.type)) return
 
     (async () => {
-      let data = await conn.send("NODE_REQUEST", event.data.name)
-      console.log("3.", data)
-      // window.postMessage({type: "NG_REQUEST", name: event.data.name, results:data});
+      let data = await conn.send(event.data.type, event.data.q)
+      window.postMessage({type: "NG_REQUEST", name:event.data.type, results:data});
     })()
 
   }, false)

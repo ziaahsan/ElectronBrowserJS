@@ -14,7 +14,6 @@ module.exports = (app) => {
     function createWindow ()  {
       mainWindow = new BrowserWindow({
         backgroundColor: "#00000000",
-        
         frame: false,
         transparent: true,
         resizable: true,
@@ -44,12 +43,12 @@ module.exports = (app) => {
 
         hidden = !hidden
       })
+
       if ((!ret || !globalShortcut.isRegistered('ctrl+space')) && isDev)
         console.log('ctrl+space shortcut failed!')
   
-      if (isDev) {
+      if (isDev)
         mainWindow.webContents.openDevTools()
-      }
     }
 
     app.on('activate', function () {

@@ -14,7 +14,7 @@ class Connect {
             .connectTo("C:\\Program Files\\dotnet\\dotnet", "run", "--project", ".\\dotnet\\app")
             .build()
         conn.onDisconnect = () => {
-            console.log("Connection Disconnected")
+            console.log("Connection Disconnected!")
             conn = null
         }
     }
@@ -34,22 +34,9 @@ class Connect {
                     reject("[Error] An error occured, if your a dev please look into this.")
                     return;
                 }
-                conn.close()
                 resolve(res)
             })
         })
-        // new Promise (
-        //     conn.send(requestType, name, (err, res) => {
-        //         if (err) {
-        //             if (isDev)
-        //                 console.log(error)
-        //             return;
-        //         }
-        //         conn.close()
-        //         console.log("1.", res)
-        //         return res
-        //     })
-        // )
     }
 
     static close = () => {
