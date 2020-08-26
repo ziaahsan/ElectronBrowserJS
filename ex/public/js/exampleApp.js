@@ -109,6 +109,7 @@
 
             function addCustomTemplates() {
                 AngularSpotlightProvider.addTemplates({
+                    'apps & folders': 'templates/apps-folders.html',
                     'wikipedia': 'templates/wikipedia.html',
                     'stackexchange': 'templates/stackexchange.html',
                     'vcard': '\

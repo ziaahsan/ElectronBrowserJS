@@ -1,0 +1,38 @@
+.ng-spotlight-results-detail-apps-folders {
+    padding: 22px;
+    .tags {
+        padding: 4px 8px;
+        text-transform: capitalize;
+        background-color: $default-tag-color;
+        color: darken($results-detail-font-color, 20);
+        word-break: break-all;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        position: absolute;
+        top: 56px;
+        left: 291px;
+        width: 493px;
+        border-bottom: 1px solid $searchbar-border-color;
+    }
+    .info {
+        width: 100%;
+        height: 187px;
+        text-align: center;
+        .title {
+            position: relative;
+            font-size: 22px;
+            top: 100px;
+            display: block;
+            word-break: break-all;
+            color: darken($results-detail-font-color, 10);
+        }
+        .type {
+            position: relative;
+            font-size: 12px;
+            top: 105px;
+            text-transform: capitalize;
+            color: darken($results-detail-font-color, 20);
+        }
+    }
+  }

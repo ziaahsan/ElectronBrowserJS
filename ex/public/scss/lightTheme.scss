@@ -1,9 +1,9 @@
 // Le background colors
-$alpha: 0.97;
+$alpha: 0.87;
 $searchbar-bg: rgba(#e6e7e8, $alpha);
 $results-list-bg: rgba(#e5e7e8, $alpha);
 $results-detail-bg: rgba(rgb(229, 230, 232), $alpha);
-$result-list-header-bg: rgba(235, 235, 235, $alpha);
+$result-list-header-bg: rgba(155, 155, 155, 0.175);
 $scroll-track-bar-bg: rgba(#e5e7e8, $alpha) !default;
 $scroll-track-bar: rgba(185, 185, 185, $alpha) !default;
 $active-active-list-item-bg: #337ef1;
@@ -23,7 +23,7 @@ $results-list-border-color: #d6d7d9;
 $overlay-border-color: rgba(#333435, 0.1);
 
 // Tag colors
-$default-tag-color: rgba(200, 200, 200, 0.97) !default;
+$default-tag-color: rgba(#e6e7e8, 0.97) !default;
 
 // Widths
 $ng-spotlight-w: 800px;

@@ -3,7 +3,7 @@ $alpha: 0.97;
 $results-list-bg: rgba(40, 40, 40, $alpha) !default;
 $results-detail-bg: rgba(45, 45, 45, $alpha) !default;
 $searchbar-bg: rgba(40, 40, 40, $alpha) !default;
-$result-list-header-bg: rgba(25, 25, 25, $alpha) !default;
+$result-list-header-bg: rgba(15, 15, 15, 0.175) !default;
 $scroll-track-bar-bg: rgba(40, 40, 40, $alpha) !default;
 $scroll-track-bar: rgba(30, 30, 30, $alpha) !default;
 $active-active-list-item-bg: #337ef1 !default;
@@ -23,7 +23,7 @@ $results-list-border-color: #515253 !default;
 $overlay-border-color: none !default;
 
 // Tag colors
-$default-tag-color: rgba(25, 25, 25, 0.97) !default;
+$default-tag-color: rgba(35, 35, 35, 0.97) !default;
 
 
 // Widths
@@ -170,6 +170,25 @@ $spotlight-responsive-width: 680px;
         }
       }
     }
+    .ng-spotlight-info-panel {
+      min-height: 172px;
+      border-top: 1px solid $searchbar-border-color;
+      color: $results-detail-font-color;
+      background-color: $results-detail-bg;
+      .icons {
+        padding: 22px 0 0 0;
+        text-align: center;
+      }
+      p {
+        padding: 8px 42px 22px 42px;
+        text-align: center;
+        font-size: 12px;
+        max-width: 650px;
+        margin: 0 auto;
+        line-height: 22px;
+      }
+
+    }
     .ng-spotlight-results-panel {
       min-height: 375px;
       border-top: 1px solid $searchbar-border-color;
@@ -211,7 +230,7 @@ $spotlight-responsive-width: 680px;
           font-size: 13px;
           color: $result-list-item-font-color;
           padding: 6px 0 6px 25px;
-          word-wrap: break-word;
+          word-break: break-all;
           max-width: 265px;
           cursor: pointer;
 
@@ -262,6 +281,7 @@ $spotlight-responsive-width: 680px;
         }
 
         @import "search-result-details/vcard";
+        @import "search-result-details/apps-folders";
         @import "search-result-details/wikipedia";
         @import "search-result-details/stackexchange";
         @import "search-result-details/default";

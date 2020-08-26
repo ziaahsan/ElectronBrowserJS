@@ -6,7 +6,7 @@ namespace App.Local {
         static Connection request = new ConnectionBuilder().WithLogging().Build();
 
         static Func<String, String> selectDirectories = (String term) => {
-            String query = $"SELECT * FROM Directories WHERE name like '%{term}%' LIMIT 3";
+            String query = $"SELECT * FROM Directories WHERE name like '%{term}%' ORDER BY last_access_time DESC LIMIT 3";
             return Database.ExecuteQuery(query);
         };
 

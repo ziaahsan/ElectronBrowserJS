@@ -32,6 +32,7 @@ msbuild.err
 msbuild.wrn
 
 ### Dir ###
+config/default.json
 node_modules
 cache/*
 release-builds

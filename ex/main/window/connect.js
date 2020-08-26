@@ -1,3 +1,5 @@
+// Setting up configuration
+const config = require('config');
 const isDev = require('electron-is-dev');
 // For dotNet connection
 const { ConnectionBuilder } = require("electron-cgi");
@@ -11,7 +13,7 @@ class Connect {
             return
         }
         conn = new ConnectionBuilder()
-            .connectTo("C:\\Program Files\\dotnet\\dotnet", "run", "--project", ".\\dotnet\\app")
+            .connectTo(config.dotnet.path, config.dotnet.cmd.type, config.dotnet.cmd.args, config.dotnet.appPath)
             .build()
         conn.onDisconnect = () => {
             console.log("Connection Disconnected!")

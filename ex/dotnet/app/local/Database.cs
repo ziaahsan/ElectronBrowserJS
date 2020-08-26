@@ -62,7 +62,10 @@ namespace App.Local {
                     id INTEGER PRIMARY KEY,
                     name VARCHAR(275) NOT NULL,
                     type VARCHAR(15) NOT NULL,
-                    path TEXT
+                    path TEXT,
+                    last_access_time DATE NOT NULL,
+                    last_write_time DATE NOT NULL,
+                    created_at DATE NOT NULL
                 );
                 CREATE INDEX directories_name ON Directories(name);
             ";
@@ -72,30 +75,42 @@ namespace App.Local {
             
             void Fetch() {
                 // Display the names of the directories.
-                String rootPath = @"C:\Users\Default\AppData\Roaming";
+                String rootPath = @"C:\Users\Ahsan\AppData\Roaming\Microsoft\Windows\Start Menu";
                 void DirectorySearch(String outerPath) {
                     try {
                         foreach (String path in Directory.GetDirectories(outerPath)) {
-                            String[] pathItems = path.Split("\\");
-                            String directoryName = pathItems[pathItems.Length - 1];
                             // Ignore windows directory
                             if (path.Contains(@"C:\Windows", StringComparison.OrdinalIgnoreCase)) continue;
                             
-                            query = "INSERT INTO Directories(name, type, path) VALUES (@name, @type, @path)";
+                            query = @"
+                                        INSERT INTO
+                                        Directories
+                                            (name, type, path, last_access_time, last_write_time, created_at)
+                                        VALUES
+                                            (@name, @type, @path, @last_access_time, @last_write_time, @created_at)
+                                    ";
                             using(SQLiteCommand insertCmd = new SQLiteCommand(query, connection)) {
-                                insertCmd.Parameters.AddWithValue("@name", directoryName);
+                                DirectoryInfo directoryInfo = new DirectoryInfo(path);
+
+                                insertCmd.Parameters.AddWithValue("@name", directoryInfo.Name);
                                 insertCmd.Parameters.AddWithValue("@type", "Directory");
                                 insertCmd.Parameters.AddWithValue("@path", path);
+                                insertCmd.Parameters.AddWithValue("@last_access_time", directoryInfo.LastAccessTime);
+                                insertCmd.Parameters.AddWithValue("@last_write_time", directoryInfo.LastWriteTime);
+                                insertCmd.Parameters.AddWithValue("@created_at", directoryInfo.CreationTime);
                                 insertCmd.ExecuteNonQuery();
                             }
 
                             foreach (String file in Directory.GetFiles(path)) {
-                                String[] fileItems = file.Split("\\");
-                                String fileName = fileItems[fileItems.Length - 1];
                                 using(SQLiteCommand insertCmd = new SQLiteCommand(query, connection)) {
-                                    insertCmd.Parameters.AddWithValue("@name", fileName);
+                                    FileInfo fileInfo = new FileInfo(file);
+
+                                    insertCmd.Parameters.AddWithValue("@name", fileInfo.Name);
                                     insertCmd.Parameters.AddWithValue("@type", "File");
                                     insertCmd.Parameters.AddWithValue("@path", file);
+                                    insertCmd.Parameters.AddWithValue("@last_access_time", fileInfo.LastAccessTime);
+                                    insertCmd.Parameters.AddWithValue("@last_write_time", fileInfo.LastWriteTime);
+                                    insertCmd.Parameters.AddWithValue("@created_at", fileInfo.CreationTime);
                                     insertCmd.ExecuteNonQuery();
                                 }
                             }
