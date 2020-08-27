@@ -165,6 +165,12 @@ $spotlight-responsive-width: 680px;
         color: $result-list-item-font-color;
         background-size: cover;
 
+        .ng-spotlight-apps-folder-icon {
+          background: url('../icons/directory.png');
+          background-size: cover;
+          height: inherit;
+        }
+
         @media only screen and (min-width: $spotlight-responsive-width) {
           display: block;
         }
@@ -182,7 +188,7 @@ $spotlight-responsive-width: 680px;
       p {
         padding: 8px 42px 22px 42px;
         text-align: center;
-        font-size: 12px;
+        font-size: 13px;
         max-width: 650px;
         margin: 0 auto;
         line-height: 22px;
@@ -253,6 +259,11 @@ $spotlight-responsive-width: 680px;
             background-color: $active-active-list-item-bg;
           }
 
+          .ng-spotlight-apps-folder-icon {
+            background: url('../icons/directory.png');
+            background-size: cover;
+          }
+
           .ng-spotlight-item-name {
             display: flex;
             width: 85%;
@@ -260,7 +271,10 @@ $spotlight-responsive-width: 680px;
 
           .info {
             margin-left: 5px;
-            color: $placeholder-font-color;
+            color: darken($result-list-item-font-color, 20);
+            word-break: break-word;
+            display: flex;
+            width: 85%;
           }
         }
       }

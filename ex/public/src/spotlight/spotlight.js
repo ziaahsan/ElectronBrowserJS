@@ -2,7 +2,6 @@
     // jQuery autoGrowInput plugin by James Padolsey
     // See related thread: http://stackoverflow.com/questions/931207/is-there-a-jquery-autogrow-plugin-for-text-fields
     $.fn.autoGrowInput = function (o) {
-
         o = $.extend({
             maxWidth: 1000,
             minWidth: 0,
@@ -58,9 +57,10 @@
         return this;
 
     };
-
 })(jQuery);
-angular.module('de.devjs.angular.spotlight', [])
+
+angular
+    .module('de.devjs.angular.spotlight', [])
     .directive('spotlightOverlay', ['$timeout', '$http', '$compile', 'AngularSpotlight', function ($timeout, $http, $compile, AngularSpotlight) {
         const KEY = {
             UP: 38,
@@ -70,27 +70,27 @@ angular.module('de.devjs.angular.spotlight', [])
         };
 
         var $ngSpotlightOverlay;
+
         return {
             restrict: 'E',
             replace: true,
             controller: controller(),
             link: link,
-            templateUrl: '../cache/spotlightOverlayTemplate.html'
+            templateUrl: 'spotlightOverlay.htm'
         };
 
         function controller() {
             return ['$scope', function ($scope) {
                 $scope.searchInputInfo = AngularSpotlight.getSearchInputInfoSearching();
                 $scope.spotlightPlaceholder = AngularSpotlight.getSpotlightPlaceholder();
+                $scope.spotlightCommands = AngularSpotlight.getSpotlightCommands();
 
                 $scope.requestCounter = 0;
 
                 $scope.search = function () {
                     if ($scope.searchTerm.length > 0 && $scope.requestCounter == 0) {
                         $scope.searchResults = []
-                        
                         //@todo: Set time out on cancelling the request you dont want to be waiting forever...
-
                         // Request 1
                         $scope.requestCounter++;
                         $scope.postMessage("select-directories");
@@ -118,6 +118,29 @@ angular.module('de.devjs.angular.spotlight', [])
 
                     setSearchInputInfo();
                     selectItemAtIndex(0);
+                }
+
+                $scope.setSearchResultsForCommands = function () {
+                    var category = {name: 'commands', items: []};
+                    Object.keys($scope.spotlightCommands).forEach(function (commandName) {
+                        var item = extractCommands(commandName)
+                        category.items.push(item);
+                    });
+
+                    if (category.items.length > 0) {
+                        $scope.searchResults.push(category);
+                    }
+
+                    function extractCommands(commandName) {
+                        return {
+                            name: commandName,
+                            info: $scope.spotlightCommands[commandName].info,
+                            usage: $scope.spotlightCommands[commandName].usage,
+                            cmds: $scope.spotlightCommands[commandName].cmdss,
+                            type: 'commands',
+                            href: '#'
+                        }
+                    }
                 }
 
                 $scope.postMessage = function (requestType) {
@@ -354,7 +377,9 @@ angular.module('de.devjs.angular.spotlight', [])
                 });
         }
     }]);
-angular.module('de.devjs.angular.spotlight')
+
+angular
+    .module('de.devjs.angular.spotlight')
     .directive('spotlightDetails', ['$compile', 'AngularSpotlight', function ($compile, AngularSpotlight) {
 
         function link(scope, element) {
@@ -381,68 +406,71 @@ angular.module('de.devjs.angular.spotlight')
             }
         }
 
-
         return {
             restrict: "E",
             link: link
         };
     }]);
-angular.module("de.devjs.angular.spotlight").run([
-    "$templateCache",
-    function ($templateCache) {
-        $templateCache.put(
-            "../cache/spotlightOverlayTemplate.html",
-            '<div class="ng-spotlight ng-spotlight-overlay" ng-keydown="handleKeyDown($event)">\n\
-                <div class="ng-spotlight-searchbar">\n\
-                    <div class="ng-spotlight-icon">\n\
-                        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"  viewBox="0 0 283.753 284.51" enable-background="new 0 0 283.753 284.51" xml:space="preserve">\n\
-                            <path d="M281.394,264.378l0.135-0.135L176.24,158.954c30.127-38.643,27.45-94.566-8.09-130.104\n\tc-38.467-38.467-100.833-38.467-139.3,0c-38.467,38.467-38.466,100.833,0,139.299c35.279,35.279,90.644,38.179,129.254,8.748\n\tl103.859,103.859c0.01,0.01,0.021,0.021,0.03,0.03l1.495,1.495l0.134-0.134c2.083,1.481,4.624,2.36,7.375,2.36\n\tc7.045,0,12.756-5.711,12.756-12.756C283.753,269.002,282.875,266.462,281.394,264.378z M47.388,149.612\n\tc-28.228-28.229-28.229-73.996,0-102.225c28.228-28.229,73.996-28.228,102.225,0.001c28.229,28.229,28.229,73.995,0,102.224\n\tC121.385,177.841,75.617,177.841,47.388,149.612z"/>\n\
-                        </svg>\n\
-                    </div>\n\n\
-                    <input class="ng-spotlight-input" ng-class="{\'empty\': searchTerm.length === 0}" type="text" placeholder="{{spotlightPlaceholder}}" ng-model="searchTerm" ng-change="search()" ng-model-options="{debounce: 250}"/>\n\n\
-                    <div class="ng-spotlight-input-after" ng-if="searchInputInfo.length > 0  && searchTerm.length > 0">&mdash; {{searchInputInfo}}</div>\n\
-                    <div class="ng-spotlight-results-icon" ng-if="searchTerm.length > 0">\n\
-                        <img ng-if="getIconForType(selectedItem.type).type == \'url\'" class="ng-spotlight-item-icon" ng-src="{{getIconForType(selectedItem.type).data}}" width="32" height="32">\n\
-                        <div ng-if="getIconForType(selectedItem.type).type == \'css\'" class="ng-spotlight-item-icon {{getIconForType(selectedItem.type).data}}"></div>\n\
+
+angular
+    .module("de.devjs.angular.spotlight")
+    .run([
+        "$templateCache",
+        function ($templateCache) {
+            $templateCache.put(
+                "spotlightOverlay.htm",
+                '<div class="ng-spotlight ng-spotlight-overlay" ng-keydown="handleKeyDown($event)">\n\
+                    <div class="ng-spotlight-searchbar">\n\
+                        <div class="ng-spotlight-icon">\n\
+                            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"  viewBox="0 0 283.753 284.51" enable-background="new 0 0 283.753 284.51" xml:space="preserve">\n\
+                                <path d="M281.394,264.378l0.135-0.135L176.24,158.954c30.127-38.643,27.45-94.566-8.09-130.104\n\tc-38.467-38.467-100.833-38.467-139.3,0c-38.467,38.467-38.466,100.833,0,139.299c35.279,35.279,90.644,38.179,129.254,8.748\n\tl103.859,103.859c0.01,0.01,0.021,0.021,0.03,0.03l1.495,1.495l0.134-0.134c2.083,1.481,4.624,2.36,7.375,2.36\n\tc7.045,0,12.756-5.711,12.756-12.756C283.753,269.002,282.875,266.462,281.394,264.378z M47.388,149.612\n\tc-28.228-28.229-28.229-73.996,0-102.225c28.228-28.229,73.996-28.228,102.225,0.001c28.229,28.229,28.229,73.995,0,102.224\n\tC121.385,177.841,75.617,177.841,47.388,149.612z"/>\n\
+                            </svg>\n\
+                        </div>\n\n\
+                        <input class="ng-spotlight-input" ng-class="{\'empty\': searchTerm.length === 0}" type="text" placeholder="{{spotlightPlaceholder}}" ng-model="searchTerm" ng-change="search()" ng-model-options="{debounce: 250}"/>\n\n\
+                        <div class="ng-spotlight-input-after" ng-if="searchInputInfo.length > 0  && searchTerm.length > 0">&mdash; {{searchInputInfo}}</div>\n\
+                        <div class="ng-spotlight-results-icon" ng-if="searchTerm.length > 0">\n\
+                            <img ng-if="getIconForType(selectedItem.type).type == \'url\'" class="ng-spotlight-item-icon" ng-src="{{getIconForType(selectedItem.type).data}}" width="32" height="32">\n\
+                            <div ng-if="getIconForType(selectedItem.type).type == \'css\'" class="ng-spotlight-item-icon {{getIconForType(selectedItem.type).data}}"></div>\n\
+                        </div>\n\
                     </div>\n\
-                </div>\n\
-                <div class="ng-spotlight-info-panel" ng-if="!searchResultsCount || searchResultsCount == 0" >\n\
-                    <div class="icons">\n\
-                        <span><img src="data:image/png;base64,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"></span>\n\
+                    <div class="ng-spotlight-info-panel" ng-if="!searchResultsCount || searchTerm.length === 0 || searchResultsCount == 0" >\n\
+                        <div class="icons">\n\
+                            <span><img src="icons/finger-print.png" width="48" height="48"/></span>\n\
+                        </div>\n\
+                        <p>\
+                            Making Windows feel right at home. Do everything with Windows,\
+                            from authenticating passwords, searching files, or even finding the right Windows app right from the Windows store.\
+                        </p>\n\
                     </div>\n\
-                    <p>\
-                        Making Windows feel right at home. Do everything with Windows,\
-                        from authenticating passwords, searching files, or even finding the right Windows app right from the Windows store.\
-                    </p>\n\
-                </div>\n\
-                <div class="ng-spotlight-results-panel" ng-if="searchTerm && searchTerm.length > 0 && searchResultsCount > 0" >\n\
-                    <div class="ng-spotlight-results-list" ng-keydown="handleKeyDown($event)">\n\
-                        <ul>\n\
-                            <li class="ng-spotlight-results-category" ng-repeat="searchResult in searchResults" ng-dblclick="openResultCategory()">\n\
-                                <div class="ng-spotlight-results-list-header">{{searchResult.name}}</div>\n\
-                                <ul>\n\
-                                    <li class="ng-spotlight-results-list-item"\n ng-repeat="resultItem in searchResult.items"\n ng-class="{\'active\': resultItem.active === true}"\n ng-click="showResultItem(searchResult.name, $index)"\n ng-dblclick="openResultItem()">\n\n\
-                                    <img ng-if="getIconForType(resultItem.type).type == \'url\'" class="ng-spotlight-item-icon" ng-src="{{getIconForType(resultItem.type).data}}">\n\
-                                    <div ng-if="getIconForType(resultItem.type).type == \'css\'" class="ng-spotlight-item-icon {{getIconForType(resultItem.type).data}}"></div>\n\n\
-                                    <span class="ng-spotlight-item-name">{{resultItem.name.substr(0, 55)}}</span>\n\n\
-                                    <span class="info" ng-if="resultItem.info">\n\
-                                        &ndash; {{resultItem.info}}\n\
-                                    </span>\n\
-                                    </li>\n\
-                                </ul>\n\
-                            </li>\n\
-                        </ul>\n\
+                    <div class="ng-spotlight-results-panel" ng-if="searchTerm && searchTerm.length > 0 && searchResultsCount > 0" >\n\
+                        <div class="ng-spotlight-results-list" ng-keydown="handleKeyDown($event)">\n\
+                            <ul>\n\
+                                <li class="ng-spotlight-results-category" ng-repeat="searchResult in searchResults" ng-dblclick="openResultCategory()">\n\
+                                    <div class="ng-spotlight-results-list-header">{{searchResult.name}}</div>\n\
+                                    <ul>\n\
+                                        <li class="ng-spotlight-results-list-item"\n ng-repeat="resultItem in searchResult.items"\n ng-class="{\'active\': resultItem.active === true}"\n ng-click="showResultItem(searchResult.name, $index)"\n ng-dblclick="openResultItem()">\n\n\
+                                        <img ng-if="getIconForType(resultItem.type).type == \'url\'" class="ng-spotlight-item-icon" ng-src="{{getIconForType(resultItem.type).data}}">\n\
+                                        <div ng-if="getIconForType(resultItem.type).type == \'css\'" class="ng-spotlight-item-icon {{getIconForType(resultItem.type).data}}"></div>\n\n\
+                                        <span class="ng-spotlight-item-name">{{resultItem.name.substr(0, 55)}}</span>\n\n\
+                                        <span class="info" ng-if="resultItem.info">\n\
+                                            {{resultItem.info}}\n\
+                                        </span>\n\
+                                        </li>\n\
+                                    </ul>\n\
+                                </li>\n\
+                            </ul>\n\
+                        </div>\n\
+                        <div class="ng-spotlight-results-detail">\n\
+                            <spotlight-details></spotlight-details>\n\
+                        </div>\n\
                     </div>\n\
-                    <div class="ng-spotlight-results-detail">\n\
-                        <spotlight-details></spotlight-details>\n\
-                    </div>\n\
-                </div>\n\
-            </div>'
-        );
-    },
-]);
+                </div>'
+            );
+        },
+    ]);
     
-angular.module('de.devjs.angular.spotlight')
+angular
+    .module('de.devjs.angular.spotlight')
     .provider("AngularSpotlight", function () {
         var _iconConfig = iconConfig();
         var _detailsTemplateConfig = detailsTemplateConfig();
@@ -547,9 +575,21 @@ angular.module('de.devjs.angular.spotlight')
             var spotlightToggleCtrlKey = KEY_SPACE;
             var spotlightCommandDelimiter = ':';
             var spotlightCommands = {
-                git: ['github'],
-                coding: ['stackexchange'],
-                wiki: ['wikipedia']
+                add: {
+                    info: 'Add to you favourite things.',
+                    usage: 'Usage: Place :add command followed by adding: auth and you will have a modal to setup an auth system (ie: :add auth).',
+                    cmds: ['auth', 'authenticator']
+                },
+                git: {
+                    info: 'Control all of your gits with one command.',
+                    usage: 'Usage: Place :git command followed by adding: github or gitlab and you will have a modal to setup an auth system (ie: :git github).',
+                    cmds: ['github', 'gitlab']
+                },
+                upload: {
+                    info: 'Upload items to your favourite palce.',
+                    usage: 'Usage: Place :upload command followed by adding: file or directory and the name of connector.',
+                    cmds: ['file', 'directory']
+                },
             };
 
             function setSearchInputInfoSearching(text) {

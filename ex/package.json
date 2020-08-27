@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "angular": "^1.8.0",
+    "angular-route": "^1.8.0",
     "config": "^3.3.1",
     "electron-cgi": "^1.0.5",
     "electron-is-dev": "^1.2.0",
