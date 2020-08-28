@@ -1,6 +1,6 @@
 // All of the Node.js APIs are available in the preload process.
 // It has the same sandbox as a Chrome extension.
-const isDev = require('electron-is-dev');
+const isDev = require('electron-is-dev')
 const conn = require('./connect')
 conn.build()
 
@@ -14,7 +14,7 @@ process.once('loaded', () => {
 
     (async () => {
       let data = await conn.send(event.data.type, event.data.q)
-      window.postMessage({type: "NG_REQUEST", name:event.data.type, results:data});
+      window.postMessage({type: "NG_REQUEST", name:event.data.type, results:data})
     })()
 
   }, false)

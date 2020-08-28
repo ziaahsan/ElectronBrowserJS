@@ -1,10 +1,5 @@
-
 // Import Fonts
-$font-family: SF-Regular !default;
-@font-face {
-    font-family: $font-family;
-    src: url("../fonts/SF/otf/SFNSText-Regular.otf");
-}
+$font-family: 'Open Sans', sans-serif !default;
 
 $results-list-bg: rgba(0, 0, 0, 0.567) !default;
 $toolbar-btn-bg: rgba(0, 0, 0, 0.2) !default;

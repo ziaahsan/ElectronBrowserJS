@@ -17,7 +17,15 @@ namespace App.Local {
         }
 
         public static void CloseConnection() {
-            connection.Close();
+            if (IsConnectionActive())
+                connection.Close();
+            connection = null;
+        }
+
+        public static bool IsConnectionActive() {
+            if (connection != null && connection.State != 0)
+                return true;
+            return false;
         }
 
         private static Dictionary<string, object> SerializeRow(IEnumerable<string> cols, SQLiteDataReader reader) {
@@ -41,7 +49,8 @@ namespace App.Local {
         }
 
         public static String ExecuteQuery(String query) {
-            if (connection == null) return null;
+            if (!IsConnectionActive()) return null;
+
             String results = "";
             void read() {
                 using(SQLiteCommand command = new SQLiteCommand(query, connection)) {
@@ -54,7 +63,7 @@ namespace App.Local {
         }
 
         public static void CreateDirectories() {
-            if (connection == null) return;
+            if (!IsConnectionActive()) return;
             
             String query = @"
                 DROP TABLE IF EXISTS Directories;

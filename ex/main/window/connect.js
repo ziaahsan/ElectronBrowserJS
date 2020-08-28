@@ -1,8 +1,8 @@
 // Setting up configuration
-const config = require('config');
-const isDev = require('electron-is-dev');
+const config = require('config')
+const isDev = require('electron-is-dev')
 // For dotNet connection
-const { ConnectionBuilder } = require("electron-cgi");
+const { ConnectionBuilder } = require("electron-cgi")
 var conn = null
 class Connect {
     
@@ -15,6 +15,7 @@ class Connect {
         conn = new ConnectionBuilder()
             .connectTo(config.dotnet.path, config.dotnet.cmd.type, config.dotnet.cmd.args, config.dotnet.appPath)
             .build()
+        
         conn.onDisconnect = () => {
             console.log("Connection Disconnected!")
             conn = null
@@ -23,19 +24,17 @@ class Connect {
 
     static send = async (requestType, name) => {
         if (conn == null) {
-            if (isDev)
-                console.log("Please enable a connection before sending message...")
+            if (isDev) console.log("Please enable a connection before sending message...")
             return
         }
 
         return new Promise((resolve, reject) => {
             conn.send(requestType, name, (err, res) => {
                 if (err) {
-                    if (isDev)
-                        console.log(error)
-                    reject("[Error] An error occured, if your a dev please look into this.")
-                    return;
+                    if (isDev) throw "[Error] An error occured, if your a dev please look into this."
+                    return
                 }
+                
                 resolve(res)
             })
         })

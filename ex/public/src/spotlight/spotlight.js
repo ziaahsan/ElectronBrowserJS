@@ -76,7 +76,7 @@ angular
             replace: true,
             controller: controller(),
             link: link,
-            templateUrl: 'spotlightOverlay.htm'
+            templateUrl: 'spotlightOverlay.html'
         };
 
         function controller() {
@@ -418,7 +418,7 @@ angular
         "$templateCache",
         function ($templateCache) {
             $templateCache.put(
-                "spotlightOverlay.htm",
+                "spotlightOverlay.html",
                 '<div class="ng-spotlight ng-spotlight-overlay" ng-keydown="handleKeyDown($event)">\n\
                     <div class="ng-spotlight-searchbar">\n\
                         <div class="ng-spotlight-icon">\n\

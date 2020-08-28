@@ -6,18 +6,15 @@ $(function() {
         var theme = $(this).data('theme');
         var cssForTheme = getCssForTheme(theme);
         style.attr('href', cssForTheme.style);
-        $('body').css('background-image', 'url(' + cssForTheme.background + ')')
     });
 
     function getCssForTheme(name) {
         var theme = {
             dark: {
                 style: 'css/darkTheme.min.css',
-                background: ''
             },
             light: {
                 style: 'css/lightTheme.min.css',
-                background: ''
             }
         };
 

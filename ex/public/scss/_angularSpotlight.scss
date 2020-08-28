@@ -30,7 +30,7 @@ $default-tag-color: rgba(35, 35, 35, 0.97) !default;
 $ng-spotlight-w: 800px;
 
 // Font Change
-$font-family: SF-Regular !default;
+$font-family: 'Open Sans', sans-serif !default;
 
 // Responsive
 $spotlight-responsive-width: 680px;
@@ -148,6 +148,7 @@ $spotlight-responsive-width: 680px;
         display: none;
         color: $placeholder-font-color;
         line-height: 55px;
+        font-weight: 600;
         @media only screen and (min-width: $spotlight-responsive-width) {
           display: block;
         }
@@ -225,10 +226,11 @@ $spotlight-responsive-width: 680px;
         }
 
         .ng-spotlight-results-list-header {
-          font-size: 13px;
+          font-size: 12px;
+          font-weight: 600;
           background-color: $result-list-header-bg;
           color: $result-list-header-font-color;
-          text-transform: uppercase;
+          text-transform: capitalize;
           padding: 4px 0 4px 25px;
         }
 
@@ -266,7 +268,9 @@ $spotlight-responsive-width: 680px;
 
           .ng-spotlight-item-name {
             display: flex;
-            width: 85%;
+            width: auto;
+            font-size: 12px;
+            font-weight: 500;
           }
 
           .info {
@@ -294,10 +298,7 @@ $spotlight-responsive-width: 680px;
           color: $results-detail-font-color;
         }
 
-        @import "search-result-details/vcard";
         @import "search-result-details/apps-folders";
-        @import "search-result-details/wikipedia";
-        @import "search-result-details/stackexchange";
         @import "search-result-details/default";
       }
     }
