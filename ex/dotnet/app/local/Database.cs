@@ -7,23 +7,21 @@ using Newtonsoft.Json;
 
 namespace App.Local {
     class Database {
-        static readonly String DATABASE_DIR = @".\cache\app.db";
-
-        static SQLiteConnection connection = null;
+        private static SQLiteConnection _connection = null;
 
         public static void OpenConnection() {
-            connection = new SQLiteConnection ($"Data Source={DATABASE_DIR}");
-            connection.Open();
+            _connection = new SQLiteConnection ($"Data Source={Constants.CACHE_DATABASE}");
+            _connection.Open();
         }
 
         public static void CloseConnection() {
             if (IsConnectionActive())
-                connection.Close();
-            connection = null;
+                _connection.Close();
+            _connection = null;
         }
 
         public static bool IsConnectionActive() {
-            if (connection != null && connection.State != 0)
+            if (_connection != null && _connection.State != 0)
                 return true;
             return false;
         }
@@ -53,13 +51,57 @@ namespace App.Local {
 
             String results = "";
             void read() {
-                using(SQLiteCommand command = new SQLiteCommand(query, connection)) {
+                using(SQLiteCommand command = new SQLiteCommand(query, _connection)) {
                     SQLiteDataReader reader = command.ExecuteReader();
                     results = JsonConvert.SerializeObject(Serialize(reader), Formatting.Indented);
                 }
             }
             read();
             return results;
+        }
+
+        public static void ExecuteSqlTransaction(String[] queries) {
+            if (!IsConnectionActive()) return;
+
+            using(SQLiteCommand command = _connection.CreateCommand()) {
+                SQLiteTransaction transaction = _connection.BeginTransaction();
+                try {
+                    foreach(String query in queries) {
+                        command.CommandText = query;
+                        command.ExecuteNonQuery();
+                    }
+
+                    transaction.Commit();
+                } catch (Exception ex) {
+                    try {
+                        transaction.Rollback();
+                    } catch (Exception ex2) {
+
+                    }
+                }
+            }
+        }
+
+        private static void CreateTables() {
+            if (!IsConnectionActive()) return;
+            List<String> queries = new List<String>();
+            queries.Add(@"
+                DROP TABLE IF EXISTS `filesystem`;
+                CREATE TABLE `filesystem` (
+                    `id` INTEGER PRIMARY KEY,
+                    `dirname` TEXT,
+                    PRIMARY KEY (`id`)
+                );
+            ");
+
+            queries.Add(@"
+                DROP TABLE IF EXISTS `tree_path`;
+                CREATE TABLE `tree_path` (
+                    `ancestor` INTEGER,
+                    `descendant` INTEGER,
+                    PRIMARY KEY (`ancestor`, `descendant`)
+                );
+            ");
         }
 
         public static void CreateDirectories() {
@@ -79,7 +121,7 @@ namespace App.Local {
                 CREATE INDEX directories_name ON Directories(name);
             ";
 
-            SQLiteCommand createCmd = new SQLiteCommand(query, connection);
+            SQLiteCommand createCmd = new SQLiteCommand(query, _connection);
             createCmd.ExecuteNonQuery();
             
             void Fetch() {
@@ -98,7 +140,7 @@ namespace App.Local {
                                         VALUES
                                             (@name, @type, @path, @last_access_time, @last_write_time, @created_at)
                                     ";
-                            using(SQLiteCommand insertCmd = new SQLiteCommand(query, connection)) {
+                            using(SQLiteCommand insertCmd = new SQLiteCommand(query, _connection)) {
                                 DirectoryInfo directoryInfo = new DirectoryInfo(path);
 
                                 insertCmd.Parameters.AddWithValue("@name", directoryInfo.Name);
@@ -111,7 +153,7 @@ namespace App.Local {
                             }
 
                             foreach (String file in Directory.GetFiles(path)) {
-                                using(SQLiteCommand insertCmd = new SQLiteCommand(query, connection)) {
+                                using(SQLiteCommand insertCmd = new SQLiteCommand(query, _connection)) {
                                     FileInfo fileInfo = new FileInfo(file);
 
                                     insertCmd.Parameters.AddWithValue("@name", fileInfo.Name);

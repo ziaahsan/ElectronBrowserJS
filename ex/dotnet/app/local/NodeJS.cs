@@ -5,10 +5,12 @@ using Microsoft.Extensions.Logging;
 namespace App.Local {
     class NodeJS {
 
-        Connection connection = null;
+        private Connection _connection = null;
 
         public NodeJS() {
-            connection = new ConnectionBuilder().WithLogging(minimumLogLevel: LogLevel.Trace).Build();
+            _connection = new ConnectionBuilder()
+                                .WithLogging(Constants.ELECTRON_LOG_FILE, minimumLogLevel: LogLevel.Trace)
+                                .Build();
         }
 
         Func<String, String> selectDirectories = (String term) => {
@@ -17,10 +19,10 @@ namespace App.Local {
         };
 
         public void BuildRecievingRequests() {
-            if (connection == null) return;
-            Console.WriteLine("NodeJS Listening...");
-            connection.On("select-directories", selectDirectories);
-            connection.Listen();
+            if (_connection == null) return;
+            Console.Error.WriteLine("NodeJS Started....");
+            _connection.On("select-directories", selectDirectories);
+            _connection.Listen();
         }
     }
 }

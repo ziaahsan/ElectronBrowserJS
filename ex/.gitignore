@@ -36,3 +36,4 @@ config/default.json
 node_modules
 cache/*
 release-builds
+*.log
