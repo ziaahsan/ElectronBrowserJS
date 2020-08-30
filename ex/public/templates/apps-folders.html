@@ -2,6 +2,10 @@
     <!-- <div class="tags">{{selectedItem.path}}</div> -->
     <div class="info">
         <span class="title">{{selectedItem.name}}</span>
-        <span class="type">{{selectedItem.type}} &middot; {{selectedItem.appType}}</span>
+        <span class="type">
+            {{selectedItem.type}}
+            <span ng-if="selectedItem.contentType != null">&middot; {{selectedItem.contentType}}</span>
+            <span ng-if="selectedItem.itemType != null">&middot; {{selectedItem.itemType}}</span>
+        </span>
     </div>
 </div>

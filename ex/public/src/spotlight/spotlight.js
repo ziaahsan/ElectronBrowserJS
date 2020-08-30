@@ -156,8 +156,9 @@ angular
 
                         switch (event.data.name) {
                           case 'select-directories':
-                            var data = JSON.parse(event.data.results);
                             var category = {name: 'apps & folders', items: []};
+                            let data = JSON.parse(event.data.results);
+                            console.log(data);
                             data.forEach(function (result) {
                                 var item = extractAppsAndFolders(result)
                                 category.items.push(item);
@@ -169,9 +170,10 @@ angular
 
                             function extractAppsAndFolders(result) {
                                 return {
-                                    name: result.name,
-                                    appType: result.type,
-                                    path: result.path,
+                                    name: result['SYSTEM.ITEMNAME'],
+                                    contentType: result['SYSTEM.CONTENTTYPE'],
+                                    itemType: result['SYSTEM.ITEMTYPE'],
+                                    path: result['SYSTEM.ITEMPATHDISPLAY'],
                                     type: 'apps & folders',
                                     href: '#'
                                 }

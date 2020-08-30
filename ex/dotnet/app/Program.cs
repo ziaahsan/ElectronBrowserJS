@@ -1,48 +1,35 @@
 ﻿// using ElectronCgi.DotNet;
 using System;
-using System.Collections.Generic;
+using System.Drawing;
 using System.Threading.Tasks;
-using System.Threading;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+using System.Collections.Generic;
 
 using App.Local;
-using App.Local.Services;
 
 namespace App {
     class Program {
+        static List<Task> _tasks = new List<Task>();
 
-        static void Main(String[] args) {            
-            List<Task> tasks = new List<Task>();
+        static void Main(String[] args) {
             
-            // Database
-            // Task database = Task.Run(() => {
-            //     Database.OpenConnection();
-            //     // Database.CreateDirectories();
-            // });
+            _tasks.Add(
+                Task.Run(() => {
+                    // Establish database
+                    Database.OpenConnection();
+                }).ContinueWith((res) => {
+                    // Setup electron and c# connection if database
+                    if (Database.IsConnectionActive())
+                        new ElectronCGI().BuildRecievingRequests();
+                    else
+                        Console.Error.WriteLine("No database connected.");
+                }).ContinueWith((res) => {
+                    // Close if database connection
+                    if (Database.IsConnectionActive())
+                        Database.CloseConnection();
+                })
+            );
 
-            Task nodeJS = Task.Run(() => {
-                new NodeJS().BuildRecievingRequests();
-            });
-
-            tasks.Add(nodeJS);
-
-            // Background Services 
-            // Task services = database.ContinueWith((res) => {
-            //     CreateHostBuilder(args).Build().Run();
-            // });
-            // tasks.Add(services);
-
-
-            Task.WaitAll(tasks.ToArray());
+            Task.WaitAll(_tasks.ToArray());
         }
-
-    //    public static IHostBuilder CreateHostBuilder(string[] args) =>
-    //         Host
-    //             .CreateDefaultBuilder(args)
-    //             .ConfigureServices((hostContext, services) => {
-    //                 services.AddHostedService<WatchFileSystem>();
-    //             });
     }
 }

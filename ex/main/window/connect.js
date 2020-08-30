@@ -31,10 +31,14 @@ class Connect {
         return new Promise((resolve, reject) => {
             conn.send(requestType, name, (err, res) => {
                 if (err) {
-                    if (isDev) throw "[Error] An error occured, if your a dev please look into this."
+                    if (isDev) {
+                        console.log(err);
+                        throw "Connect.js: An error occured, if your a dev please look into this."
+                    }
                     return
                 }
                 
+                // Send the result back
                 resolve(res)
             })
         })
