@@ -1,0 +1,266 @@
+// Files
+$archive-icon: "../icons/styleA/files/archive.png";
+$audio-icon: "../icons/styleA/files/audio.png";
+$blank-icon: "../icons/styleA/files/blank.png";
+$book-icon: "../icons/styleA/files/book.png";
+$calendar-icon: "../icons/styleA/files/calendar.png";
+$code-icon: "../icons/styleA/files/code.png";
+$communication-icon: "../icons/styleA/files/communication.png";
+$contacts-icon: "../icons/styleA/files/contacts.png";
+$document-icon: "../icons/styleA/files/document.png";
+$exec-icon: "../icons/styleA/files/exec.png";
+$folder-icon: "../icons/styleA/files/folder.png";
+$font-icon: "../icons/styleA/files/font.png";
+$games-icon: "../icons/styleA/files/games.png";
+$home-icon: "../icons/styleA/files/home.png";
+$image-icon: "../icons/styleA/files/image.png";
+$mail-icon: "../icons/styleA/files/mail.png";
+$message-icon: "../icons/styleA/files/message.png";
+$note-icon: "../icons/styleA/files/note.png";
+$search-icon: "../icons/styleA/files/search.png";
+$settings-icon: "../icons/styleA/files/settings.png";
+$sheet-icon: "../icons/styleA/files/sheet.png";
+$slide-icon: "../icons/styleA/files/slide.png";
+$text-icon: "../icons/styleA/files/text.png";
+$unknown-icon: "../icons/styleA/files/unknown.png";
+$video-icon: "../icons/styleA/files/video.png";
+$web-icon: "../icons/styleA/files/web.png";
+
+// Kinds
+.calendar-icon        { background: url($calendar-icon); background-size: cover; height: inherit; }
+.communication-icon   { background: url($communication-icon); background-size: cover; height: inherit; }
+.contacts-icon        { background: url($contacts-icon); background-size: cover; height: inherit; }
+.document-icon        { background: url($document-icon); background-size: cover; height: inherit; }
+.mail-icon            { background: url($mail-icon); background-size: cover; height: inherit; }
+.feed-icon            { background: url($home-icon); background-size: cover; height: inherit; }
+.folder-icon          { background: url($folder-icon); background-size: cover; height: inherit; }
+.game-icon            { background: url($game-icon); background-size: cover; height: inherit; }
+.message-icon         { background: url($message-icon); background-size: cover; height: inherit; }
+.journal-icon         { background: url($unknown-icon); background-size: cover; height: inherit; }
+.link-icon            { background: url($unknown-icon); background-size: cover; height: inherit; }
+.movie-icon           { background: url($audio-icon); background-size: cover; height: inherit; }
+.music-icon           { background: url($audio-icon); background-size: cover; height: inherit; }
+.note-icon            { background: url($note-icon); background-size: cover; height: inherit; }
+.picture-icon         { background: url($image-icon); background-size: cover; height: inherit; }
+.playlist-icon        { background: url($audio-icon); background-size: cover; height: inherit; }
+.program-icon         { background: url($exec-icon); background-size: cover; height: inherit; }
+.tv-icon              { background: url($audio-icon); background-size: cover; height: inherit; }
+.search-icon          { background: url($search-icon); background-size: cover; height: inherit; }
+.task-icon            { background: url($note-icon); background-size: cover; height: inherit; }
+.video-icon           { background: url($video-icon); background-size: cover; height: inherit; }
+.web-icon             { background: url($web-icon); background-size: cover; height: inherit; }
+.unknown-icon         { background: url($unknown-icon); background-size: cover; height: inherit; }
+
+// Archive
+.a-icon,
+.apk-icon,
+.ar-icon,
+.bz2-icon,
+.cab-icon,
+.cpio-icon,
+.deb-icon,
+.dmg-icon,
+.egg-icon,
+.gz-icon,
+.iso-icon,
+.jar-icon,
+.lha-icon,
+.mar-icon,
+.pea-icon,
+.rar-icon,
+.rpm-icon,
+.s7z-icon,
+.shar-icon,
+.tar-icon,
+.tbz2-icon,
+.tgz-icon,
+.tlz-icon,
+.war-icon,
+.whl-icon,
+.xpi-icon,
+.zip-icon,
+.zipx-icon,
+.xz-icon,
+.pak-icon                 { background: url($archive-icon); background-size: cover; height: inherit; }
+
+// Audio
+.aac-icon,
+.aiff-icon,
+.ape-icon,
+.au-icon,
+.flac-icon,
+.gsm-icon,
+.it-icon,
+.m3u-icon,
+.m4a-icon,
+.mid-icon,
+.mod-icon,
+.mp3-icon,
+.mpa-icon,
+.pls-icon,
+.ra-icon,
+.s3m-icon,
+.sid-icon,
+.wav-icon,
+.wma-icon,
+.xm-icon                { background: url($audio-icon); background-size: cover; height: inherit; }
+
+// Book
+.mobi-icon,
+.epub-icon,
+.azw1-icon,
+.azw3-icon,
+.azw4-icon,
+.azw6-icon,
+.azw-icon,
+.cbr-icon,
+.cbz-icon               { background: url($book-icon); background-size: cover; height: inherit; }
+
+// Code
+.c-icon,
+.cc-icon,
+.class-icon,
+.clj-icon,
+.cpp-icon,
+.cs-icon,
+.cxx-icon,
+.el-icon,
+.go-icon,
+.h-icon,
+.java-icon,
+.lua-icon,
+.m-icon,
+.m4-icon,
+.php-icon,
+.pl-icon,
+.po-icon,
+.py-icon,
+.pyc-icon,
+.pyw-icon,
+.rb-icon,
+.rs-icon,
+.sh-icon,
+.swift-icon,
+.vb-icon,
+.vcxproj-icon,
+.xcodeproj-icon,
+.xml-icon,
+.diff-icon,
+.patch-icon,
+.html-icon,
+.js-icon                { background: url($code-icon); background-size: cover; height: inherit; }
+
+// Exec
+.exe-icon,
+.msi-icon,
+.bin-icon,
+.command-icon,
+.sh-icon,
+.bat-icon,
+.lnk-icon,
+.crx-icon               { background: url($exec-icon); background-size: cover; height: inherit; }
+
+// Fonts
+.eot-icon,
+.otf-icon,
+.ttf-icon,
+.woff-icon,
+.woff2-icon             { background: url($font-icon); background-size: cover; height: inherit; }
+
+// Image
+.max-icon,
+.bmp-icon,
+.dds-icon,
+.gif-icon,
+.jpg-icon,
+.jpeg-icon,
+.png-icon,
+.psd-icon,
+.xcf-icon,
+.tga-icon,
+.thm-icon,
+.tif-icon,
+.tiff-icon,
+.yuv-icon,
+.ai-icon,
+.eps-icon,
+.ps-icon,
+.svg-icon,
+.dwg-icon,
+.dxf-icon,
+.gpx-icon,
+.kml-icon,
+.kmz-icon,
+.webp-icon             { background: url($image-icon); background-size: cover; height: inherit; }
+
+// Sheet
+.ods-icon,
+.xls-icon,
+.xlsx-icon,
+.csv-icon,
+.ics-icon,
+.vcf-icon              { background: url($sheet-icon); background-size: cover; height: inherit; }
+
+// Slide
+.ppt-icon,
+.odp-icon              { background: url($slide-icon); background-size: cover; height: inherit; }
+
+
+// Text
+.doc-icon,
+.docx-icon,
+.ebook-icon,
+.log-icon,
+.md-icon,
+.msg-icon,
+.odt-icon,
+.org-icon,
+.pages-icon,
+.pdf-icon,
+.rtf-icon,
+.rst-icon,
+.tex-icon,
+.txt-icon,
+.wpd-icon,
+.wps-icon              { background: url($text-icon); background-size: cover; height: inherit; }
+
+// Video
+.aaf-icon,
+.asf-icon,
+.avchd-icon,
+.avi-icon,
+.drc-icon,
+.flv-icon,
+.m2v-icon,
+.m4p-icon,
+.m4v-icon,
+.mkv-icon,
+.mng-icon,
+.mov-icon,
+.mp2-icon,
+.mp4-icon,
+.mpe-icon,
+.mpeg-icon,
+.mpg-icon,
+.mpv-icon,
+.mxf-icon,
+.nsv-icon,
+.ogg-icon,
+.ogv-icon,
+.ogm-icon,
+.qt-icon,
+.rm-icon,
+.rmvb-icon,
+.roq-icon,
+.srt-icon,
+.svi-icon,
+.vob-icon,
+.webm-icon,
+.wmv-icon,
+.yuv-icon           { background: url($video-icon); background-size: cover; height: inherit; }
+
+// Settings
+.dll-icon,
+.lib-icon,
+.meta-icon,
+.md-icon            { background: url($settings-icon); background-size: cover; height: inherit; }

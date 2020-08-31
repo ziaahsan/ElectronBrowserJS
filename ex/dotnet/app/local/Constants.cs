@@ -10,5 +10,6 @@ namespace App.Local {
 
         public static readonly String CACHE_DIR = @".\cache";
         public static readonly String CACHE_FILE_WATCHER = $"{CACHE_DIR}\\file-watcher.txt";
+        public static readonly String CACHE_ICONS = $"{CACHE_DIR}\\icons";
     }
 }

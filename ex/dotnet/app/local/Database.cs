@@ -1,7 +1,9 @@
 using System;
 using System.IO;
+using System.Drawing;
 using System.Data.OleDb;
 using System.Collections.Generic;
+
 using Newtonsoft.Json;
 
 namespace App.Local {
@@ -27,8 +29,11 @@ namespace App.Local {
 
         private static Dictionary<string, object> SerializeRow(IEnumerable<string> cols, OleDbDataReader reader) {
             var result = new Dictionary<string, object>();
-            foreach (var col in cols) 
+            foreach (var col in cols) {
+                // if (col.Contains("SYSTEM.ITEMPATHDISPLAY"))
+                //     SaveIcon(reader["SYSTEM.ITEMPATHDISPLAY"].ToString(), reader["SYSTEM.THUMBNAILCACHEID"].ToString());
                 result.Add(col, reader[col]);
+            }
             return result;
         }
 

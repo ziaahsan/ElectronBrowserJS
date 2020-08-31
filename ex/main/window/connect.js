@@ -37,10 +37,10 @@ class Connect {
                     }
                     return
                 }
-                
                 // Send the result back
                 resolve(res)
             })
+            
         })
     }
 

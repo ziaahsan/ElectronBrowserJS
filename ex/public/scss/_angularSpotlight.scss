@@ -166,12 +166,6 @@ $spotlight-responsive-width: 680px;
         color: $result-list-item-font-color;
         background-size: cover;
 
-        .ng-spotlight-apps-folder-icon {
-          background: url('../icons/directory.png');
-          background-size: cover;
-          height: inherit;
-        }
-
         @media only screen and (min-width: $spotlight-responsive-width) {
           display: block;
         }
@@ -259,11 +253,6 @@ $spotlight-responsive-width: 680px;
           &.active {
             color: $result-list-item-hover-font-color;
             background-color: $active-active-list-item-bg;
-          }
-
-          .ng-spotlight-apps-folder-icon {
-            background: url('../icons/directory.png');
-            background-size: cover;
           }
 
           .ng-spotlight-item-name {

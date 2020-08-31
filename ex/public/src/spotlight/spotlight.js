@@ -88,6 +88,8 @@ angular
                 $scope.requestCounter = 0;
 
                 $scope.search = function () {
+                    console.log($scope.requestCounter);
+
                     if ($scope.searchTerm.length > 0 && $scope.requestCounter == 0) {
                         $scope.searchResults = []
                         //@todo: Set time out on cancelling the request you dont want to be waiting forever...
@@ -104,6 +106,7 @@ angular
                 };
 
                 $scope.setSearchResult = function () {
+                    //@todo find a better way to decreease this
                     if ($scope.requestCounter < 0) throw "Requests went to negatives :?";
                     $scope.requestCounter--;
                     if ($scope.requestCounter != 0) return;
@@ -149,6 +152,7 @@ angular
 
                 $scope.recieveMessage = function () {
                     window.addEventListener('message', event => {
+                        //@bug: if any of the below is tru the requestCounter is not decreased...
                         if (event.source != window) return;
                         if (event.data.type == null || event.data.type == undefined || event.data.type != "NG_REQUEST") return;
                         if (event.data.results == null || event.data.results == undefined) return;
@@ -157,9 +161,7 @@ angular
                         switch (event.data.name) {
                           case 'select-directories':
                             var category = {name: 'apps & folders', items: []};
-                            let data = JSON.parse(event.data.results);
-                            console.log(data);
-                            data.forEach(function (result) {
+                            event.data.results.forEach(function (result) {
                                 var item = extractAppsAndFolders(result)
                                 category.items.push(item);
                             });
@@ -174,6 +176,7 @@ angular
                                     contentType: result['SYSTEM.CONTENTTYPE'],
                                     itemType: result['SYSTEM.ITEMTYPE'],
                                     path: result['SYSTEM.ITEMPATHDISPLAY'],
+                                    icon: result['SYSTEM.ICON'],
                                     type: 'apps & folders',
                                     href: '#'
                                 }
@@ -431,8 +434,9 @@ angular
                         <input class="ng-spotlight-input" ng-class="{\'empty\': searchTerm.length === 0}" type="text" placeholder="{{spotlightPlaceholder}}" ng-model="searchTerm" ng-change="search()" ng-model-options="{debounce: 250}"/>\n\n\
                         <div class="ng-spotlight-input-after" ng-if="searchInputInfo.length > 0  && searchTerm.length > 0">&mdash; {{searchInputInfo}}</div>\n\
                         <div class="ng-spotlight-results-icon" ng-if="searchTerm.length > 0">\n\
-                            <img ng-if="getIconForType(selectedItem.type).type == \'url\'" class="ng-spotlight-item-icon" ng-src="{{getIconForType(selectedItem.type).data}}" width="32" height="32">\n\
-                            <div ng-if="getIconForType(selectedItem.type).type == \'css\'" class="ng-spotlight-item-icon {{getIconForType(selectedItem.type).data}}"></div>\n\
+                            <img ng-if="!selectedItem.icon && getIconForType(selectedItem.type).type == \'url\'" class="ng-spotlight-item-icon" ng-src="{{getIconForType(selectedItem.type).data}}" width="32" height="32">\n\
+                            <div ng-if="!selectedItem.icon && getIconForType(selectedItem.type).type == \'css\'" class="ng-spotlight-item-icon {{getIconForType(selectedItem.type).data}}"></div>\n\
+                            <div ng-if="selectedItem.icon" class="ng-spotlight-item-icon {{selectedItem.icon}}"></div>\n\n\
                         </div>\n\
                     </div>\n\
                     <div class="ng-spotlight-info-panel" ng-if="!searchResultsCount || searchTerm.length === 0 || searchResultsCount == 0" >\n\
@@ -451,8 +455,9 @@ angular
                                     <div class="ng-spotlight-results-list-header">{{searchResult.name}}</div>\n\
                                     <ul>\n\
                                         <li class="ng-spotlight-results-list-item"\n ng-repeat="resultItem in searchResult.items"\n ng-class="{\'active\': resultItem.active === true}"\n ng-click="showResultItem(searchResult.name, $index)"\n ng-dblclick="openResultItem()">\n\n\
-                                        <img ng-if="getIconForType(resultItem.type).type == \'url\'" class="ng-spotlight-item-icon" ng-src="{{getIconForType(resultItem.type).data}}">\n\
-                                        <div ng-if="getIconForType(resultItem.type).type == \'css\'" class="ng-spotlight-item-icon {{getIconForType(resultItem.type).data}}"></div>\n\n\
+                                        <img ng-if="!resultItem.icon && getIconForType(resultItem.type).type == \'url\'" class="ng-spotlight-item-icon" ng-src="{{getIconForType(resultItem.type).data}}">\n\
+                                        <div ng-if="!resultItem.icon && getIconForType(resultItem.type).type == \'css\'" class="ng-spotlight-item-icon {{getIconForType(resultItem.type).data}}"></div>\n\n\
+                                        <div ng-if="resultItem.icon" class="ng-spotlight-item-icon {{resultItem.icon}}"></div>\n\n\
                                         <span class="ng-spotlight-item-name">{{resultItem.name.substr(0, 55)}}</span>\n\n\
                                         <span class="info" ng-if="resultItem.info">\n\
                                             {{resultItem.info}}\n\
