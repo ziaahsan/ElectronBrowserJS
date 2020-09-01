@@ -69,6 +69,18 @@ angular
             ENTER: 13
         };
 
+        const validRequests = {
+            programs: {
+                name: "select-programs",
+                type: "apps"
+            },
+
+            folders: {
+                name: "select-folders",
+                type: "folders"
+            },
+        }
+
         var $ngSpotlightOverlay;
 
         return {
@@ -83,22 +95,16 @@ angular
             return ['$scope', function ($scope) {
                 $scope.searchInputInfo = AngularSpotlight.getSearchInputInfoSearching();
                 $scope.spotlightPlaceholder = AngularSpotlight.getSpotlightPlaceholder();
-                $scope.spotlightCommands = AngularSpotlight.getSpotlightCommands();
-
-                $scope.requestCounter = 0;
 
                 $scope.search = function () {
-                    console.log($scope.requestCounter);
-
-                    if ($scope.searchTerm.length > 0 && $scope.requestCounter == 0) {
+                    if ($scope.searchTerm.length > 0) {
                         $scope.searchResults = []
-                        //@todo: Set time out on cancelling the request you dont want to be waiting forever...
+
                         // Request 1
-                        $scope.requestCounter++;
-                        $scope.postMessage("select-directories");
+                        $scope.postMessage(validRequests.programs);
+                        $scope.postMessage(validRequests.folders);
 
                         // Request 2
-                        // $scope.requestCounter++;
                         // AngularSpotlight
                         //     .search($scope.searchTerm, $scope.searchResults)
                         //     .then($scope.setSearchResult);
@@ -106,82 +112,84 @@ angular
                 };
 
                 $scope.setSearchResult = function () {
-                    //@todo find a better way to decreease this
-                    if ($scope.requestCounter < 0) throw "Requests went to negatives :?";
-                    $scope.requestCounter--;
-                    if ($scope.requestCounter != 0) return;
-
-                    $scope.searchResultsCount = $scope.searchResults
-                        .map(function (category) {
-                            return category.items.length;
-                        })
-                        .reduce(function (prev, cur) {
-                            return prev + cur;
-                        }, 0);
+                    $scope.searchResultsCount =
+                        $scope.searchResults
+                                .map(function (category) {
+                                    return category.items.length;
+                                })
+                                .reduce(function (prev, cur) {
+                                    return prev + cur;
+                                }, 0);
 
                     setSearchInputInfo();
                     selectItemAtIndex(0);
                 }
 
-                $scope.setSearchResultsForCommands = function () {
-                    var category = {name: 'commands', items: []};
-                    Object.keys($scope.spotlightCommands).forEach(function (commandName) {
-                        var item = extractCommands(commandName)
-                        category.items.push(item);
-                    });
-
-                    if (category.items.length > 0) {
-                        $scope.searchResults.push(category);
-                    }
-
-                    function extractCommands(commandName) {
-                        return {
-                            name: commandName,
-                            info: $scope.spotlightCommands[commandName].info,
-                            usage: $scope.spotlightCommands[commandName].usage,
-                            cmds: $scope.spotlightCommands[commandName].cmdss,
-                            type: 'commands',
-                            href: '#'
-                        }
-                    }
-                }
-
-                $scope.postMessage = function (requestType) {
-                    window.postMessage({type: requestType, q:$scope.searchTerm});
-                }
+                $scope.postMessage = function (request) {
+                    window.postMessage({type: request.name, q:$scope.searchTerm});
+                };
 
                 $scope.recieveMessage = function () {
-                    window.addEventListener('message', event => {
-                        //@bug: if any of the below is tru the requestCounter is not decreased...
-                        if (event.source != window) return;
-                        if (event.data.type == null || event.data.type == undefined || event.data.type != "NG_REQUEST") return;
-                        if (event.data.results == null || event.data.results == undefined) return;
-                        if (event.data.results.length === 0) return;
+                    window.addEventListener('message', async event => {
+                        if (event.source != window ||
+                            event.data.type == null || event.data.type == undefined || event.data.type != "NG_REQUEST") return;
+
+                        if (event.data.results == null || event.data.results.length == 0) {
+                            $scope.setSearchResult();
+                            $scope.$apply();
+
+                            return
+                        }
 
                         switch (event.data.name) {
-                          case 'select-directories':
-                            var category = {name: 'apps & folders', items: []};
-                            event.data.results.forEach(function (result) {
-                                var item = extractAppsAndFolders(result)
-                                category.items.push(item);
-                            });
+                            case validRequests.programs.name:
+                                var category = {name: validRequests.programs.type, items: []};
+                                event.data.results.forEach(function (result) {
+                                    var item = extractPrograms(result)
+                                    category.items.push(item);
+                                });
 
-                            if (category.items.length > 0) {
-                                $scope.searchResults.push(category);
-                            }
-
-                            function extractAppsAndFolders(result) {
-                                return {
-                                    name: result['SYSTEM.ITEMNAME'],
-                                    contentType: result['SYSTEM.CONTENTTYPE'],
-                                    itemType: result['SYSTEM.ITEMTYPE'],
-                                    path: result['SYSTEM.ITEMPATHDISPLAY'],
-                                    icon: result['SYSTEM.ICON'],
-                                    type: 'apps & folders',
-                                    href: '#'
+                                if (category.items.length > 0) {
+                                    $scope.searchResults.push(category);
                                 }
-                            }
-                            break;
+
+                                function extractPrograms(result) {
+                                    return {
+                                        name: result['SYSTEM.ITEMNAMEDISPLAYWITHOUTEXTENSION'],
+                                        contentType: result['SYSTEM.CONTENTTYPE'],
+                                        itemType: result['SYSTEM.ITEMTYPE'],
+                                        itemTypeText: result['SYSTEM.ITEMTYPETEXT'],
+                                        path: result['SYSTEM.ITEMPATHDISPLAY'],
+                                        icon: result['SYSTEM.ICON'],
+                                        type: validRequests.programs.type,
+                                        href: '#'
+                                    }
+                                }
+                                break
+                            case validRequests.folders.name:
+                                var category = {name: validRequests.folders.type, items: []};
+                                event.data.results.forEach(function (result) {
+                                    var item = extractFolders(result)
+                                    category.items.push(item);
+                                });
+
+                                if (category.items.length > 0) {
+                                    $scope.searchResults.push(category);
+                                }
+
+                                function extractFolders(result) {
+                                    return {
+                                        name: result['SYSTEM.ITEMNAMEDISPLAYWITHOUTEXTENSION'],
+                                        contentType: result['SYSTEM.CONTENTTYPE'],
+                                        itemType: result['SYSTEM.ITEMTYPE'],
+                                        itemTypeText: result['SYSTEM.ITEMTYPETEXT'],
+                                        path: result['SYSTEM.ITEMPATHDISPLAY'],
+                                        icon: result['SYSTEM.ICON'],
+                                        type: validRequests.folders.type,
+                                        href: '#'
+                                    }
+                                }
+                                break;
                         }
 
                         $scope.setSearchResult();
@@ -503,9 +511,7 @@ angular
                     getSearchInputInfoSearching: _defaultSpotlightConfig.getSearchInputInfoSearching,
                     getSearchInputInfoNoResults: _defaultSpotlightConfig.getSearchInputInfoNoResults,
                     getSpotlightPlaceholder: _defaultSpotlightConfig.getSpotlightPlaceholder,
-                    getSpotlightToggleCtrlKey: _defaultSpotlightConfig.getSpotlightToggleCtrlKey,
-                    getSpotlightCommandDelimiter: _defaultSpotlightConfig.getSpotlightCommandDelimiter,
-                    getSpotlightCommands: _defaultSpotlightConfig.getSpotlightCommands
+                    getSpotlightToggleCtrlKey: _defaultSpotlightConfig.getSpotlightToggleCtrlKey
                 };
             }]
         };
@@ -550,10 +556,13 @@ angular
         function detailsTemplateConfig() {
             var detailsTemplates = {
                 'default': '\
-                    <div class="ng-spotlight-results-detail-default">\
-                        <img ng-if="getIconForType(selectedItem.type).type == \'url\'" class="ng-spotlight-item-icon" ng-src="{{getIconForType(selectedItem.type).data}}" width="64" height="64" />\
-                        <div ng-if="getIconForType(selectedItem.type).type == \'css\'" class="ng-spotlight-item-icon {{getIconForType(selectedItem.type).data}}"></div>\
-                        <div class="name">{{selectedItem.name}}</div>\
+                    <div class="ng-spotlight-results-detail-default">\n\
+                        <div ng-if="selectedItem.icon" class="icon-image {{selectedItem.icon}}"></div>\n\
+                        <span class="title">{{selectedItem.name}}</span>\n\
+                        <span class="type">\n\
+                            {{selectedItem.type}}\n\
+                            <span ng-if="selectedItem.itemTypeText != null">&middot; {{selectedItem.itemTypeText}}</span>\n\
+                        </span>\n\
                     </div>'
             };
 
@@ -580,24 +589,6 @@ angular
             var searchInputInfoNoResults = 'Keine Ergebnisse';
             var spotlightPlaceholder = 'Spotlight-Suche';
             var spotlightToggleCtrlKey = KEY_SPACE;
-            var spotlightCommandDelimiter = ':';
-            var spotlightCommands = {
-                add: {
-                    info: 'Add to you favourite things.',
-                    usage: 'Usage: Place :add command followed by adding: auth and you will have a modal to setup an auth system (ie: :add auth).',
-                    cmds: ['auth', 'authenticator']
-                },
-                git: {
-                    info: 'Control all of your gits with one command.',
-                    usage: 'Usage: Place :git command followed by adding: github or gitlab and you will have a modal to setup an auth system (ie: :git github).',
-                    cmds: ['github', 'gitlab']
-                },
-                upload: {
-                    info: 'Upload items to your favourite palce.',
-                    usage: 'Usage: Place :upload command followed by adding: file or directory and the name of connector.',
-                    cmds: ['file', 'directory']
-                },
-            };
 
             function setSearchInputInfoSearching(text) {
                 searchInputInfoSearching = text;
@@ -631,14 +622,6 @@ angular
                 return spotlightToggleCtrlKey;
             }
 
-            function getSpotlightCommandDelimiter() {
-                return spotlightCommandDelimiter;
-            }
-
-            function getSpotlightCommands() {
-                return spotlightCommands;
-            }
-
             return {
                 setSearchInputInfoSearching: setSearchInputInfoSearching,
                 getSearchInputInfoSearching: getSearchInputInfoSearching,
@@ -647,9 +630,7 @@ angular
                 setSpotlightPlaceholder: setSpotlightPlaceholder,
                 getSpotlightPlaceholder: getSpotlightPlaceholder,
                 setSpotlightToggleCtrlKey: setSpotlightToggleCtrlKey,
-                getSpotlightToggleCtrlKey: getSpotlightToggleCtrlKey,
-                getSpotlightCommandDelimiter: getSpotlightCommandDelimiter,
-                getSpotlightCommands: getSpotlightCommands
+                getSpotlightToggleCtrlKey: getSpotlightToggleCtrlKey
             }
         }
     });

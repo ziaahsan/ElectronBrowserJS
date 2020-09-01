@@ -28,12 +28,12 @@
 
                 // Adding custom templates
                 AngularSpotlightProvider.addTemplates({
-                    'apps & folders': 'templates/apps-folders.html'
+                    
                 });
 
                 // Adding custom icons
                 AngularSpotlightProvider.addIcons({
-                    'apps & folders': 'ng-spotlight-apps-folder-icon'
+                    
                 });
             })();
         });

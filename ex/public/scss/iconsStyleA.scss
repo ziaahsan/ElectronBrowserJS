@@ -1,4 +1,4 @@
-// Files
+// Extension Icons
 $archive-icon: "../icons/styleA/files/archive.png";
 $audio-icon: "../icons/styleA/files/audio.png";
 $blank-icon: "../icons/styleA/files/blank.png";
@@ -9,11 +9,14 @@ $communication-icon: "../icons/styleA/files/communication.png";
 $contacts-icon: "../icons/styleA/files/contacts.png";
 $document-icon: "../icons/styleA/files/document.png";
 $exec-icon: "../icons/styleA/files/exec.png";
+$feed-icon: "../icons/styleA/files/feed.png";
 $folder-icon: "../icons/styleA/files/folder.png";
 $font-icon: "../icons/styleA/files/font.png";
 $games-icon: "../icons/styleA/files/games.png";
 $home-icon: "../icons/styleA/files/home.png";
 $image-icon: "../icons/styleA/files/image.png";
+$journal-icon: "../icons/styleA/files/journal.png";
+$link-icon: "../icons/styleA/files/link.png";
 $mail-icon: "../icons/styleA/files/mail.png";
 $message-icon: "../icons/styleA/files/message.png";
 $note-icon: "../icons/styleA/files/note.png";
@@ -32,12 +35,12 @@ $web-icon: "../icons/styleA/files/web.png";
 .contacts-icon        { background: url($contacts-icon); background-size: cover; height: inherit; }
 .document-icon        { background: url($document-icon); background-size: cover; height: inherit; }
 .mail-icon            { background: url($mail-icon); background-size: cover; height: inherit; }
-.feed-icon            { background: url($home-icon); background-size: cover; height: inherit; }
+.feed-icon            { background: url($feed-icon); background-size: cover; height: inherit; }
 .folder-icon          { background: url($folder-icon); background-size: cover; height: inherit; }
-.game-icon            { background: url($game-icon); background-size: cover; height: inherit; }
+.games-icon           { background: url($games-icon); background-size: cover; height: inherit; }
 .message-icon         { background: url($message-icon); background-size: cover; height: inherit; }
-.journal-icon         { background: url($unknown-icon); background-size: cover; height: inherit; }
-.link-icon            { background: url($unknown-icon); background-size: cover; height: inherit; }
+.journal-icon         { background: url($journal-icon); background-size: cover; height: inherit; }
+.link-icon            { background: url($link-icon); background-size: cover; height: inherit; }
 .movie-icon           { background: url($audio-icon); background-size: cover; height: inherit; }
 .music-icon           { background: url($audio-icon); background-size: cover; height: inherit; }
 .note-icon            { background: url($note-icon); background-size: cover; height: inherit; }

@@ -1,6 +1,4 @@
 using System;
-using System.IO;
-using System.Drawing;
 using System.Data.OleDb;
 using System.Collections.Generic;
 

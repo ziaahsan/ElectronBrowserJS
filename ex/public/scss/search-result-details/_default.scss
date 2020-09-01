@@ -1,13 +1,27 @@
 .ng-spotlight-results-detail-default {
+  position: relative;
+  display: block;
   text-align: center;
-  font-size: 16px;
-  padding: 105px 50px;
-
-  .ng-spotlight-item-icon {
-    font-size: 32px;
+  padding: 22px;
+  margin-top: 62px;
+  .icon-image {
+      position: relative;
+      width: 72px;
+      height: 72px;
+      margin: 22px auto;
   }
-
-  .name {
-    margin-top: 15px;
+  .title {
+      position: relative;
+      display: block;
+      font-size: 22px;
+      word-break: break-all;
+      color: darken($results-detail-font-color, 10);
+  }
+  .type {
+      position: relative;
+      font-size: 12px;
+      font-weight: 500;
+      text-transform: capitalize;
+      color: darken($results-detail-font-color, 20);
   }
 }
