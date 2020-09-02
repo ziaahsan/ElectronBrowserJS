@@ -1,4 +1,5 @@
 // Maps extensions to various .Search folders.
+// @Ref:https://docs.microsoft.com/en-us/windows/win32/properties/props-system-kind
 module.exports = {
     KIND_CALENDAR: {
         mnemonics: "calendar|calendars|meeting|meetings|appointment|appointments",

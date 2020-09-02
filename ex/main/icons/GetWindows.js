@@ -14,7 +14,7 @@ module.exports = (item) => {
       })
   } else if (item['SYSTEM.FILEEXTENSION'] && item['SYSTEM.FILEEXTENSION'] != null) {
     item['SYSTEM.FILEEXTENSION'] = item['SYSTEM.FILEEXTENSION'].substr(1)
-    item["SYSTEM.ICON"] = `${item['SYSTEM.FILEEXTENSION']}-icon`.toLocaleLowerCase()
+    item["SYSTEM.ICON"] = `${item['SYSTEM.FILEEXTENSION']}-icon`.toLowerCase()
   } else {
     item["SYSTEM.ICON"] = kinds["KIND_UNKNOWN"].css
   }

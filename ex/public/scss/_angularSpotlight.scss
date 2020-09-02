@@ -18,7 +18,7 @@ $result-list-item-font-color: #ffffff !default;
 $result-list-item-hover-font-color: #ffffff !default;
 
 // Colors for borders
-$searchbar-border-color: #515253 !default;
+$searchbar-border-color: rgba(#515253, $alpha) !default;
 $results-list-border-color: #515253 !default;
 $overlay-border-color: none !default;
 
@@ -51,6 +51,92 @@ $spotlight-responsive-width: 680px;
 }
 
 .ng-spotlight {
+
+  // Global
+  a, a:link, a:active, a:visited, a:hover {
+    color: $results-detail-font-color;
+  }
+  .ng-cards {
+    padding: 12px 6px;
+    color: $results-detail-font-color;
+    background-color: $results-detail-bg;
+    border-top: 1px solid $searchbar-border-color;
+    .ng-card {
+      width: 23%;
+      height: 122px;
+      border-radius: 4px;
+      margin: 4px 6px;
+      display: inline-block;
+      .ng-info {
+        position: relative;
+        padding: 12px;
+        .title {
+          font-size: 16px;
+          font-weight: 600;
+          display: block;
+        }
+        .description {
+          font-size: 12px;
+          font-weight: 500;
+        }
+      }
+    }
+  }
+
+  // Settings overlay
+  &.ng-settings-overlay {
+    position: absolute;
+    top: 20%;
+    left: 1%;
+    z-index: 2147483647;
+    width: 98%;
+    display: none;
+    font-size: 12px;
+    letter-spacing: 0.3px;
+
+    @if $overlay-border-color != "none" {
+      border: 1px solid $overlay-border-color;
+    }
+
+    font-family: $font-family;
+    box-shadow: 0 12px 15px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19);
+    border-radius: 6px;
+    overflow: hidden;
+
+    @media only screen and (min-width: $spotlight-responsive-width) {
+      left: 50%;
+      margin-left: (-$ng-spotlight-w/2);
+      width: $ng-spotlight-w;
+    }
+
+    .ng-settings {
+      height: auto;
+      color: $results-detail-font-color;
+      background-color: $results-detail-bg;
+      padding: 16px;
+      text-align: left;
+      .nav-arrow {
+        position: relative;
+        display: inline-block;
+        padding-right: 12px;
+      }
+      .title {
+        font-size: 14px;
+        font-weight: 600;
+        display: block;
+      }
+      .description {
+        font-size: 12px;
+        font-weight: 500;
+        max-width: 650px;
+        margin: 0 auto;
+        line-height: 22px;
+        padding-left: 28px;
+      }
+    }
+  }
+
+  // Spotlight overlay
   &.ng-spotlight-overlay {
     position: absolute;
     top: 20%;
@@ -292,4 +378,3 @@ $spotlight-responsive-width: 680px;
     }
   }
 }
-

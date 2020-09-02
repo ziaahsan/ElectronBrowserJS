@@ -9,7 +9,7 @@ conn.build()
 const validRequestTypes = ['select-programs', 'select-folders']
 
 
-// Simply adds icon to the data it it can
+// Simply adds icon to the data if it can
 async function attachIconToResults(data) {
     return await new Promise((resolve, reject) => {
         data = JSON.parse(data)

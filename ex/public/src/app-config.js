@@ -1,9 +1,11 @@
 (function () {
     angular
-        .module('de.devjs.angular.app', ['ngRoute', 'de.devjs.angular.spotlight'])
-        .config((AngularSpotlightProvider, $routeProvider) => {
+        .module('de.devjs.angular.app', ['ngRoute', 'de.devjs.angular.spotlight', 'de.devjs.angular.settings'])
+        .config((AngularSpotlightProvider, SettingsProvider,  $routeProvider) => {
             // Routing
-            $routeProvider.when("/", { templateUrl : "src/spotlight/view.html"});
+            $routeProvider
+                .when("/", { templateUrl : "src/spotlight/view.html"})
+                .when("/settings", { templateUrl : "src/settings/view.html"});
 
             // AngularSpotlightProvider Default Settings
             (() => {
@@ -11,7 +13,7 @@
                 AngularSpotlightProvider.setSearchInputInfoSearching("Searching...");
                 AngularSpotlightProvider.setSearchInputInfoNoResults("No Results");
                 AngularSpotlightProvider.setSpotlightPlaceholder("Spotlight Search");
-                AngularSpotlightProvider.setSpotlightToggleCtrlKey(toggleKey); // Ctrl + B
+                AngularSpotlightProvider.setSpotlightToggleCtrlKey(toggleKey);
 
                 // Adding search results
                 AngularSpotlightProvider.search = function ($http, $q) {

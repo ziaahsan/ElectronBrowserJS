@@ -4,8 +4,8 @@ $searchbar-bg: rgba(#e6e7e8, $alpha);
 $results-list-bg: rgba(#e5e7e8, $alpha);
 $results-detail-bg: rgba(rgb(229, 230, 232), $alpha);
 $result-list-header-bg: rgba(155, 155, 155, 0.175);
-$scroll-track-bar-bg: rgba(#e5e7e8, $alpha) !default;
-$scroll-track-bar: rgba(185, 185, 185, $alpha) !default;
+$scroll-track-bar-bg: rgba(#e5e7e8, $alpha);
+$scroll-track-bar: rgba(185, 185, 185, $alpha);
 $active-active-list-item-bg: #337ef1;
 $icon-magnifier-color: #635d5c;
 
@@ -18,12 +18,12 @@ $result-list-item-font-color: #333435;
 $result-list-item-hover-font-color: #ffffff;
 
 // Colors for borders
-$searchbar-border-color: #cccecf;
+$searchbar-border-color: rgba(240,240,240, $alpha);
 $results-list-border-color: #d6d7d9;
 $overlay-border-color: rgba(#333435, 0.1);
 
 // Tag colors
-$default-tag-color: rgba(#e6e7e8, 0.97) !default;
+$default-tag-color: rgba(#e6e7e8, 0.97);
 
 // Widths
 $ng-spotlight-w: 800px;
