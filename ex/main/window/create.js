@@ -1,7 +1,12 @@
 "use strict";
+// Setup is dev
 const isDev = require('electron-is-dev');
+
+// Setup consts for window
 const { globalShortcut } = require('electron')
 const { BrowserWindow } = require('glasstron')
+
+// path config abs
 const path = require('path')
 
 let mainWindow = null
@@ -25,7 +30,6 @@ module.exports = (app) => {
         vibrancy: "fullscreen-ui",
 
         webPreferences: {
-          nodeIntegration: false,
           preload: path.join(__dirname, 'preload.js'),
         }
       })

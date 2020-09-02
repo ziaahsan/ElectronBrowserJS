@@ -1,4 +1,8 @@
+"use strict";
+// Setup dev
 const isDev = require('electron-is-dev')
+
+// Cons for attaching icons
 const getWindowsIcons = require('../icons/GetWindows')
 
 // Setup c# connection
@@ -8,6 +12,8 @@ conn.build()
 // Valid requests from front-end
 const validRequestTypes = ['select-programs', 'select-folders']
 
+// Queue request, @todo: If there is another request of same type it's ignored.
+let queuedRequests = []
 
 // Simply adds icon to the data if it can
 async function attachIconToResults(data) {
@@ -18,21 +24,18 @@ async function attachIconToResults(data) {
     })
 }
 
-let queuedRequests = []
-
+//@todo: create all async tasks as try-catch
 class Requests {
     static fetch = async (event) => {
-        let valid = true
+        if (event.data.type == null || event.data.type == undefined || !validRequestTypes.includes(event.data.type)) return
 
-        if (event.source != window) valid = false
-        if (event.data.type == null || event.data.type == undefined || !validRequestTypes.includes(event.data.type)) valid = false
-        if (queuedRequests[event.data.type]) valid = false
+        // Already in queue
+        if (queuedRequests[event.data.type]) return
 
-        if (!valid) return;
-
-        // add it to the list
+        // Add it to queue
         queuedRequests[event.data.type] = event
         
+        // Wait on prmoises
         await new Promise((resolve, reject) => {
             switch(event.data.type) {
                 case validRequestTypes[0]:
@@ -53,27 +56,29 @@ class Requests {
     static requestPrograms = async (event) => {
         // Setting up the c# request
         conn.send(event.data.type, event.data.q)
+
         let data = await conn.recievedPrograms()
         data = await attachIconToResults(data)
 
+        // Send data to front-end
+        event.sender.send('add-request-response', event.data.type, data)
+
         // request completed remove it
         this.remove(event)
-
-        // Send data to front-end
-        window.postMessage({type: "NG_REQUEST", name:event.data.type, results:data})
     }
 
     static requestFolders = async (event) => {
         // Setting up the c# request
         conn.send(event.data.type, event.data.q)
+
         let data = await conn.recievedFolders()
         data = await attachIconToResults(data)
         
+        // Send data to front-end
+        event.sender.send('add-request-response', event.data.type, data)
+
         // request completed remove it
         this.remove(event)
-
-        // Send data to front-end
-        window.postMessage({type: "NG_REQUEST", name:event.data.type, results:data})
     }
 }
 

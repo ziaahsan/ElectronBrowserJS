@@ -1,3 +1,4 @@
+"use strict";
 // Setting up configuration
 const config = require('config');
 

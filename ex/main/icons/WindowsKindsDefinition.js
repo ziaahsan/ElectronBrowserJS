@@ -1,3 +1,4 @@
+"use strict";
 // Maps extensions to various .Search folders.
 // @Ref:https://docs.microsoft.com/en-us/windows/win32/properties/props-system-kind
 module.exports = {

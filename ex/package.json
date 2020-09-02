@@ -14,7 +14,8 @@
   "author": "",
   "license": "",
   "devDependencies": {
-    "electron": "^9.2.0"
+    "electron": "^10.1.1",
+    "electron-packager": "^15.1.0"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.14.0",
@@ -23,7 +24,6 @@
     "config": "^3.3.1",
     "electron-cgi": "^1.0.5",
     "electron-is-dev": "^1.2.0",
-    "electron-packager": "^15.0.0",
     "glasstron": "0.0.4",
     "jquery": "^3.5.1",
     "otplib": "^12.0.1"

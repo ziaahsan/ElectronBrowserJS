@@ -1,3 +1,4 @@
+"use strict";
 // Requires windows kind definitions file
 const kinds = require('./WindowsKindsDefinition')
 

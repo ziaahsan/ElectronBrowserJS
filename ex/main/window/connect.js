@@ -1,5 +1,7 @@
+"use strict";
 // Setting up configuration
 const config = require('config')
+// Setting up dev
 const isDev = require('electron-is-dev')
 // For dotNet connection
 const { ConnectionBuilder } = require("electron-cgi")
