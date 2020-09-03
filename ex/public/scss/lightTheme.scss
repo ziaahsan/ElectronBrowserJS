@@ -1,31 +1,22 @@
-// Le background colors
-$alpha: 0.87;
-$searchbar-bg: rgba(#e6e7e8, $alpha);
-$results-list-bg: rgba(#e5e7e8, $alpha);
-$results-detail-bg: rgba(rgb(229, 230, 232), $alpha);
-$result-list-header-bg: rgba(155, 155, 155, 0.175);
-$scroll-track-bar-bg: rgba(#e5e7e8, $alpha);
-$scroll-track-bar: rgba(185, 185, 185, $alpha);
-$active-active-list-item-bg: #337ef1;
+$alpha: 0.97;
+
+// Primary
+$primary: rgba(225, 225, 225, $alpha) !default;
+$secondary: rgba(210, 210, 210, $alpha) !default;
+
+$primary-highlight: #337ef1;
 $icon-magnifier-color: #635d5c;
 
+// Font
+$font-family: 'Open Sans', sans-serif;
+
 // Font colors
-$results-detail-font-color: #333435;
-$searchbar-input-font-color: #333435;
-$result-list-header-font-color: #333435;
-$placeholder-font-color: #606162;
-$result-list-item-font-color: #333435;
-$result-list-item-hover-font-color: #ffffff;
+$primary-color: rgba(25, 25, 25, $alpha);
+$primary-color-dark: rgba(20, 20, 20, $alpha);
 
 // Colors for borders
-$searchbar-border-color: rgba(200, 200, 200, $alpha);
-$results-list-border-color: #d6d7d9;
+$border-color: rgba(215, 215, 215, $alpha) !default;
 $overlay-border-color: rgba(#333435, 0.1);
 
-// Tag colors
-$default-tag-color: rgba(#e6e7e8, 0.97);
-
-// Widths
-$ng-spotlight-w: 800px;
 
 @import "_angularSpotlight";

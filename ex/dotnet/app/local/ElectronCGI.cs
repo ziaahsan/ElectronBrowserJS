@@ -23,7 +23,7 @@ namespace App.Local {
         private Task SelectPrograms(String term) {
             var query = String.Format(
                             @"  
-                                SELECT TOP 5
+                                SELECT TOP 20
                                 System.Search.Rank, System.ItemNameDisplayWithoutExtension,
                                 System.Kind, System.DateModified, System.DateAccessed, System.RatingText, System.Keywords,
                                 System.Size, System.ContentType, System.ItemType, System.ItemPathDisplay,
@@ -60,7 +60,7 @@ namespace App.Local {
 
         public void BuildRecievingRequests() {
             if (_connection == null) return;
-            
+
             _connection.On("select-programs", async (String query) => {
                 await SelectPrograms(query);
             });

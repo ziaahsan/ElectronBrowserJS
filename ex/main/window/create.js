@@ -30,6 +30,8 @@ module.exports = (app) => {
         vibrancy: "fullscreen-ui",
 
         webPreferences: {
+          worldSafeExecuteJavaScript: true,
+          contextIsolation: true,
           preload: path.join(__dirname, 'preload.js'),
         }
       })

@@ -1,11 +1,11 @@
 (function () {
     angular
-        .module('de.devjs.angular.app', ['ngRoute', 'de.devjs.angular.spotlight', 'de.devjs.angular.settings'])
-        .config((AngularSpotlightProvider, SettingsProvider,  $routeProvider) => {
+        .module('de.devjs.angular.app', ['ngRoute', 'ngAnimate', 'de.devjs.angular.spotlight', 'de.devjs.angular.pins', 'de.devjs.angular.appstore'])
+        .config((AngularSpotlightProvider, PinsProvider, AppStoreProvider,  $routeProvider) => {
             // Routing
             $routeProvider
                 .when("/", { templateUrl : "src/spotlight/view.html"})
-                .when("/settings", { templateUrl : "src/settings/view.html"});
+                .when("/appstore", { templateUrl : "src/appstore/view.html"});
 
             // AngularSpotlightProvider Default Settings
             (() => {

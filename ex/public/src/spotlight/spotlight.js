@@ -132,7 +132,7 @@ angular
                 $scope.recieveMessage = function () {
                     window.addEventListener('message', async event => {
                         if (event.source != window ||
-                            event.data.type == null || event.data.type == undefined || event.data.type != "NG_REQUEST") return;
+                            event.data.type == null || event.data.type == undefined || event.data.type != "SPOTLIGHT_REQUEST") return;
 
                         if (event.data.results == null || event.data.results.length == 0) {
                             $scope.setSearchResult();
@@ -441,9 +441,9 @@ angular
                         </div>\n\n\
                         <input class="ng-spotlight-input" ng-class="{\'empty\': searchTerm.length === 0}" type="text" placeholder="{{spotlightPlaceholder}}" ng-model="searchTerm" ng-change="search()" ng-model-options="{debounce: 250}"/>\n\n\
                         <div class="ng-spotlight-input-after" ng-if="searchInputInfo.length > 0  && searchTerm.length > 0">&mdash; {{searchInputInfo}}</div>\n\
-                        <div class="ng-spotlight-results-icon" ng-if="!searchTerm">\n\
+                        <div class="ng-spotlight-results-icon" ng-if="!searchResultsCount || searchTerm.length === 0 || searchResultsCount == 0">\n\
                             <div class="ng-spotlight-item-icon">\n\
-                                <a href="#!/settings"><i class="fas fa-cog fa-xs"></i></a>\n\
+                                <a href="#!/appstore"><i class="fas fa-cog fa-xs"></i></a>\n\
                             </div>\n\
                         </div>\n\
                         <div class="ng-spotlight-results-icon" ng-if="searchTerm.length > 0">\n\

@@ -1,14 +1,14 @@
 angular
-    .module('de.devjs.angular.settings', [])
-    .directive('settingsOverlay', ['$timeout', '$http', '$compile', 'Settings', function ($timeout, $http, $compile, Settings) {
-        var $ngSettingsOverlay;
+    .module('de.devjs.angular.appstore', [])
+    .directive('appstoreOverlay', ['$timeout', '$http', '$compile', 'AppStore', function ($timeout, $http, $compile, AppStore) {
+        var $ngAppStoreOverlay;
 
         return {
             restrict: 'E',
             replace: true,
             controller: controller(),
             link: link,
-            templateUrl: 'settingsOverlay.html'
+            templateUrl: 'appstoreOverlay.html'
         };
 
         function controller() {
@@ -16,7 +16,7 @@ angular
         }
 
         function link(scope, element) {
-            $ngSettingsOverlay = $(element);
+            $ngAppStoreOverlay = $(element);
 
             $(document)
                 .ready(function() {
@@ -24,25 +24,25 @@ angular
                 });
 
             function toggleOverlay() {
-                $ngSettingsOverlay.toggle();
+                $ngAppStoreOverlay.toggle();
             }
 
         }
     }]);
 
 angular
-    .module("de.devjs.angular.settings")
+    .module("de.devjs.angular.appstore")
     .run([
         "$templateCache",
         function ($templateCache) {
             $templateCache.put(
-                "settingsOverlay.html",
-                '<div class="ng-spotlight ng-settings-overlay">\n\
-                    <div class="ng-settings">\n\
+                "appstoreOverlay.html",
+                '<div class="ng-spotlight ng-appstore-overlay">\n\
+                    <div class="ng-header">\n\
                         <span class="title">\n\
-                            <span class="nav-arrow"><a href="#!/"><i class="fas fa-arrow-left"></i></span></a> Application Settings\n\
+                            <span class="nav-arrow"><a href="#!/"><i class="fas fa-arrow-left"></i></span></a> App Store\n\
                         </span>\n\
-                        <span class="description">Configure all your settings by selectring apps below.</span>\n\
+                        <span class="description">Configure all your apps below.</span>\n\
                     </div>\n\
                     <div class="ng-cards">\n\
                         <div class="ng-card">\n\
@@ -69,6 +69,18 @@ angular
                                 <span class="description">Manage all your auths with windows.</span>\n\
                             </div>\n\
                         </div>\n\
+                        <div class="ng-card">\n\
+                            <div class="ng-info">\n\
+                                <span class="title">Messages</span>\n\
+                                <span class="description">Connect your phone with windows.</span>\n\
+                            </div>\n\
+                        </div>\n\
+                        <div class="ng-card">\n\
+                            <div class="ng-info">\n\
+                                <span class="title">Subscribe</span>\n\
+                                <span class="description">Subscribe to any thing with windows.</span>\n\
+                            </div>\n\
+                        </div>\n\
                     </div>\n\
                 </div>'
             );
@@ -76,8 +88,8 @@ angular
     ]);
 
 angular
-    .module('de.devjs.angular.settings')
-    .provider("Settings", function () {
+    .module('de.devjs.angular.appstore')
+    .provider("AppStore", function () {
 
         return {
             $get: ['$http', '$q', function ($http, $q) {

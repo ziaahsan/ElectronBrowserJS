@@ -14,7 +14,7 @@
         "
     >
 
-    <title>Angular</title>
+    <title>Windows Search</title>
 
     <!-- Required Dependencies -->
     <script src="../node_modules/jquery/dist/jquery.min.js"></script>
@@ -31,12 +31,15 @@
     <!-- AngularJS -->
     <script src="../node_modules/angular/angular.js"></script>
     <script src="../node_modules/angular-route/angular-route.min.js"></script>
+    <script src="../node_modules/angular-animate/angular-animate.min.js"></script>    
 
     <script src="src/app-config.js"></script>
     <script src="src/app-theme-config.js"></script>
-
+    
+    <!-- Angular Components -->
+    <script src="src/pins/pins.js"></script>
     <script src="src/spotlight/spotlight.js"></script>
-    <script src="src/settings/settings.js"></script>
+    <script src="src/appstore/appstore.js"></script>
 
 </head>
 <body ng-app="de.devjs.angular.app">
@@ -45,6 +48,6 @@
         <a class="btn btn-theme" data-theme="dark">Dark</a>
         <a class="btn btn-theme" data-theme="light">Light</a>
     </div>
-    <ng-view></ng-view>
+    <ng-view class="view"></ng-view>
 </body>
 </html>

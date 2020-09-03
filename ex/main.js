@@ -6,6 +6,8 @@ const authenticator = require('./main/authenticator/totp')
 
 // Setting up IPC
 ipcMain.handle('add-requests', (event, data) => {
+    // We're adding data to the reqeust
+    // because in the requests.fetch we want to event.sender.send
     event.data = data
     requests.fetch(event)
 });

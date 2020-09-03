@@ -26,7 +26,7 @@ async function attachIconToResults(data) {
 
 //@todo: create all async tasks as try-catch
 class Requests {
-    static fetch = async (event) => {
+    static fetch = (event) => {
         if (event.data.type == null || event.data.type == undefined || !validRequestTypes.includes(event.data.type)) return
 
         // Already in queue
@@ -35,17 +35,15 @@ class Requests {
         // Add it to queue
         queuedRequests[event.data.type] = event
         
-        // Wait on prmoises
-        await new Promise((resolve, reject) => {
-            switch(event.data.type) {
-                case validRequestTypes[0]:
-                   this.requestPrograms(event)
-                   break
-                case validRequestTypes[1]:
-                    this.requestFolders(event)
-                    break
-            }
-        })
+        // Simply call and move on
+        switch(event.data.type) {
+            case validRequestTypes[0]:
+                this.requestPrograms(event)
+                break
+            case validRequestTypes[1]:
+                this.requestFolders(event)
+                break
+        }
     }
 
     static remove = (event) => {
@@ -73,7 +71,7 @@ class Requests {
 
         let data = await conn.recievedFolders()
         data = await attachIconToResults(data)
-        
+
         // Send data to front-end
         event.sender.send('add-request-response', event.data.type, data)
 

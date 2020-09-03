@@ -5,10 +5,16 @@ const config = require('config')
 const isDev = require('electron-is-dev')
 // For dotNet connection
 const { ConnectionBuilder } = require("electron-cgi")
+
+// Setting up the connection with .Net
 var conn = null
 
+
+//@todo: async calls to try-catch
+//@todo: convert check for conn != null to something like conn.active?
 class Connect {
     
+    // Building up .Net connection
     static build = () => {
         if (conn != null) {
             if (isDev) console.log("Another connection already active...")
@@ -25,6 +31,7 @@ class Connect {
         }
     }
 
+    // Call coming in from (for now .Net)
     static recievedPrograms = async () => {
         if (conn == null) throw "Connect.js: No connection."
         
@@ -33,6 +40,7 @@ class Connect {
         })
     }
     
+    // Call coming in from (for now .Net)
     static recievedFolders = async () => {
         if (conn == null) throw "Connect.js: No connection."
         
@@ -41,11 +49,13 @@ class Connect {
         })
     }
 
+    // Call sent to (.Net)
     static send = (requestType, name) => {
         if (conn == null) throw "Connect.js: No connection."
         conn.send(requestType, name);
     }
 
+    // Close the connection w/ .Net
     static close = () => {
         if (conn == null) {
             if (isDev) console.log("There's no connection to close...")

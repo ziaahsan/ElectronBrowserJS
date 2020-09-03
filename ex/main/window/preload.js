@@ -15,5 +15,6 @@ process.once('loaded', () => {
 
   // Send it forward to NG from IPC
   //@todo: Check if windows.post is the correct way to broadcast as of now this broad cast the data to everything...
-  ipcRenderer.on('add-request-response', (event, requestName, requestData) => window.postMessage({type: "NG_REQUEST", name:requestName, results:requestData}))
+  //@todo: Answer to above todo: https://stackoverflow.com/questions/36286592/how-to-integrate-electron-ipcrenderer-into-angular-2-app-based-on-typescript
+  ipcRenderer.on('add-request-response', (event, requestName, requestData) => window.postMessage({type: "SPOTLIGHT_REQUEST", name:requestName, results:requestData}))
 })

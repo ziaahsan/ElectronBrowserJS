@@ -1,6 +1,5 @@
 ﻿// using ElectronCgi.DotNet;
 using System;
-using System.Drawing;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
@@ -11,7 +10,6 @@ namespace App {
         static List<Task> _tasks = new List<Task>();
 
         static void Main(String[] args) {
-            
             _tasks.Add(
                 Task.Run(() => {
                     // Establish database
