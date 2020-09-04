@@ -49,7 +49,7 @@ $spotlight-responsive-width: 680px !default;
     background-color: $primary;
     .ng-card {
       width: 23%;
-      height: 87px;
+      min-height: 87px;
       border-radius: 4px;
       margin: 4px 6px;
       display: inline-block;
@@ -61,11 +61,22 @@ $spotlight-responsive-width: 680px !default;
           font-weight: 600;
           display: block;
         }
+        .command {
+          font-size: 11px;
+          font-weight: 700;
+          color: darken($primary-color-dark, 20);
+          display: block;
+        }
         .description {
           font-size: 12px;
           font-weight: 500;
         }
       }
+    }
+    .ng-card:hover {
+      background-color: $secondary;
+      border-radius: 4px;
+      cursor: pointer;
     }
   }
 

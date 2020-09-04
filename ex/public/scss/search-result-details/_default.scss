@@ -5,23 +5,23 @@
   padding: 22px;
   margin-top: 62px;
   .icon-image {
-      position: relative;
-      width: 72px;
-      height: 72px;
-      margin: 22px auto;
+    position: relative;
+    width: 72px;
+    height: 72px;
+    margin: 22px auto;
   }
   .title {
-      position: relative;
-      display: block;
-      font-size: 22px;
-      word-break: break-all;
-      color: darken($primary-color, 10);
+    position: relative;
+    display: block;
+    font-size: 18px;
+    word-break: break-all;
+    color: darken($primary-color, 2);
   }
   .type {
-      position: relative;
-      font-size: 12px;
-      font-weight: 500;
-      text-transform: capitalize;
-      color: darken($primary-color, 20);
+    position: relative;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: capitalize;
+    color: darken($primary-color, 20);
   }
 }

@@ -23,6 +23,9 @@ module.exports = (app) => {
         transparent: true,
         resizable: true,
 
+        minHeight: 900,
+        minWidth: 600,
+        
         // skipTaskbar: true,
   
         blur: true,
