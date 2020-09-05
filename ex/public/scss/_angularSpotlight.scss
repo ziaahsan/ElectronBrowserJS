@@ -41,7 +41,31 @@ $spotlight-responsive-width: 680px !default;
   a, a:link, a:active, a:visited, a:hover {
     color: $primary-color;
   }
-
+  // Dialogs
+  .ng-success-dialog {
+    padding: 42px 6px;
+    color: $primary-color;
+    background-color: $primary;
+    .ng-info {
+      text-align: center;
+      position: relative;
+      padding: 12px;
+      .title {
+        font-size: 24px;
+        font-weight: 600;
+        display: block;
+        margin-bottom: 7px;
+      }
+      .hint {
+        font-size: 12px;
+        display: block;
+      }
+      .description {
+        font-size: 12px;
+        font-weight: 500;
+      }
+    }
+  }
   // Global css usage
   .ng-cards {
     padding: 12px 6px;
@@ -56,16 +80,24 @@ $spotlight-responsive-width: 680px !default;
       .ng-info {
         position: relative;
         padding: 12px;
+        .icon {
+          position: absolute;
+          right: 15px;
+          opacity: 0.775;
+          font-size: 23px;
+        }
         .title {
           font-size: 16px;
           font-weight: 600;
           display: block;
+          width: calc(100% - 42px);
         }
         .command {
           font-size: 11px;
           font-weight: 700;
           color: darken($primary-color-dark, 20);
           display: block;
+          width: calc(100% - 42px);
         }
         .description {
           font-size: 12px;
@@ -83,9 +115,8 @@ $spotlight-responsive-width: 680px !default;
    // Pins overlay
    &.ng-pins-overlay {
     position: relative;
-    z-index: 2147483647;
+    z-index: 9;
     width: 100%;
-    display: none;
     font-size: 12px;
     letter-spacing: 0.3px;
 
@@ -108,9 +139,8 @@ $spotlight-responsive-width: 680px !default;
   // AppStore overlay
   &.ng-appstore-overlay {
     position: relative;
-    z-index: 2147483647;
+    z-index: 9;
     width: 100%;
-    display: none;
     font-size: 12px;
     letter-spacing: 0.3px;
 
@@ -159,9 +189,8 @@ $spotlight-responsive-width: 680px !default;
   // Spotlight overlay
   &.ng-spotlight-overlay {
     position: relative;
-    z-index: 2147483647; // Le Max Int32 ;)
+    z-index: 9;
     width: 100%;
-    display: none;
     font-size: 12px;
     letter-spacing: 0.3px;
 

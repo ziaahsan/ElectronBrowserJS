@@ -1,8 +1,8 @@
 $alpha: 0.97;
 
 // Primary
-$primary: rgba(225, 225, 225, $alpha) !default;
-$secondary: rgba(210, 210, 210, $alpha) !default;
+$primary: rgba(225, 225, 225, $alpha);
+$secondary: rgba(210, 210, 210, $alpha);
 
 $primary-highlight: #337ef1;
 $icon-magnifier-color: #635d5c;
@@ -12,10 +12,10 @@ $font-family: 'Open Sans', sans-serif;
 
 // Font colors
 $primary-color: rgba(25, 25, 25, $alpha);
-$primary-color-dark: rgba(10, 10, 10, $alpha);
+$primary-color-dark: rgba(127, 127, 127, $alpha);
 
 // Colors for borders
-$border-color: rgba(215, 215, 215, $alpha) !default;
+$border-color: rgba(215, 215, 215, $alpha);
 $overlay-border-color: rgba(#333435, 0.1);
 
 

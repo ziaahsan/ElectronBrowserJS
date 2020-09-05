@@ -1,417 +1,405 @@
-(function ($) {
-    // jQuery autoGrowInput plugin by James Padolsey
-    // See related thread: http://stackoverflow.com/questions/931207/is-there-a-jquery-autogrow-plugin-for-text-fields
-    $.fn.autoGrowInput = function (o) {
-        o = $.extend({
-            maxWidth: 1000,
-            minWidth: 0,
-            comfortZone: 70
-        }, o);
-
-        this.filter('input:text').each(function () {
-            var minWidth = o.minWidth || $(this).width(),
-                val = '',
-                input = $(this),
-                testSubject = $('<tester/>').css({
-                    position: 'absolute',
-                    top: -9999,
-                    left: -9999,
-                    width: 'auto',
-                    fontSize: input.css('fontSize'),
-                    fontFamily: input.css('fontFamily'),
-                    fontWeight: input.css('fontWeight'),
-                    letterSpacing: input.css('letterSpacing'),
-                    whiteSpace: 'nowrap'
-                }),
-                check = function () {
-
-                    if (val === (val = input.val())) {
-                        return;
-                    }
-
-                    // Enter new content into testSubject
-                    var escaped = val.replace(/&/g, '&amp;').replace(/\s/g, '&nbsp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-                    testSubject.html(escaped);
-
-                    // Calculate new width + whether to change
-                    var testerWidth = testSubject.width(),
-                        newWidth = (testerWidth + o.comfortZone) >= minWidth ? testerWidth + o.comfortZone : minWidth,
-                        currentWidth = input.width(),
-                        isValidWidthChange = (newWidth < currentWidth && newWidth >= minWidth)
-                            || (newWidth > minWidth && newWidth < o.maxWidth);
-
-                    // Animate width
-                    if (isValidWidthChange) {
-                        input.width(newWidth);
-                    }
-
-                };
-
-            testSubject.insertAfter(input);
-
-            $(this).bind('keyup keydown blur update', check);
-
-            check();
-        });
-
-        return this;
-
+angular
+.module('de.devjs.angular.spotlight', [])
+.directive('spotlightOverlay', ['$timeout', '$http', '$compile', 'AngularSpotlight', function ($timeout, $http, $compile, AngularSpotlight) {
+    // Key valus
+    const KEY = {
+        UP: 38,
+        DOWN: 40,
+        ESC: 27,
+        ENTER: 13
     };
-})(jQuery);
 
-angular
-    .module('de.devjs.angular.spotlight', [])
-    .directive('spotlightOverlay', ['$timeout', '$http', '$compile', 'AngularSpotlight', function ($timeout, $http, $compile, AngularSpotlight) {
-        const KEY = { UP: 38, DOWN: 40, ESC: 27, ENTER: 13 };
-
-        const validRequests = {
-            programs: { name: "select-programs", type: "apps" },
-            folders: { name: "select-folders", type: "folders" }
-        };
-
-        var $ngSpotlightOverlay;
-
-        return {
-            restrict: 'E',
-            replace: true,
-            controller: controller(),
-            link: link,
-            templateUrl: 'src/spotlight/spotlightOverlay.html'
-        };
-
-        function controller() {
-            return ['$scope', function ($scope) {
-                $scope.searchInputInfo = AngularSpotlight.getSearchInputInfoSearching();
-                $scope.spotlightPlaceholder = AngularSpotlight.getSpotlightPlaceholder();
-
-                $scope.search = function () {
-                    if ($scope.searchTerm.length > 0) {
-                        $scope.searchResults = []
-
-                        // Request 1
-                        $scope.postMessage(validRequests.programs);
-                        $scope.postMessage(validRequests.folders);
-
-                        // Request 2
-                        // AngularSpotlight
-                        //     .search($scope.searchTerm, $scope.searchResults)
-                        //     .then($scope.setSearchResult);
-                    }
-                };
-
-                $scope.setSearchResult = function () {
-                    $scope.searchResultsCount =
-                        $scope.searchResults
-                                .map(function (category) {
-                                    return category.items.length;
-                                })
-                                .reduce(function (prev, cur) {
-                                    return prev + cur;
-                                }, 0);
-
-                    setSearchInputInfo();
-                    selectItemAtIndex(0);
-                };
-
-                $scope.postMessage = function (request) {
-                    window.postMessage({type: request.name, q:$scope.searchTerm});
-                };
-
-                $scope.recieveMessage = function () {
-                    window.addEventListener('message', async event => {
-                        if (event.source != window ||
-                            event.data.type == null || event.data.type == undefined || event.data.type != "SPOTLIGHT_REQUEST") return;
-
-                        if (event.data.results == null || event.data.results.length == 0) {
-                            $scope.setSearchResult();
-                            $scope.$apply();
-
-                            return
-                        }
-
-                        switch (event.data.name) {
-                            case validRequests.programs.name:
-                                var category = {name: validRequests.programs.type, items: []};
-                                event.data.results.forEach(function (result) {
-                                    var item = extractPrograms(result)
-                                    category.items.push(item);
-                                });
-
-                                if (category.items.length > 0) {
-                                    $scope.searchResults.push(category);
-                                }
-
-                                function extractPrograms(result) {
-                                    return {
-                                        name: result['SYSTEM.ITEMNAMEDISPLAYWITHOUTEXTENSION'],
-                                        contentType: result['SYSTEM.CONTENTTYPE'],
-                                        itemType: result['SYSTEM.ITEMTYPE'],
-                                        itemTypeText: result['SYSTEM.ITEMTYPETEXT'],
-                                        path: result['SYSTEM.ITEMPATHDISPLAY'],
-                                        icon: result['SYSTEM.ICON'],
-                                        type: validRequests.programs.type,
-                                        href: '#'
-                                    }
-                                }
-                                break
-                            case validRequests.folders.name:
-                                var category = {name: validRequests.folders.type, items: []};
-                                event.data.results.forEach(function (result) {
-                                    var item = extractFolders(result)
-                                    category.items.push(item);
-                                });
-
-                                if (category.items.length > 0) {
-                                    $scope.searchResults.push(category);
-                                }
-
-                                function extractFolders(result) {
-                                    return {
-                                        name: result['SYSTEM.ITEMNAMEDISPLAYWITHOUTEXTENSION'],
-                                        contentType: result['SYSTEM.CONTENTTYPE'],
-                                        itemType: result['SYSTEM.ITEMTYPE'],
-                                        itemTypeText: result['SYSTEM.ITEMTYPETEXT'],
-                                        path: result['SYSTEM.ITEMPATHDISPLAY'],
-                                        icon: result['SYSTEM.ICON'],
-                                        type: validRequests.folders.type,
-                                        href: '#'
-                                    }
-                                }
-                                break;
-                        }
-
-                        $scope.setSearchResult();
-                        $scope.$apply();
-                    }, false);
-                };
-
-                $scope.getIconForType = function (type) {
-                    return AngularSpotlight.getIconDescriptorForType(type);
-                };
-
-                $scope.showResultItem = function (categoryName, idx) {
-                    var indexToSelect = 0;
-
-                    for (var i = 0; i < $scope.searchResults.length; i++) {
-                        if ($scope.searchResults[i].name !== categoryName) {
-                            indexToSelect += $scope.searchResults[i].items.length;
-                        } else {
-                            break;
-                        }
-                    }
-
-                    selectItemAtIndex(indexToSelect + idx);
-
-                    $ngSpotlightOverlay
-                        .find('input')
-                        .focus()
-                        .select();
-                };
-
-                /**
-                 * Handle Keyboard events
-                 * @param $event
-                 */
-                $scope.handleKeyDown = function ($event) {
-                    switch ($event.keyCode) {
-                        case KEY.UP:
-                            $event.preventDefault();
-                            selectPreviousEntry();
-                            break;
-                        case KEY.DOWN:
-                            $event.preventDefault();
-                            selectNextEntry();
-                            break;
-                        case KEY.ESC:
-                            resetSearch();
-                            break;
-                        case KEY.ENTER:
-                            $scope.openResultItem();
-                            break;
-                    }
-                };
-
-                $scope.openResultCategory = function() {
-                    console.log($scope.selectedCategory);
-                };
-
-                $scope.openResultItem = function () {
-                    if($scope.selectedItem.href) {
-                        // window.location.href = $scope.selectedItem.href;
-                        // $ngSpotlightOverlay.hide();
-                    }
-                };
-
-                function resetSearch() {
-                    $scope.selectedItem = undefined;
-                    $scope.searchResultsCount = 0;
-                    $scope.searchResults = [];
-                    $scope.searchInputInfo = undefined;
-                    $scope.searchTerm = "";
-                }
-
-                function selectPreviousEntry() {
-                    var idx = getSelectedItemIndex();
-                    if (idx - 1 >= 0) {
-                        selectItemAtIndex(idx - 1)
-                    }
-                }
-
-                function selectNextEntry() {
-                    var idx = getSelectedItemIndex();
-                    if (idx + 1 < $scope.searchResultsCount) {
-                        selectItemAtIndex(idx + 1);
-                    }
-                }
-
-                function selectItemAtIndex(idx) {
-                    var currentItemIndex = 0;
-                    $scope.searchResults.forEach(function (category) {
-                        if (category.items.length > 0) {
-                            category.items.forEach(function (item) {
-                                var isActive = currentItemIndex === (idx || 0);
-                                item.active = isActive;
-                                currentItemIndex++;
-
-                                if (isActive) {
-                                    $scope.selectedItem = item;
-                                    $scope.selectedCategory = category;
-                                    setSearchInputInfo(category.name);
-                                }
-                            });
-                        }
-                    });
-                    $scope.selectedItemIndex = idx;
-                }
-
-                function setSearchInputInfo(categoryName) {
-                    if ($scope.searchTerm.length === 0) {
-                        $scope.searchInputInfo = AngularSpotlight.getSearchInputInfoSearching();
-                    } else if ($scope.searchResultsCount === 0) {
-                        $scope.searchInputInfo = AngularSpotlight.getSearchInputInfoNoResults();
-                    } else if ($scope.selectedItem) {
-                        $scope.searchInputInfo = $scope.selectedItem.name.substr(0, 55) + " - " + categoryName;
-                    }
-                }
-
-                function getSelectedItemIndex() {
-                    return $scope.selectedItemIndex || 0;
-                }
-
-                $scope.$watch('selectedItemIndex', function () {
-                    $timeout(function () {
-                        if ($scope.selectedItemIndex !== undefined) {
-                            keepItemVisible();
-                        }
-                    }, 100);
-                });
-
-                function keepItemVisible() {
-                    var activeItem = $ngSpotlightOverlay.find('li.ng-spotlight-results-list-item.active');
-                    var resultsList = $ngSpotlightOverlay.find('.ng-spotlight-results-list');
-
-                    var activeItemTop = activeItem.position().top;
-                    var activeItemBottom = activeItem.position().top + activeItem.outerHeight();
-                    var parentsHeight = resultsList.height();
-                    var currentScrollTop = resultsList.scrollTop();
-
-                    if (parentsHeight - activeItemBottom < 0) {
-                        resultsList.scrollTop(currentScrollTop + Math.abs(parentsHeight - activeItemBottom));
-                    }
-                    if (activeItemTop < 0) {
-                        var padding = 0;
-                        if (activeItem.parent().find('li').index(activeItem) === 0) {
-                            padding = $('.ng-spotlight-results-list-header:first').outerHeight();
-                        }
-                        resultsList.scrollTop(currentScrollTop + activeItemTop - padding);
-                    }
-                }
-            }];
+    // Type of requests avaliable
+    const VALID_REQUESTS = {
+        PROGRAMS: {
+            NAME: "select-programs",
+            CATEGORY: "apps"
+        },
+        FOLDERS: {
+            NAME: "select-folders",
+            CATEGORY: "folders"
         }
+    };
 
-        function link(scope, element) {
-            $ngSpotlightOverlay = $(element);
+    // Root view element to append items to
+    var $ngSpotlightOverlay;
 
-            $('[data-toggle="ng-spotlight"]')
-                .on('click', function (e) {
-                    e.stopPropagation();
-                    toggleOverlay();
-                });
+    // Directive objects
+    return {
+        restrict: 'E',
+        replace: true,
+        controller: controller(),
+        link: link,
+        templateUrl: 'src/spotlight/spotlightOverlay.html'
+    };
 
-            $(document)
-                .on('keydown', function (e) {
-                    if (e.ctrlKey && e.keyCode === AngularSpotlight.getSpotlightToggleCtrlKey()) {
-                        e.preventDefault();
-                        toggleOverlay();
-                    }
-                })
-                .on('click', function (e) {
-                    if ($(e.target).closest('.ng-spotlight').length === 0) {
-                        // $ngSpotlightOverlay.hide();
-                    } else {
-                        $ngSpotlightOverlay
-                            .find('input')
-                            .focus();
-                    }
-                })
-                .ready(function() {
-                    scope.recieveMessage();
-                    toggleOverlay();
-                });
+    //<summary>
+    // NG - controller
+    //</summary>
+    function controller() {
+        return ['$scope', function ($scope) {
+            // Setup the defaules
+            $scope.searchInputInfo = AngularSpotlight.getSearchInputInfoSearching();
+            $scope.spotlightPlaceholder = AngularSpotlight.getSpotlightPlaceholder();
 
-            function toggleOverlay() {
-                $ngSpotlightOverlay.toggle();
-
-                if ($ngSpotlightOverlay.is(':visible')) {
-                    $ngSpotlightOverlay
-                        .find('input')
-                        .focus()
-                        .select();
-                }
-            }
-
-            $ngSpotlightOverlay
-                .find('.ng-spotlight-input').autoGrowInput({
-                    maxWidth: 400,
-                    minWidth: 10,
-                    comfortZone: 15
-                });
-        }
-    }]);
-
-angular
-    .module('de.devjs.angular.spotlight')
-    .directive('spotlightDetails', ['$compile', 'AngularSpotlight', function ($compile, AngularSpotlight) {
-
-        function link(scope, element) {
-            scope.getContentUrl = function() {
-                return scope.templateUrl;
-            };
-
-            scope.$watch('selectedItem', function () {
-                if (scope.selectedItem) {
-                    var templateForType = AngularSpotlight.getTemplateForType(scope.selectedItem.type);
-
-                    if(templateIsFile(templateForType)) {
-                        scope.templateUrl = templateForType;
-                        templateForType = angular.element('<div ng-include="getContentUrl()"></div>');
-                    }
-
-                    element.html(templateForType).show();
-                    $compile(element.contents())(scope);
-                }
+            // Clean up with angularJS
+            $scope.$on('$destroy', function() {
+                window.removeEventListener('message', $scope.recieveMessage);
+                window.removeEventListener('keydown', $scope.hideAndSeek);
+                window.removeEventListener('click', $scope.click);
             });
 
-            function templateIsFile(templateForType) {
-                return new RegExp('\.html?$').test(templateForType);
+            // Initial setup
+            $scope.init = function() {
+                $scope.focus();
+                $('[data-toggle="ng-spotlight"]').on('click', $scope.ngSpotlightClickToggle);
+
+                window.addEventListener('message', $scope.recieveMessage);
+                window.addEventListener('keydown', $scope.hideAndSeek);
+                window.addEventListener('click', $scope.click);
+
+                $ngSpotlightOverlay
+                    .find('.ng-spotlight-input').autoGrowInput({
+                        maxWidth: 400,
+                        minWidth: 10,
+                        comfortZone: 15
+                    });
+
             }
+
+            // Auto focus
+            $scope.focus = function () {
+                if ($ngSpotlightOverlay.is(':visible'))
+                    $ngSpotlightOverlay.find('input').focus().select();
+            }
+
+            // Keydown events
+            $scope.hideAndSeek = function(event) {
+                if (event.ctrlKey && event.keyCode === AngularSpotlight.getSpotlightToggleCtrlKey()) {
+                    event.preventDefault();
+                    $scope.focus();
+                }
+            }
+
+            // Click events
+            $scope.click = function(event) {
+                if ($(event.target).closest('.ng-spotlight').length === 0) {
+                    // $ngSpotlightOverlay.hide();
+                } else {
+                    $ngSpotlightOverlay.find('input').focus();
+                }
+            }
+
+            // Simple data-attr toggle
+            $scope.ngSpotlightClickToggle = function(event) {
+                event.stopPropagation();
+                $scope.focus();
+            }
+
+            // Setup searching
+            $scope.search = function () {
+                if ($scope.searchTerm.length > 0) {
+                    // Append the search results to empty list everytime?
+                    $scope.searchResults = []
+
+                    // Requests to fetch from .Net
+                    $scope.postMessage(VALID_REQUESTS.PROGRAMS);
+                    $scope.postMessage(VALID_REQUESTS.FOLDERS);
+                }
+            };
+
+            // Setup the search results
+            $scope.setSearchResult = function () {
+                $scope.searchResultsCount =
+                    $scope.searchResults
+                            .map(category => { return category.items.length })
+                            .reduce((prev, cur) => { return prev + cur; }, 0);
+
+                setSearchInputInfo();
+                selectItemAtIndex(0);
+            };
+
+            // Post message for processing requests
+            $scope.postMessage = function (request) {
+                window.postMessage({type: request.NAME, q:$scope.searchTerm});
+            }
+
+            // Listen for message
+            $scope.recieveMessage = function(event) {
+                if (event.source != window ||
+                    !event.data.type || event.data.type != 'ng-spotlight') return;
+
+                if (!event.data.results || event.data.results.length == 0) {
+                    $scope.setSearchResult();
+                    $scope.$apply();
+                    return
+                }
+
+                // Check the name and perform
+                switch(event.data.name) {
+                    case VALID_REQUESTS.PROGRAMS.NAME:
+                        $scope.makeProgramsItems(event)
+                        break;
+                    case VALID_REQUESTS.FOLDERS.NAME:
+                        $scope.makeFoldersItems(event)
+                        break;
+                }
+
+            }
+
+            // Programs request
+            $scope.makeProgramsItems = function (event) {
+                var category = {name: VALID_REQUESTS.PROGRAMS.CATEGORY, items: []};
+                
+                event.data.results.forEach(function (result) {
+                    var item = extractPrograms(result)
+                    category.items.push(item);
+                });
+
+                if (category.items.length > 0) {
+                    $scope.searchResults.push(category);
+                }
+
+                $scope.setSearchResult();
+                $scope.$apply();
+
+                function extractPrograms(result) {
+                    return {
+                        name: result['SYSTEM.ITEMNAMEDISPLAYWITHOUTEXTENSION'],
+                        contentType: result['SYSTEM.CONTENTTYPE'],
+                        itemType: result['SYSTEM.ITEMTYPE'],
+                        itemTypeText: result['SYSTEM.ITEMTYPETEXT'],
+                        path: result['SYSTEM.ITEMPATHDISPLAY'],
+                        icon: result['SYSTEM.ICON'],
+                        type: VALID_REQUESTS.PROGRAMS.CATEGORY,
+                        href: '#'
+                    }
+                }
+            }
+
+            // Folders request
+            $scope.makeFoldersItems = function (event) {
+                var category = {name: VALID_REQUESTS.FOLDERS.CATEGORY, items: []};
+                
+                event.data.results.forEach(function (result) {
+                    var item = extractFolders(result)
+                    category.items.push(item);
+                });
+
+                if (category.items.length > 0) {
+                    $scope.searchResults.push(category);
+                }
+
+                $scope.setSearchResult();
+                $scope.$apply();
+
+                function extractFolders(result) {
+                    return {
+                        name: result['SYSTEM.ITEMNAMEDISPLAYWITHOUTEXTENSION'],
+                        contentType: result['SYSTEM.CONTENTTYPE'],
+                        itemType: result['SYSTEM.ITEMTYPE'],
+                        itemTypeText: result['SYSTEM.ITEMTYPETEXT'],
+                        path: result['SYSTEM.ITEMPATHDISPLAY'],
+                        icon: result['SYSTEM.ICON'],
+                        type: VALID_REQUESTS.FOLDERS.CATEGORY,
+                        href: '#'
+                    }
+                }
+            }
+
+            // Fetches the icon for type only
+            $scope.getIconForType = function (type) {
+                return AngularSpotlight.getIconDescriptorForType(type);
+            }
+
+            // Set search results
+            $scope.showResultItem = function (categoryName, idx) {
+                var indexToSelect = 0;
+
+                for (var i = 0; i < $scope.searchResults.length; i++) {
+                    if ($scope.searchResults[i].name !== categoryName) {
+                        indexToSelect += $scope.searchResults[i].items.length;
+                    } else {
+                        break;
+                    }
+                }
+
+                selectItemAtIndex(indexToSelect + idx);
+                $ngSpotlightOverla.find('input').focus().select();
+            };
+
+            // Key events
+            $scope.handleKeyDown = function ($event) {
+                switch ($event.keyCode) {
+                    case KEY.UP:
+                        $event.preventDefault();
+                        selectPreviousEntry();
+                        break;
+                    case KEY.DOWN:
+                        $event.preventDefault();
+                        selectNextEntry();
+                        break;
+                    case KEY.ESC:
+                        resetSearch();
+                        break;
+                    case KEY.ENTER:
+                        $scope.openResultItem();
+                        break;
+                }
+            }
+
+            $scope.openResultCategory = function() {
+                console.log($scope.selectedCategory);
+            }
+
+            // Open selected result item
+            $scope.openResultItem = function () {
+                if($scope.selectedItem.href) {
+                    // window.location.href = $scope.selectedItem.href;
+                    // $ngSpotlightOverlay.hide();
+                }
+            };
+
+            function resetSearch() {
+                $scope.selectedItem = undefined;
+                $scope.searchResultsCount = 0;
+                $scope.searchResults = [];
+                $scope.searchInputInfo = undefined;
+                $scope.searchTerm = "";
+            }
+
+            function selectPreviousEntry() {
+                var idx = getSelectedItemIndex();
+                if (idx - 1 >= 0) {
+                    selectItemAtIndex(idx - 1)
+                }
+            }
+
+            function selectNextEntry() {
+                var idx = getSelectedItemIndex();
+                if (idx + 1 < $scope.searchResultsCount) {
+                    selectItemAtIndex(idx + 1);
+                }
+            }
+
+            function selectItemAtIndex(idx) {
+                var currentItemIndex = 0;
+                $scope.searchResults.forEach(function (category) {
+                    if (category.items.length > 0) {
+                        category.items.forEach(function (item) {
+                            var isActive = currentItemIndex === (idx || 0);
+                            item.active = isActive;
+                            currentItemIndex++;
+
+                            if (isActive) {
+                                $scope.selectedItem = item;
+                                $scope.selectedCategory = category;
+                                setSearchInputInfo(category.name);
+                            }
+                        });
+                    }
+                });
+                $scope.selectedItemIndex = idx;
+            }
+
+            function setSearchInputInfo(categoryName) {
+                if ($scope.searchTerm.length === 0) {
+                    $scope.searchInputInfo = AngularSpotlight.getSearchInputInfoSearching();
+                } else if ($scope.searchResultsCount === 0) {
+                    $scope.searchInputInfo = AngularSpotlight.getSearchInputInfoNoResults();
+                } else if ($scope.selectedItem) {
+                    $scope.searchInputInfo = $scope.selectedItem.name.substr(0, 55) + " - " + categoryName;
+                }
+            }
+
+            function getSelectedItemIndex() {
+                return $scope.selectedItemIndex || 0;
+            }
+
+            $scope.$watch('selectedItemIndex', function () {
+                $timeout(function () {
+                    if ($scope.selectedItemIndex !== undefined) {
+                        keepItemVisible();
+                    }
+                }, 100);
+            });
+
+            function keepItemVisible() {
+                var activeItem = $ngSpotlightOverlay.find('li.ng-spotlight-results-list-item.active');
+                var resultsList = $ngSpotlightOverlay.find('.ng-spotlight-results-list');
+
+                var activeItemTop = activeItem.position().top;
+                var activeItemBottom = activeItem.position().top + activeItem.outerHeight();
+                var parentsHeight = resultsList.height();
+                var currentScrollTop = resultsList.scrollTop();
+
+                if (parentsHeight - activeItemBottom < 0) {
+                    resultsList.scrollTop(currentScrollTop + Math.abs(parentsHeight - activeItemBottom));
+                }
+                if (activeItemTop < 0) {
+                    var padding = 0;
+                    if (activeItem.parent().find('li').index(activeItem) === 0) {
+                        padding = $('.ng-spotlight-results-list-header:first').outerHeight();
+                    }
+                    resultsList.scrollTop(currentScrollTop + activeItemTop - padding);
+                }
+            }
+        }];
+    }
+
+    //<summary>
+    // NG - linkage
+    //</summary>
+    function link(scope, element) {
+        $ngSpotlightOverlay = $(element);
+        scope.init();
+    }
+}]);
+
+angular
+.module('de.devjs.angular.spotlight')
+.directive('spotlightDetails', ['$compile', 'AngularSpotlight', function ($compile, AngularSpotlight) {
+    // Objects
+    return {
+        restrict: "E",
+        link: link
+    }
+
+    //<summary>
+    // NG - linkage
+    //</summary>
+    function link(scope, element) {
+        // Setup the watch on selected items
+        scope.$watch('selectedItem', function () {
+            // Check if selected item isset
+            if (scope.selectedItem) {
+                // Fet the template type
+                var templateForType = AngularSpotlight.getTemplateForType(scope.selectedItem.type);
+
+                // If the fetched item is a file
+                if (scope.templateIsFile(templateForType)) {
+                    // Setup the url & include the contents
+                    scope.templateUrl = templateForType;
+                    templateForType = angular.element('<div ng-include="getContentUrl()"></div>');
+                }
+
+                // Compile and render the contents
+                element.html(templateForType).show();
+                $compile(element.contents())(scope);
+            }
+        });
+
+        // Returns the path of the template to be used
+        scope.getContentUrl = function() {
+            return scope.templateUrl;
         }
 
-        return {
-            restrict: "E",
-            link: link
-        };
-    }]);
+        // Check if the URL is file
+        scope.templateIsFile = function(templateForType) {
+            return new RegExp('\.html?$').test(templateForType);
+        }
+    }
+}]);
     
 angular
     .module('de.devjs.angular.spotlight')
@@ -420,7 +408,6 @@ angular
         var _detailsTemplateConfig = detailsTemplateConfig();
         var _defaultSpotlightConfig = defaultSpotlightConfig();
 
-        // === LE PUBLIC API ====================
         return {
             search: function () {
                 throw "You have to implement a search function using AngularSpotlightProvider!";

@@ -11,6 +11,10 @@ class Authenticator {
         return authenticator.generate(secret)
     }
 
+    static GetTimeRemaining = () => {
+        return authenticator.timeRemaining()
+    }
+    
     static IsValid = (token) => {
         return authenticator.check(token, secret)
     }

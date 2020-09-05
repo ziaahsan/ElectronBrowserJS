@@ -7,7 +7,8 @@
             $routeProvider
                 .when("/", { templateUrl : "src/spotlight/view.html" })
                 .when("/appstore", { templateUrl : "src/appstore/store/view.html" })
-                .when("/appstore/twofactorauth", { templateUrl : "src/appstore/twofactorauth/view.html" });
+                .when("/appstore/twofactorauth", { templateUrl : "src/appstore/twofactorauth/view.html" })
+                .when("/appstore/twofactorauth/:name", { templateUrl : "src/appstore/twofactorauth/view.html" });
 
             // AngularSpotlightProvider Default Settings
             (() => {

@@ -59,7 +59,7 @@ class Requests {
         data = await attachIconToResults(data)
 
         // Send data to front-end
-        event.sender.send('add-request-response', event.data.type, data)
+        event.sender.send('request-response', 'ng-spotlight', event.data.type, data)
 
         // request completed remove it
         this.remove(event)
@@ -73,7 +73,7 @@ class Requests {
         data = await attachIconToResults(data)
 
         // Send data to front-end
-        event.sender.send('add-request-response', event.data.type, data)
+        event.sender.send('request-response', 'ng-spotlight', event.data.type, data)
 
         // request completed remove it
         this.remove(event)

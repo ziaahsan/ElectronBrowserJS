@@ -8,6 +8,9 @@
     <div class="ng-cards">
         <div class="ng-card">
             <div class="ng-info">
+                <span class="icon">
+                    <i class="fas fa-fingerprint"></i>
+                </span>
                 <span class="title">Hotmail</span>
                 <span class="command">:2FA:Hotmail</span>
                 <span class="description">Click to view your token.</span>
@@ -15,6 +18,19 @@
         </div>
         <div class="ng-card">
             <div class="ng-info">
+                <span class="icon">
+                    <i class="fas fa-fingerprint"></i>
+                </span>
+                <span class="title">Stripe</span>
+                <span class="command">:2FA:Stripe</span>
+                <span class="description">Click to view your token.</span>
+            </div>
+        </div>
+        <div class="ng-card" ng-click="redirect('/appstore/twofactorauth/github')">
+            <div class="ng-info">
+                <span class="icon">
+                    <i class="fas fa-fingerprint"></i>
+                </span>
                 <span class="title">Github</span>
                 <span class="command">:2FA:Github</span>
                 <span class="description">Click to view your token.</span>
