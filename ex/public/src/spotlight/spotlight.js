@@ -1,3 +1,4 @@
+"use strict";
 angular
 .module('de.devjs.angular.spotlight', [])
 .directive('spotlightOverlay', ['$timeout', '$http', '$compile', 'AngularSpotlight', function ($timeout, $http, $compile, AngularSpotlight) {
@@ -225,7 +226,7 @@ angular
                 }
 
                 selectItemAtIndex(indexToSelect + idx);
-                $ngSpotlightOverla.find('input').focus().select();
+                $ngSpotlightOverlay.find('input').focus().select();
             };
 
             // Key events
@@ -402,151 +403,151 @@ angular
 }]);
     
 angular
-    .module('de.devjs.angular.spotlight')
-    .provider("AngularSpotlight", function () {
-        var _iconConfig = iconConfig();
-        var _detailsTemplateConfig = detailsTemplateConfig();
-        var _defaultSpotlightConfig = defaultSpotlightConfig();
+.module('de.devjs.angular.spotlight')
+.provider("AngularSpotlight", function () {
+    var _iconConfig = iconConfig();
+    var _detailsTemplateConfig = detailsTemplateConfig();
+    var _defaultSpotlightConfig = defaultSpotlightConfig();
 
-        return {
-            search: function () {
-                throw "You have to implement a search function using AngularSpotlightProvider!";
-            },
-            addIcons: _iconConfig.addIcons,
-            addTemplates: _detailsTemplateConfig.addTemplates,
-            setSearchInputInfoSearching: _defaultSpotlightConfig.setSearchInputInfoSearching,
-            setSearchInputInfoNoResults: _defaultSpotlightConfig.setSearchInputInfoNoResults,
-            setSpotlightPlaceholder: _defaultSpotlightConfig.setSpotlightPlaceholder,
-            setSpotlightToggleCtrlKey: _defaultSpotlightConfig.setSpotlightToggleCtrlKey,
-            $get: ['$http', '$q', function ($http, $q) {
-                var that = this;
-                return {
-                    search: that.search($http, $q),
-                    getIconDescriptorForType: _iconConfig.getIconForType,
-                    getTemplateForType: _detailsTemplateConfig.getTemplateForType,
-                    getSearchInputInfoSearching: _defaultSpotlightConfig.getSearchInputInfoSearching,
-                    getSearchInputInfoNoResults: _defaultSpotlightConfig.getSearchInputInfoNoResults,
-                    getSpotlightPlaceholder: _defaultSpotlightConfig.getSpotlightPlaceholder,
-                    getSpotlightToggleCtrlKey: _defaultSpotlightConfig.getSpotlightToggleCtrlKey
-                };
-            }]
+    return {
+        search: function () {
+            throw "You have to implement a search function using AngularSpotlightProvider!";
+        },
+        addIcons: _iconConfig.addIcons,
+        addTemplates: _detailsTemplateConfig.addTemplates,
+        setSearchInputInfoSearching: _defaultSpotlightConfig.setSearchInputInfoSearching,
+        setSearchInputInfoNoResults: _defaultSpotlightConfig.setSearchInputInfoNoResults,
+        setSpotlightPlaceholder: _defaultSpotlightConfig.setSpotlightPlaceholder,
+        setSpotlightToggleCtrlKey: _defaultSpotlightConfig.setSpotlightToggleCtrlKey,
+        $get: ['$http', '$q', function ($http, $q) {
+            var that = this;
+            return {
+                search: that.search($http, $q),
+                getIconDescriptorForType: _iconConfig.getIconForType,
+                getTemplateForType: _detailsTemplateConfig.getTemplateForType,
+                getSearchInputInfoSearching: _defaultSpotlightConfig.getSearchInputInfoSearching,
+                getSearchInputInfoNoResults: _defaultSpotlightConfig.getSearchInputInfoNoResults,
+                getSpotlightPlaceholder: _defaultSpotlightConfig.getSpotlightPlaceholder,
+                getSpotlightToggleCtrlKey: _defaultSpotlightConfig.getSpotlightToggleCtrlKey
+            };
+        }]
+    };
+
+    // Helpers
+    function iconConfig() {
+        var icons = {
+            'default': ''
         };
 
-        // Helpers
-        function iconConfig() {
-            var icons = {
-                'default': ''
+        function addIcons(iconDescriptors) {
+            Object.keys(iconDescriptors)
+                .forEach(function (iconKey) {
+                    icons[iconKey.toLowerCase()] = iconDescriptors[iconKey];
+                });
+        }
+
+        function getIconForType(type) {
+            var icon = icons[(type || 'default').toLowerCase()] || icons['default'];
+
+            return {
+                data: icon,
+                type: guessType(icon)
             };
 
-            function addIcons(iconDescriptors) {
-                Object.keys(iconDescriptors)
-                    .forEach(function (iconKey) {
-                        icons[iconKey.toLowerCase()] = iconDescriptors[iconKey];
-                    });
-            }
-
-            function getIconForType(type) {
-                var icon = icons[(type || 'default').toLowerCase()] || icons['default'];
-
-                return {
-                    data: icon,
-                    type: guessType(icon)
-                };
-
-                function guessType(icon) {
-                    var icon = icon.toLowerCase();
-                    if (icon.indexOf('http') === 0 || icon.indexOf('data:') === 0) {
-                        return 'url';
-                    } else {
-                        return 'css';
-                    }
+            function guessType(icon) {
+                var icon = icon.toLowerCase();
+                if (icon.indexOf('http') === 0 || icon.indexOf('data:') === 0) {
+                    return 'url';
+                } else {
+                    return 'css';
                 }
             }
-
-            return {
-                addIcons: addIcons,
-                getIconForType: getIconForType
-            }
         }
 
-        function detailsTemplateConfig() {
-            var detailsTemplates = {
-                'default': '\
-                    <div class="ng-spotlight-results-detail-default">\n\
-                        <div ng-if="selectedItem.icon" class="icon-image {{selectedItem.icon}}"></div>\n\
-                        <span class="title">{{selectedItem.name}}</span>\n\
-                        <span class="type">\n\
-                            {{selectedItem.type}}\n\
-                            <span ng-if="selectedItem.itemTypeText != null">&middot; {{selectedItem.itemTypeText}}</span>\n\
-                        </span>\n\
-                    </div>'
-            };
+        return {
+            addIcons: addIcons,
+            getIconForType: getIconForType
+        }
+    }
 
-            function addTemplates(templateDescriptors) {
-                Object.keys(templateDescriptors)
-                    .forEach(function (templateKey) {
-                        detailsTemplates[templateKey.toLowerCase()] = templateDescriptors[templateKey];
-                    });
-            }
+    function detailsTemplateConfig() {
+        var detailsTemplates = {
+            'default': '\
+                <div class="ng-spotlight-results-detail-default">\n\
+                    <div ng-if="selectedItem.icon" class="icon-image {{selectedItem.icon}}"></div>\n\
+                    <span class="title">{{selectedItem.name}}</span>\n\
+                    <span class="type">\n\
+                        {{selectedItem.type}}\n\
+                        <span ng-if="selectedItem.itemTypeText != null">&middot; {{selectedItem.itemTypeText}}</span>\n\
+                    </span>\n\
+                </div>'
+        };
 
-            function getTemplateForType(type) {
-                return detailsTemplates[(type || 'default').toLowerCase()] || detailsTemplates['default'];
-            }
-
-            return {
-                addTemplates: addTemplates,
-                getTemplateForType: getTemplateForType
-            }
+        function addTemplates(templateDescriptors) {
+            Object.keys(templateDescriptors)
+                .forEach(function (templateKey) {
+                    detailsTemplates[templateKey.toLowerCase()] = templateDescriptors[templateKey];
+                });
         }
 
-        function defaultSpotlightConfig() {
-            const KEY_SPACE = 32;
-            var searchInputInfoSearching = 'Suchend ...';
-            var searchInputInfoNoResults = 'Keine Ergebnisse';
-            var spotlightPlaceholder = 'Spotlight-Suche';
-            var spotlightToggleCtrlKey = KEY_SPACE;
-
-            function setSearchInputInfoSearching(text) {
-                searchInputInfoSearching = text;
-            }
-
-            function getSearchInputInfoSearching() {
-                return searchInputInfoSearching;
-            }
-
-            function setSearchInputInfoNoResults(text) {
-                searchInputInfoNoResults = text;
-            }
-
-            function getSearchInputInfoNoResults() {
-                return searchInputInfoNoResults;
-            }
-
-            function setSpotlightPlaceholder(text) {
-                spotlightPlaceholder = text;
-            }
-
-            function getSpotlightPlaceholder() {
-                return spotlightPlaceholder;
-            }
-
-            function setSpotlightToggleCtrlKey(key_code) {
-                spotlightToggleCtrlKey = key_code;
-            }
-
-            function getSpotlightToggleCtrlKey() {
-                return spotlightToggleCtrlKey;
-            }
-
-            return {
-                setSearchInputInfoSearching: setSearchInputInfoSearching,
-                getSearchInputInfoSearching: getSearchInputInfoSearching,
-                setSearchInputInfoNoResults: setSearchInputInfoNoResults,
-                getSearchInputInfoNoResults: getSearchInputInfoNoResults,
-                setSpotlightPlaceholder: setSpotlightPlaceholder,
-                getSpotlightPlaceholder: getSpotlightPlaceholder,
-                setSpotlightToggleCtrlKey: setSpotlightToggleCtrlKey,
-                getSpotlightToggleCtrlKey: getSpotlightToggleCtrlKey
-            }
+        function getTemplateForType(type) {
+            return detailsTemplates[(type || 'default').toLowerCase()] || detailsTemplates['default'];
         }
-    });
+
+        return {
+            addTemplates: addTemplates,
+            getTemplateForType: getTemplateForType
+        }
+    }
+
+    function defaultSpotlightConfig() {
+        const KEY_SPACE = 32;
+        var searchInputInfoSearching = 'Suchend ...';
+        var searchInputInfoNoResults = 'Keine Ergebnisse';
+        var spotlightPlaceholder = 'Spotlight-Suche';
+        var spotlightToggleCtrlKey = KEY_SPACE;
+
+        function setSearchInputInfoSearching(text) {
+            searchInputInfoSearching = text;
+        }
+
+        function getSearchInputInfoSearching() {
+            return searchInputInfoSearching;
+        }
+
+        function setSearchInputInfoNoResults(text) {
+            searchInputInfoNoResults = text;
+        }
+
+        function getSearchInputInfoNoResults() {
+            return searchInputInfoNoResults;
+        }
+
+        function setSpotlightPlaceholder(text) {
+            spotlightPlaceholder = text;
+        }
+
+        function getSpotlightPlaceholder() {
+            return spotlightPlaceholder;
+        }
+
+        function setSpotlightToggleCtrlKey(key_code) {
+            spotlightToggleCtrlKey = key_code;
+        }
+
+        function getSpotlightToggleCtrlKey() {
+            return spotlightToggleCtrlKey;
+        }
+
+        return {
+            setSearchInputInfoSearching: setSearchInputInfoSearching,
+            getSearchInputInfoSearching: getSearchInputInfoSearching,
+            setSearchInputInfoNoResults: setSearchInputInfoNoResults,
+            getSearchInputInfoNoResults: getSearchInputInfoNoResults,
+            setSpotlightPlaceholder: setSpotlightPlaceholder,
+            getSpotlightPlaceholder: getSpotlightPlaceholder,
+            setSpotlightToggleCtrlKey: setSpotlightToggleCtrlKey,
+            getSpotlightToggleCtrlKey: getSpotlightToggleCtrlKey
+        }
+    }
+});

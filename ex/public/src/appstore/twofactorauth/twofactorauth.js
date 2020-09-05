@@ -1,3 +1,4 @@
+"use strict";
 angular
 .module('de.devjs.angular.twofactorauth', [])
 .directive('twofactorauthOverlay', ['$timeout', '$http', '$compile', 'TwoFactorAuth', function ($timeout, $http, $compile, TwoFactorAuth) {
@@ -11,11 +12,11 @@ angular
         controller: controller(),
         link: link,
         templateUrl: ''
-    };
+    }
 
     //<summary>
     // NG - controller
-    //</summary>
+    //</summary>    
     function controller() {
         // Base URL directory for 2FA
         let baseUrl = 'src/appstore/twofactorauth/';
@@ -35,6 +36,15 @@ angular
 
             // Route with params initializer
             $scope.routeParamsInit = function() {
+                // Default header
+                $scope.title = "Github Token";
+                $scope.description = "Your github token will be shown below.";
+                $scope.link = "#!/";
+
+                // Default values for route with Params
+                $scope.token = '123456';
+                $scope.timeRemaining = '30';
+
                 // Setup the interval to fetch the request every second
                 // Interval is auto trriggered when function runs
                 $scope.refreshToken = $interval(function() {
@@ -47,6 +57,14 @@ angular
                 $scope.requestToken();
                 // Setup refresh every seconds
                 $scope.$refreshToken;
+            }
+
+            // Initialize initial setup
+            $scope.init = function() {
+                // Default header
+                $scope.title = "2 Factor Auth";
+                $scope.description = "Configure your auths below.";
+                $scope.link = "#!/";
             }
 
             // Initialize events
@@ -88,6 +106,8 @@ angular
                     return templates.routeName;
                 }
 
+                // Return with initial
+                $scope.init();
                 // Default template viewing for otherwise
                 return templates.default;
             }

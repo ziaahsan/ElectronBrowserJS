@@ -1,15 +1,10 @@
 <div class="ng-spotlight ng-appstore-overlay">
-    <div class="ng-header">
-        <span class="title">
-            <span class="nav-arrow"><a href="#!/"><i class="fas fa-arrow-left"></i></span></a> 2 Factor Auth
-        </span>
-        <span class="description">Configure your auths below.</span>
-    </div>
+    <div ng-include="'src/navigation/header.html'"></div>
     <div class="ng-cards">
         <div class="ng-card">
             <div class="ng-info">
                 <span class="icon">
-                    <i class="fas fa-fingerprint"></i>
+                    <i class="las la-shield-alt"></i>
                 </span>
                 <span class="title">Hotmail</span>
                 <span class="command">:2FA:Hotmail</span>
@@ -19,7 +14,7 @@
         <div class="ng-card">
             <div class="ng-info">
                 <span class="icon">
-                    <i class="fas fa-fingerprint"></i>
+                    <i class="las la-shield-alt"></i>
                 </span>
                 <span class="title">Stripe</span>
                 <span class="command">:2FA:Stripe</span>
@@ -29,7 +24,7 @@
         <div class="ng-card" ng-click="redirect('/appstore/twofactorauth/github')">
             <div class="ng-info">
                 <span class="icon">
-                    <i class="fas fa-fingerprint"></i>
+                    <i class="las la-shield-alt"></i>
                 </span>
                 <span class="title">Github</span>
                 <span class="command">:2FA:Github</span>

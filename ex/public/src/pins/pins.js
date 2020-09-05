@@ -1,3 +1,4 @@
+"use strict";
 angular
 .module('de.devjs.angular.pins', [])
 .directive('pinsOverlay', ['$timeout', '$http', '$compile', 'Pins', function ($timeout, $http, $compile, Pins) {

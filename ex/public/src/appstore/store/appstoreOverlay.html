@@ -1,10 +1,5 @@
 <div class="ng-spotlight ng-appstore-overlay">
-    <div class="ng-header">
-        <span class="title">
-            <span class="nav-arrow"><a href="#!/"><i class="fas fa-arrow-left"></i></span></a> App Store
-        </span>
-        <span class="description">Configure all your apps below.</span>
-    </div>
+    <div ng-include="'src/navigation/header.html'"></div>
     <div class="ng-cards">
         <div class="ng-card">
             <div class="ng-info">
@@ -53,6 +48,13 @@
                 <span class="title">Subscribe</span>
                 <span class="command">:Subscribe</span>
                 <span class="description">Subscribe to anything with windows.</span>
+            </div>
+        </div>
+        <div class="ng-card">
+            <div class="ng-info">
+                <span class="title">Translate</span>
+                <span class="command">:Translate [msg]</span>
+                <span class="description">Translate anything from-to with windows.</span>
             </div>
         </div>
     </div>

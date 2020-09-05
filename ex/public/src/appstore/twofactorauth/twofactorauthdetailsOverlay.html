@@ -1,14 +1,9 @@
 <div class="ng-spotlight ng-appstore-overlay">
-    <div class="ng-header">
-        <span class="title">
-            <span class="nav-arrow"><a href="#!/"><i class="fas fa-arrow-left"></i></span></a> Github Token
-        </span>
-        <span class="description">Your github token will be shown below.</span>
-    </div>
+    <div ng-include="'src/navigation/header.html'"></div>
     <div class="ng-success-dialog">
         <div class="ng-info">
             <span class="title">{{token}}</span>
-            <span class="description">This will refresh in <u>{{timeRemaining}}</u> seconds.</span>
+            <span class="description">Token will refresh in <u>{{timeRemaining}}</u> seconds.</span>
             <span class="hint">Copy the token into your password field to gain access.</span>
         </div>
     </div>

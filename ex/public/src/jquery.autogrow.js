@@ -1,3 +1,4 @@
+"use strict";
 (function ($) {
     // See related thread: http://stackoverflow.com/questions/931207/is-there-a-jquery-autogrow-plugin-for-text-fields
     $.fn.autoGrowInput = function (o) {

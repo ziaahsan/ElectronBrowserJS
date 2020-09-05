@@ -1,3 +1,4 @@
+"use strict";
 angular
 .module('de.devjs.angular.appstore', [])
 .directive('appstoreOverlay', ['$timeout', '$http', '$compile', 'AppStore', function ($timeout, $http, $compile, AppStore) {
@@ -23,9 +24,12 @@ angular
 
             });
 
-            // Route with params initializer
+            // Initialize initial setup
             $scope.init = function() {
-
+                // Default header
+                $scope.title = "Apps";
+                $scope.description = "Configure all your apps below.";
+                $scope.link = "#!/";
             }
 
             // Setup redirection
@@ -41,6 +45,7 @@ angular
     function link(scope, element) {
         // Root element from view.html
         $ngAppStoreOverlay = $(element);
+        scope.init();
     }
 }]);
 
