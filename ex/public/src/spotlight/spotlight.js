@@ -261,6 +261,15 @@ angular
                 }
             };
 
+            $scope.$watch('selectedItemIndex', function () {
+                $timeout(function () {
+                    if ($scope.selectedItemIndex !== undefined) {
+                        keepItemVisible();
+                    }
+                }, 100);
+            });
+
+            // Local reset search params
             function resetSearch() {
                 $scope.selectedItem = undefined;
                 $scope.searchResultsCount = 0;
@@ -269,6 +278,7 @@ angular
                 $scope.searchTerm = "";
             }
 
+            // Local setup the previous
             function selectPreviousEntry() {
                 var idx = getSelectedItemIndex();
                 if (idx - 1 >= 0) {
@@ -276,6 +286,7 @@ angular
                 }
             }
 
+            // Local selection of next item
             function selectNextEntry() {
                 var idx = getSelectedItemIndex();
                 if (idx + 1 < $scope.searchResultsCount) {
@@ -283,6 +294,7 @@ angular
                 }
             }
 
+            // Local item at index
             function selectItemAtIndex(idx) {
                 var currentItemIndex = 0;
                 $scope.searchResults.forEach(function (category) {
@@ -303,6 +315,7 @@ angular
                 $scope.selectedItemIndex = idx;
             }
 
+            // Local search input params
             function setSearchInputInfo(categoryName) {
                 if ($scope.searchTerm.length === 0) {
                     $scope.searchInputInfo = AngularSpotlight.getSearchInputInfoSearching();
@@ -313,18 +326,12 @@ angular
                 }
             }
 
+            // Local return the selected item index
             function getSelectedItemIndex() {
                 return $scope.selectedItemIndex || 0;
             }
 
-            $scope.$watch('selectedItemIndex', function () {
-                $timeout(function () {
-                    if ($scope.selectedItemIndex !== undefined) {
-                        keepItemVisible();
-                    }
-                }, 100);
-            });
-
+            // Local item visible
             function keepItemVisible() {
                 var activeItem = $ngSpotlightOverlay.find('li.ng-spotlight-results-list-item.active');
                 var resultsList = $ngSpotlightOverlay.find('.ng-spotlight-results-list');
@@ -405,10 +412,12 @@ angular
 angular
 .module('de.devjs.angular.spotlight')
 .provider("AngularSpotlight", function () {
+    // Defaults
     var _iconConfig = iconConfig();
     var _detailsTemplateConfig = detailsTemplateConfig();
     var _defaultSpotlightConfig = defaultSpotlightConfig();
 
+    // Rquired + other objects
     return {
         search: function () {
             throw "You have to implement a search function using AngularSpotlightProvider!";
@@ -470,6 +479,7 @@ angular
         }
     }
 
+    // Sets up default templates and others
     function detailsTemplateConfig() {
         var detailsTemplates = {
             'default': '\
@@ -500,6 +510,7 @@ angular
         }
     }
 
+    // Spotlight configuration
     function defaultSpotlightConfig() {
         const KEY_SPACE = 32;
         var searchInputInfoSearching = 'Suchend ...';
@@ -539,6 +550,7 @@ angular
             return spotlightToggleCtrlKey;
         }
 
+        // Get default objects
         return {
             setSearchInputInfoSearching: setSearchInputInfoSearching,
             getSearchInputInfoSearching: getSearchInputInfoSearching,

@@ -1,4 +1,7 @@
 "use strict";
+// Server setup
+const server = require('./main/server/server')
+
 // Modules to control application life and create native browser window
 const { app, ipcMain } = require('electron')
 const requests = require('./main/window/requests')

@@ -1,67 +1,12 @@
 <div class="ng-spotlight ng-appstore-overlay">
     <div ng-include="'src/navigation/header.html'"></div>
-    <div class="ng-cards">
-        <div class="ng-card">
+    <div ng-if="appstoreItems === null"  ng-include="'src/navigation/loading.html'"></div>
+    <div class="ng-cards" ng-if="appstoreItems !== null">
+        <div class="ng-card" ng-repeat="appstoreItem in appstoreItems" ng-click="redirect(appstoreItem.relative_link)">
             <div class="ng-info">
-                <span class="title">Theme</span>
-                <span class="command">:Theme</span>
-                <span class="description">Change theme or set it to auto with windows.</span>
-            </div>
-        </div>
-        <div class="ng-card">
-            <div class="ng-info">
-                <span class="title">Calendar</span>
-                <span class="command">:Calendar</span>
-                <span class="description">Keep up with all your calendars.</span>
-            </div>
-        </div>
-        <div class="ng-card">
-            <div class="ng-info">
-                <span class="title">Mail</span>
-                <span class="command">:Mail</span>
-                <span class="description">One inbox for all your mail.</span>
-            </div>
-        </div>
-        <div class="ng-card">
-            <div class="ng-info">
-                <span class="title">2 Factor Auth</span>
-                <span class="command">:2FA</span>
-                <span class="description">Manage all your auths with windows.</span>
-            </div>
-        </div>
-        <div class="ng-card">
-            <div class="ng-info">
-                <span class="title">Messages</span>
-                <span class="command">:Messages</span>
-                <span class="description">Message anyone with windows.</span>
-            </div>
-        </div>
-        <div class="ng-card">
-            <div class="ng-info">
-                <span class="title">Spotify</span>
-                <span class="command">:Spotify</span>
-                <span class="description">Your Spotify music now with windows.</span>
-            </div>
-        </div>
-        <div class="ng-card">
-            <div class="ng-info">
-                <span class="title">Subscribe</span>
-                <span class="command">:Subscribe</span>
-                <span class="description">Subscribe to anything with windows.</span>
-            </div>
-        </div>
-        <div class="ng-card">
-            <div class="ng-info">
-                <span class="title">Translate</span>
-                <span class="command">:Translate [msg]</span>
-                <span class="description">Translate anything from-to with windows.</span>
-            </div>
-        </div>
-        <div class="ng-card">
-            <div class="ng-info">
-                <span class="title">Todo</span>
-                <span class="command">:Todo</span>
-                <span class="description">Manage your projects, or days with windows.</span>
+                <span class="title">{{appstoreItem.title}}</span>
+                <span class="command">{{appstoreItem.command}}</span>
+                <span class="description">{{appstoreItem.description}}</span>
             </div>
         </div>
     </div>

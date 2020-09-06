@@ -41,6 +41,15 @@ $spotlight-responsive-width: 680px !default;
   a, a:link, a:active, a:visited, a:hover {
     color: $primary-color;
   }
+  // Global loader
+  .ng-loading {
+    padding: 22px;
+    text-align: center;
+    color: $primary-color;
+    background-color: $primary;
+    border-bottom: 1px solid $border-color;
+    font-size: 28px;
+  }
   // Global password pin
   .ng-pass-pin {
     color: $primary-color;
@@ -135,6 +144,7 @@ $spotlight-responsive-width: 680px !default;
           font-weight: 600;
           display: block;
           width: calc(100% - 42px);
+          text-transform: capitalize;
         }
         .command {
           font-size: 11px;
@@ -146,6 +156,9 @@ $spotlight-responsive-width: 680px !default;
         .description {
           font-size: 12px;
           font-weight: 500;
+        }
+        .description::first-letter {
+          text-transform: uppercase;
         }
       }
     }

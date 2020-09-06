@@ -1,4 +1,12 @@
 {
+    "mysql": {
+        "host": "",
+        "user": "",
+        "password": "",
+        "database": "",
+        "charset": "utf8mb4"
+    },
+    
     "dotnet": {
         "path": "",
         "appPath": "",

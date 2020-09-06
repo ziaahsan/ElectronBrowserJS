@@ -18,7 +18,12 @@ angular
     // NG - controller
     //</summary>
     function controller() {
+        let apiUrl = "http://localhost:8000/api/appstore"
+
         return ['$scope', '$location', function ($scope, $location) {
+            // Store appstore items from api
+            $scope.appstoreItems = null;
+            
             // Clean up with angularJS
             $scope.$on('$destroy', function() {
 
@@ -30,10 +35,22 @@ angular
                 $scope.title = "Apps";
                 $scope.description = "Configure all your apps below.";
                 $scope.link = "#!/";
+
+                // Make intial /api/appstore request to get all items
+                $scope.getAppStoreItems();
+            }
+
+            $scope.getAppStoreItems = async function() {
+                let response = await new Promise(resolve => resolve($http.get(apiUrl)) );
+                $scope.appstoreItems = response.data.results;
+
+                // Apply the changes
+                $scope.$apply();
             }
 
             // Setup redirection
             $scope.redirect = function (path) {
+                console.log(path);
                 $location.path(path);
             }
         }];
