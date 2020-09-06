@@ -88,7 +88,7 @@ angular
 
                 // Update the layout with the new changes
                 $scope.$apply();
-            }            
+            }
 
             // Setup redirection
             $scope.redirect = function (path) {

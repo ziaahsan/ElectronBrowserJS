@@ -41,7 +41,48 @@ $spotlight-responsive-width: 680px !default;
   a, a:link, a:active, a:visited, a:hover {
     color: $primary-color;
   }
-  // Dialogs
+  // Global password pin
+  .ng-pass-pin {
+    color: $primary-color;
+    background-color: $primary;
+    text-align: center;
+    padding: 16px 0 32px 0;
+    .ng-info {
+      text-align: center;
+      position: relative;
+      margin: 0 0 12px 0;
+      .icon {
+        font-size: 42px;
+      }
+      .title {
+        font-size: 16px;
+        font-weight: 600;
+        display: block
+      }
+      .description {
+        font-size: 12px;
+        font-weight: 500;
+        display: block;
+      }
+    }
+    form {
+      input[type=password] {
+        padding: 10px;
+        border: 1px solid $border-color;
+        width: 25px;
+        height: 25px;
+        text-align: center;
+        font-size: 18px;
+        color: $primary-color;
+        background-color: $secondary;
+      }
+      input[type=password]:focus {
+        outline: 2px solid $primary-highlight;
+      }
+    }
+  }
+
+  // Global dialogs
   .ng-success-dialog {
     padding: 42px 6px;
     color: $primary-color;
@@ -66,11 +107,13 @@ $spotlight-responsive-width: 680px !default;
       }
     }
   }
-  // Global css usage
+  // Global cards
   .ng-cards {
     padding: 12px 6px;
     color: $primary-color;
     background-color: $primary;
+    max-height: 312px;
+    overflow-y: scroll;
     .ng-card {
       width: 23%;
       min-height: 87px;
@@ -113,8 +156,39 @@ $spotlight-responsive-width: 680px !default;
     }
   }
 
-   // Pins overlay
-   &.ng-pins-overlay {
+  //Global header
+  .ng-header {
+    height: auto;
+    color: $primary-color;
+    background-color: $primary;
+    padding: 16px;
+    text-align: left;
+    border-bottom: 1px solid $border-color;
+    .icon-left {
+      position: relative;
+      display: inline-block;
+      padding-right: 8px;
+    }
+    .title {
+      font-size: 14px;
+      font-weight: 600;
+      display: block;
+    }
+    .description {
+      font-size: 12px;
+      font-weight: 500;
+      max-width: 650px;
+      margin: 0 auto;
+      line-height: 22px;
+      padding-left: 28px;
+    }
+  }
+
+
+   // Login, Pins, AppStore overlay
+   &.ng-login-overlay,
+   &.ng-pins-overlay,
+   &.ng-appstore-overlay {
     position: relative;
     z-index: 9;
     width: 100%;
@@ -134,56 +208,6 @@ $spotlight-responsive-width: 680px !default;
       margin: 0 auto;
       margin-top: 6px;
       width: $ng-spotlight-w;
-    }
-  }
-
-  // AppStore overlay
-  &.ng-appstore-overlay {
-    position: relative;
-    z-index: 9;
-    width: 100%;
-    font-size: 12px;
-    letter-spacing: 0.3px;
-
-    @if $overlay-border-color != "none" {
-      border: 1px solid $overlay-border-color;
-    }
-
-    font-family: $font-family;
-    box-shadow: 0 12px 15px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19);
-    border-radius: 6px;
-    overflow: hidden;
-
-    @media only screen and (min-width: $spotlight-responsive-width) {
-      margin: 0 auto;
-      width: $ng-spotlight-w;
-    }
-
-    .ng-header {
-      height: auto;
-      color: $primary-color;
-      background-color: $primary;
-      padding: 16px;
-      text-align: left;
-      border-bottom: 1px solid $border-color;
-      .icon-left {
-        position: relative;
-        display: inline-block;
-        padding-right: 8px;
-      }
-      .title {
-        font-size: 14px;
-        font-weight: 600;
-        display: block;
-      }
-      .description {
-        font-size: 12px;
-        font-weight: 500;
-        max-width: 650px;
-        margin: 0 auto;
-        line-height: 22px;
-        padding-left: 28px;
-      }
     }
   }
 
