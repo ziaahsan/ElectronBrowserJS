@@ -4,7 +4,7 @@ const config = require('config');
 const { v4: uuidv4 } = require('uuid');
 
 // Setting up server dependencies
-const connection = require('./database')
+const connection = require('./components/database')
 
 // Setting up express
 const express = require('express')
@@ -51,9 +51,9 @@ server.use(bodyParser.json())
 server.use(session(sess))
 
 // require routes
-require('./routes/indexRoot')(server, connection, sessionStore);
-require('./routes/appstoreRoute')(server, connection, sessionStore);
-require('./routes/loginRoute')(server, connection, sessionStore);
+require('./components/routes/indexRoot')(server, connection, sessionStore);
+require('./components/routes/appstoreRoute')(server, connection, sessionStore);
+require('./components/routes/loginRoute')(server, connection, sessionStore);
 
 // App's port
 const PORT = process.env.PORT || config.server.port

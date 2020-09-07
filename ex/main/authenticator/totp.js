@@ -1,7 +1,4 @@
 "use strict";
-// Setting up configuration
-const config = require('config');
-
 // For TOTP
 const { authenticator } = require('otplib')
 
