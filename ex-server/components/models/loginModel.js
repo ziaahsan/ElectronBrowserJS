@@ -3,7 +3,7 @@ class loginModel {
     // check if user exists
     static authenticate(connection, email, pin, result) {
         // Prepare query
-        let strQuery = 'SELECT COUNT(*) as count FROM `ma_users` WHERE email = ? AND pin = ?';
+        let strQuery = 'SELECT id, COUNT(*) as count FROM `ma_users` WHERE email = ? AND pin = ?';
 
         connection.query(strQuery, [email, pin], (error, results) => {
             // Check for error

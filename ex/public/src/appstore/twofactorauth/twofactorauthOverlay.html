@@ -1,34 +1,15 @@
 <div class="ng-spotlight ng-appstore-overlay">
     <div ng-include="'src/navigation/header.html'"></div>
-    <div class="ng-cards">
-        <div class="ng-card">
+    <div ng-if="twoFactorAuthItems === null" ng-include="'src/navigation/loading.html'"></div>
+    <div class="ng-cards" ng-if="twoFactorAuthItems !== null">
+        <div class="ng-card" ng-repeat="twoFactorAuthItem in twoFactorAuthItems" ng-click="redirect(twoFactorAuthItem.relative_link)">
             <div class="ng-info">
                 <span class="icon">
                     <i class="las la-shield-alt"></i>
                 </span>
-                <span class="title">Hotmail</span>
-                <span class="command">:2FA:Hotmail</span>
-                <span class="description">Click to view your token.</span>
-            </div>
-        </div>
-        <div class="ng-card">
-            <div class="ng-info">
-                <span class="icon">
-                    <i class="las la-shield-alt"></i>
-                </span>
-                <span class="title">Stripe</span>
-                <span class="command">:2FA:Stripe</span>
-                <span class="description">Click to view your token.</span>
-            </div>
-        </div>
-        <div class="ng-card" ng-click="redirect('/appstore/twofactorauth/github')">
-            <div class="ng-info">
-                <span class="icon">
-                    <i class="las la-shield-alt"></i>
-                </span>
-                <span class="title">Github</span>
-                <span class="command">:2FA:Github</span>
-                <span class="description">Click to view your token.</span>
+                <span class="title">{{twoFactorAuthItem.title}}</span>
+                <span class="command">{{twoFactorAuthItem.command}}</span>
+                <span class="description">{{twoFactorAuthItem.description}}</span>
             </div>
         </div>
     </div>

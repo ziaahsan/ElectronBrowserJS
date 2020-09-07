@@ -18,27 +18,28 @@ angular
     // NG - controller
     //</summary>    
     function controller() {
+        let apiUrl = "http://localhost:8000/api/appstore/twofactorauth";
+
         // Base Dir directory for 2FA
         let baseDir = 'src/appstore/twofactorauth/';
 
         // Set of templates
         let templates = {
             default: baseDir + 'twofactorauthOverlay.html',
-            routeName: baseDir + 'twofactorauthdetailsOverlay.html'
+            twofactorauthdetails: baseDir + 'twofactorauthdetailsOverlay.html'
         }
 
         return ['$scope', '$routeParams', '$location', '$interval', function ($scope, $routeParams, $location, $interval) {
             // Clean up with angularJS
             $scope.$on('$destroy', function() {
                 $interval.cancel($scope.refreshToken);
-                window.removeEventListener('message', $scope.recievedToken);
             });
 
             // Route with params initializer
             $scope.routeParamsInit = function() {
                 // Default header
-                $scope.title = "Github Token";
-                $scope.description = "Your github token will be shown below.";
+                $scope.title = "Requesting Token";
+                $scope.description = "Your token is being requested and will be shown below.";
                 $scope.link = "#!/";
 
                 // Default values for route with Params
@@ -48,68 +49,93 @@ angular
                 // Setup the interval to fetch the request every second
                 // Interval is auto trriggered when function runs
                 $scope.refreshToken = $interval(function() {
-                    $scope.requestToken();
+                    $scope.requestItemSecret();
                 }, 1000);
                 
-                // Initial setup of events
-                $scope.attachEventListerners();
                 // Make initial request
-                $scope.requestToken();
+                $scope.requestItemSecret();
                 // Setup refresh every seconds
                 $scope.$refreshToken;
             }
 
             // Initialize initial setup
             $scope.init = function() {
+                // Store twofactorauth items from api
+                $scope.twoFactorAuthItems = null;
+
                 // Default header
                 $scope.title = "2 Factor Auth";
                 $scope.description = "Configure your auths below.";
                 $scope.link = "#!/";
+
+                // Request token
+                $scope.requestItems();
             }
 
-            // Initialize events
-            $scope.attachEventListerners = async function() {
-                window.addEventListener('message', $scope.recievedToken);
-            }
+            // Fetch items for init
+            $scope.requestItems = async function() {
+                let response = await new Promise( resolve => $http.get(apiUrl).then(result => resolve(result)) );
 
-            // Fetch token
-            $scope.requestToken = function() {
-                window.postMessage({type:'get-token', q:$routeParams.name});
-            }
+                // No response results
+                if (response.data.code !== 403) {
+                    // Get data resul
+                    $scope.twoFactorAuthItems = response.data.results;
+                } else {
+                    $scope.redirect('/login');
+                }
 
-            // Listens on incoming message only for type ng-twofactorauth
-            $scope.recievedToken = function(event) {
-                if (event.source != window ||
-                    event.data.type == null || event.data.type == undefined ||
-                    event.data.type != 'ng-twofactorauth' || !event.data.results) return;
-                
-                $scope.token = event.data.results.token;
-                $scope.timeRemaining = event.data.results.timeRemaining;
-
-                // Update the layout with the new changes
+                // Update the scope
                 $scope.$apply();
             }
 
-            // Setup redirection
-            $scope.redirect = function (path) {
-                $location.path(path);
+            $scope.requestItemSecret = async function() {
+                let response = await new Promise( resolve => $http.post(apiUrl, {token: $routeParams.token}).then(result => resolve(result)) );
+
+                // Set the loading to false
+                $scope.isLoading = false;
+
+                // No response results
+                if (response.data.code !== 403) {
+                    // Get data resul
+                    $scope.twoFactorAuthItems = response.data.results;
+
+                    // Default header
+                    $scope.title = response.data.results[0].title;
+                    $scope.description = response.data.results[0].description;
+                    $scope.link = "#!/";
+
+                    // Default values for route with Params
+                    $scope.token = response.data.results[0].secret;
+                    $scope.timeRemaining = response.data.results[0].timeRemaining;
+                } else {
+                    // For 403
+                    $scope.redirect('/login');
+                }
+
+                // Update the scope
+                $scope.$apply();
             }
 
             // Setup route based templates
             $scope.getTemplateUrl = function (element) {
-                // Get the :name parameter from URI
-                if ($routeParams.name) {
+                // Get the :token parameter from URI
+                if ($routeParams.token) {
                     // Initialize some things
                     $scope.routeParamsInit();
 
                     // Send back the default template
-                    return templates.routeName;
+                    return templates.twofactorauthdetails;
                 }
 
                 // Return with initial
                 $scope.init();
                 // Default template viewing for otherwise
                 return templates.default;
+            }
+
+            // Setup redirection
+            $scope.redirect = function (path) {
+                $location.path(path);
             }
         }];
     }

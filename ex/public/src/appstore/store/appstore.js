@@ -20,13 +20,7 @@ angular
     function controller() {
         let apiUrl = "http://localhost:8000/api/appstore";
 
-        return ['$scope', '$location', function ($scope, $location) {
-            // Initial loading screen to be enabled
-            $scope.isLoading = true;
-
-            // Store appstore items from api
-            $scope.appstoreItems = null;
-            
+        return ['$scope', '$location', function ($scope, $location) {            
             // Clean up with angularJS
             $scope.$on('$destroy', function() {
 
@@ -34,29 +28,27 @@ angular
 
             // Initialize initial setup
             $scope.init = function() {
+                // Store appstore items from api
+                $scope.appstoreItems = null;
+
                 // Default header
                 $scope.title = "Apps";
                 $scope.description = "Configure all your apps below.";
                 $scope.link = "#!/";
 
-                // Make intial /api/appstore request to get all items
-                $scope.getAppStoreItems();
+                // Make initial /api/appstore request to get all items
+                $scope.requestItems();
             }
 
             // Gets app store items from database
-            $scope.getAppStoreItems = async function() {
+            $scope.requestItems = async function() {
                 let response = await new Promise( resolve => $http.get(apiUrl).then(result => resolve(result)) );
-
-                // Set the loading to false
-                $scope.isLoading = false;
-                
                 // No response results
                 if (response.data.code !== 403) {
                     // Get data resul
                     $scope.appstoreItems = response.data.results;
                 } else {
-                    // For 403 update description
-                    $scope.description = "Your pin is required in order to proceed.";
+                    $scope.redirect('/login');
                 }
 
                 // Update the scope

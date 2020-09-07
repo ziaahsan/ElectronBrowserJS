@@ -43,12 +43,16 @@ $spotlight-responsive-width: 680px !default;
   }
   // Global loader
   .ng-loading {
-    padding: 22px;
     text-align: center;
     color: $primary-color;
     background-color: $primary;
-    border-bottom: 1px solid $border-color;
-    font-size: 28px;
+    min-height: 192px;
+    .icon {
+      position: absolute;
+      font-size: 28px;
+      top: 50%;
+      right: 50%;
+    }
   }
   // Global password pin
   .ng-pass-pin {
@@ -62,6 +66,7 @@ $spotlight-responsive-width: 680px !default;
       margin: 0 0 12px 0;
       .icon {
         font-size: 42px;
+        color: #e44c3c;
       }
       .title {
         font-size: 16px;
@@ -219,12 +224,6 @@ $spotlight-responsive-width: 680px !default;
     }
   }
 
-  // Login overlay overwrites
-  &.ng-login-overlay {
-    border-radius: 0;
-    box-shadow: none;
-  }
-
   // Spotlight overlay
   &.ng-spotlight-overlay {
     position: relative;
@@ -349,8 +348,10 @@ $spotlight-responsive-width: 680px !default;
       color: $primary-color;
       background-color: $primary;
       .icons {
-        padding: 22px 0 0 0;
+        padding: 12px 0 0 0;
         text-align: center;
+        color: #e44c3c;
+        font-size: 42px;
       }
       p {
         padding: 8px 42px 22px 42px;

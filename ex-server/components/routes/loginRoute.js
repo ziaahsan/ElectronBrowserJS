@@ -8,6 +8,33 @@ const loginModel = require('../models/loginModel')
 const { check, validationResult } = require('express-validator')
 
 module.exports = (server, connection, store) => {
+    server.get('/api/login', (req, res) => {
+        // Construct the response default
+        let response = {
+            errors: null,
+            code: 200,
+            results: null
+        }
+
+        // Check if request is authentic
+        store.get(req.sessionID, (error, session) => {
+            // Check if request.session doesnt have an email
+            if (session && session.email && session.userID) {
+                // Sending response
+                res.status(200).send(response)
+                return
+            }
+            
+            response.errors = "Not logged in."
+            response.code = 403
+            response.results = null
+            
+            // Sending response
+            res.status(200).send(response)
+            return
+        })
+    })
+
     server.post(
         '/api/login',
         [
@@ -26,7 +53,7 @@ module.exports = (server, connection, store) => {
             // Check if request is authentic
             store.get(req.sessionID, (error, session) => {
                 // Check if request.session doesnt have an email
-                if (session && session.email) {
+                if (session && session.email && session.userID) {
                     response.errors = "Already logged in!"
                     
                     // Sending response
@@ -39,7 +66,7 @@ module.exports = (server, connection, store) => {
                 
                 // Send errors back
                 if (!errors.isEmpty()) {
-                    response.errors = errors.array(),
+                    response.errors = errors.array()
                     response.code = 400
                     response.results = null
                     
@@ -78,6 +105,7 @@ module.exports = (server, connection, store) => {
                     // Save session
                     if (count == 1) {
                         response.code = 200
+                        req.session.userID = jsonResults.id
                         req.session.email = email
                         store.set(req.sessionID, req.session, (error) => {
                             if (error) {

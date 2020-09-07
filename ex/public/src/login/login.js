@@ -77,7 +77,7 @@ angular
                     new Promise(async resolove => {
                         let response = await $http.post(apiUrl, {email: 'ahsan_m_zia@live.com', pin: pin});
                         resolove(response);
-                    }).then(results => {
+                    }).then(async results => {
                         // Reset pin
                         pin = '';
                         // Get the code and see if requests has errors
@@ -87,14 +87,18 @@ angular
                             $formInputs.val('');
                             $scope.focus();
 
-                            // Make the icon animate red, on completion add listener
-                            $("span.icon > .las.la-fingerprint").css({color: '#c60f36'});
+                            // Change border color of all inputs
+                            $formInputs.css({borderColor: '#e44c3c'});
 
                             // Add the listener back
                             window.addEventListener('keyup', $scope.moveOnKey);
                         } else {
-                            // Mark authenticated
-                            $("span.icon > .las.la-fingerprint").css({color: '#85e735'});
+                            // Change border color of all inputs
+                            $formInputs.css({borderColor: '#85e735'});
+
+                            // Wait 700 milliseconds and prevoius route[page]
+                            await new Promise(resolve => setTimeout(resolve, 700));
+                            $scope.back();
                         }
                     })
                 }
@@ -107,12 +111,22 @@ angular
 
                 // Setup listeners
                 window.addEventListener('keyup', $scope.moveOnKey);
+
+                // Default header
+                $scope.title = "Pin";
+                $scope.description = "Your pin is required to proceed.";
+                $scope.link = "#!/";
             }
 
             // Setup redirection
             $scope.redirect = function (path) {
                 $location.path(path);
             }
+
+            // Go back to the previous route[page]
+            $scope.back = function() { 
+                window.history.back();
+            };
         }];
     }
 
