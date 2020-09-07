@@ -1,6 +1,7 @@
 "use strict";
+const config = require('config')
 // Setting up dev
-const isDev = require('electron-is-dev')
+const isDev = config.server.isDev
 
 module.exports = (server, connection, store) => {
     // Default root construct a session

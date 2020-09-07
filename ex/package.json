@@ -4,7 +4,7 @@
   "description": "Ex",
   "main": "main.js",
   "scripts": {
-    "package-win": "electron-packager . ex --overwrite --asar=true --platform=win32 --arch=ia32 --icon=assets/icons/win/icon.ico --prune=true --out=release-builds --version-string.CompanyName=AI --version-string.FileDescription=AI --version-string.ProductName=\"Ex\"",
+    "package-win": "electron-packager . ex --overwrite --asar=true --platform=win32 --arch=ia32 --icon=icon.ico --prune=true --out=release-builds --version-string.CompanyName=AI --version-string.FileDescription=AI --version-string.ProductName=\"Ex\"",
     "start": "electron ."
   },
   "repository": "https://github.com/ziaahsan/electron-apps/tree/master/ex",

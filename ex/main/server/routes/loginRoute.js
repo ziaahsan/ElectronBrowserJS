@@ -1,6 +1,8 @@
 "use strict";
+const config = require('config')
 // Setting up dev
-const isDev = require('electron-is-dev')
+const isDev = config.server.isDev
+
 // setup login model
 const loginModel = require('../models/loginModel')
 const { check, validationResult } = require('express-validator')

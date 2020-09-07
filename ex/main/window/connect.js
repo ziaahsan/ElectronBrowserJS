@@ -22,7 +22,7 @@ class Connect {
         }
 
         conn = new ConnectionBuilder()
-            .connectTo(config.dotnet.path, config.dotnet.cmd.type, config.dotnet.cmd.args, config.dotnet.appPath)
+            .connectTo("C:\\Program Files\\dotnet\\dotnet", "run", "--project", ".\\dotnet\\app")
             .build()
         
         conn.onDisconnect = () => {

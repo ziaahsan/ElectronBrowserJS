@@ -1,7 +1,4 @@
 "use strict";
-// Server setup
-const server = require('./main/server/server')
-
 // Modules to control application life and create native browser window
 const { app, ipcMain } = require('electron')
 const requests = require('./main/window/requests')
@@ -14,8 +11,9 @@ ipcMain.handle('ng-requests', async (event, data) => {
     // because in the requests.fetch we want to event.sender.send
     switch(data.type)  {
         case 'get-token':
-            let token = await new Promise(resolve => resolve(authenticator.GetToken()))
-            let timeRemaining = await new Promise(resolve => resolve(authenticator.GetTimeRemaining()));
+            let secret = '123456'
+            let token = await new Promise(resolve => resolve(authenticator.GetToken(secret)))
+            let timeRemaining = await new Promise(resolve => resolve(authenticator.GetTimeRemaining()))
             event.sender.send('request-response', 'ng-twofactorauth', data.type, {token: token, timeRemaining: timeRemaining})
             break
         case 'select-programs':

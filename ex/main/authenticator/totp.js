@@ -4,10 +4,9 @@ const config = require('config');
 
 // For TOTP
 const { authenticator } = require('otplib')
-const secret = config.otplib.github.ziaahsan
 
 class Authenticator {
-    static GetToken = () => {
+    static GetToken = (secret) => {
         return authenticator.generate(secret)
     }
 

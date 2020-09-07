@@ -1,15 +1,13 @@
 "use strict";
-// Setting up dev
-const isDev = require('electron-is-dev')
+const config = require('config')
+const isDev = config.server.isDev
 // setup appstore model
-const appstoreModel = require('../models/appstoreModel');
+const appstoreModel = require('../models/appstoreModel')
 
 module.exports = (server, connection, store) => {
     server.get(
         '/api/appstore',
         (req, res) => {
-            console.log(req.get('host'))
-            console.log(req.get('origin'))
             // Construct the response default
             let response = {
                 errors: null,
