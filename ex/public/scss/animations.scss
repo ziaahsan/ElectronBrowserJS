@@ -1,0 +1,25 @@
+// View animation all togather
+.view.ng-leave {
+	-webkit-animation: scaleDownUp .3s ease both;
+    animation: scaleDownUp .3s ease both;
+}
+.view.ng-enter {  
+    -webkit-animation: scaleUpDown .3s ease both;
+	animation: scaleUpDown .3s ease both;
+}
+
+// Scaling animations
+@-webkit-keyframes scaleDownUp {
+	from { }
+	to { opacity: 0; -webkit-transform: scale(1.05); }
+}
+@keyframes scaleDownUp {
+	from { }
+	to { opacity: 0; -webkit-transform: scale(1.05); transform: scale(1.05); }
+}
+@-webkit-keyframes scaleUpDown {
+	from { opacity: 0; -webkit-transform: scale(1.05); }
+}
+@keyframes scaleUpDown {
+	from { opacity: 0; -webkit-transform: scale(1.05); transform: scale(1.05); }
+}
