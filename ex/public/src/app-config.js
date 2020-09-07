@@ -8,7 +8,6 @@
         // Routing
         $routeProvider
             .when("/", { templateUrl : "src/spotlight/view.html" })
-            .when("/login", { templateUrl : "src/login/view.html" })
             .when("/appstore", { templateUrl : "src/appstore/store/view.html" })
             .when("/appstore/twofactorauth", { templateUrl : "src/appstore/twofactorauth/view.html" })
             .when("/appstore/twofactorauth/:name", { templateUrl : "src/appstore/twofactorauth/view.html" });

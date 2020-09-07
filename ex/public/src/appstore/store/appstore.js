@@ -18,9 +18,12 @@ angular
     // NG - controller
     //</summary>
     function controller() {
-        let apiUrl = "http://localhost:8000/api/appstore"
+        let apiUrl = "http://localhost:8000/api/appstore";
 
         return ['$scope', '$location', function ($scope, $location) {
+            // Initial loading screen to be enabled
+            $scope.isLoading = true;
+
             // Store appstore items from api
             $scope.appstoreItems = null;
             
@@ -40,17 +43,28 @@ angular
                 $scope.getAppStoreItems();
             }
 
+            // Gets app store items from database
             $scope.getAppStoreItems = async function() {
-                let response = await new Promise(resolve => resolve($http.get(apiUrl)) );
-                $scope.appstoreItems = response.data.results;
+                let response = await new Promise( resolve => $http.get(apiUrl).then(result => resolve(result)) );
 
-                // Apply the changes
+                // Set the loading to false
+                $scope.isLoading = false;
+                
+                // No response results
+                if (response.data.code !== 403) {
+                    // Get data resul
+                    $scope.appstoreItems = response.data.results;
+                } else {
+                    // For 403 update description
+                    $scope.description = "Your pin is required in order to proceed.";
+                }
+
+                // Update the scope
                 $scope.$apply();
             }
 
             // Setup redirection
             $scope.redirect = function (path) {
-                console.log(path);
                 $location.path(path);
             }
         }];

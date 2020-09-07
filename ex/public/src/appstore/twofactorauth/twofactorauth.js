@@ -18,13 +18,13 @@ angular
     // NG - controller
     //</summary>    
     function controller() {
-        // Base URL directory for 2FA
-        let baseUrl = 'src/appstore/twofactorauth/';
+        // Base Dir directory for 2FA
+        let baseDir = 'src/appstore/twofactorauth/';
 
         // Set of templates
         let templates = {
-            default: baseUrl + 'twofactorauthOverlay.html',
-            routeName: baseUrl + 'twofactorauthdetailsOverlay.html'
+            default: baseDir + 'twofactorauthOverlay.html',
+            routeName: baseDir + 'twofactorauthdetailsOverlay.html'
         }
 
         return ['$scope', '$routeParams', '$location', '$interval', function ($scope, $routeParams, $location, $interval) {

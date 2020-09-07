@@ -22,7 +22,13 @@ angular
     // NG - controller
     //</summary>
     function controller() {
+        let apiUrl = "http://localhost:8000/api/login";
+
         return ['$scope', '$location', function ($scope, $location) {
+            // Local pin
+            let pin = '';
+            let $formInputs = $("form#pass-pin :input");
+
             // Clean up with angularJS
             $scope.$on('$destroy', function() {
                 window.removeEventListener('keyup', $scope.moveOnKey);
@@ -36,6 +42,11 @@ angular
             // As pin is input move forward
             $scope.moveOnKey = function(event) {
                 var $passpin = $ngLoginOverlay.find('input:focus');
+                if ($passpin.length === 0) {
+                    $ngLoginOverlay.find('input:last').focus().select()
+                    $passpin = $ngLoginOverlay.find('input:focus');
+                }
+                
                 let pinFields = $passpin.closest('form').find(':input');
 
                 // Remvove and move back
@@ -44,6 +55,7 @@ angular
                     if (pinFieldsIndx < 0) pinFieldsIndx = 0;
 
                     pinFields.eq(pinFieldsIndx).focus();
+                    pin = pin.slice(0, -1);
                     return;
                 }
 
@@ -51,6 +63,40 @@ angular
                 if ($passpin.val().length >= 1) {
                     let pinFieldsIndx = pinFields.index($passpin) + 1;
                     pinFields.eq(pinFieldsIndx).focus();
+                    // Add value to pin
+                    pin += $passpin.val();
+                }
+
+                // Upon hittin pin length 4
+                if (pin.length === 4) {
+                    // Remove the listener
+                    window.removeEventListener('keyup', $scope.moveOnKey);
+                    // Disable all inputs
+                    $formInputs.prop('disabled', true);
+                    // Setup a prmoise for request
+                    new Promise(async resolove => {
+                        let response = await $http.post(apiUrl, {email: 'ahsan_m_zia@live.com', pin: pin});
+                        resolove(response);
+                    }).then(results => {
+                        // Reset pin
+                        pin = '';
+                        // Get the code and see if requests has errors
+                        if (results.data.code !== 200) {
+                            // Enable, clear and focus inputs
+                            $formInputs.prop('disabled', false);
+                            $formInputs.val('');
+                            $scope.focus();
+
+                            // Make the icon animate red, on completion add listener
+                            $("span.icon > .las.la-fingerprint").css({color: '#c60f36'});
+
+                            // Add the listener back
+                            window.addEventListener('keyup', $scope.moveOnKey);
+                        } else {
+                            // Mark authenticated
+                            $("span.icon > .las.la-fingerprint").css({color: '#85e735'});
+                        }
+                    })
                 }
             }
 
@@ -61,11 +107,6 @@ angular
 
                 // Setup listeners
                 window.addEventListener('keyup', $scope.moveOnKey);
-
-                // Default header
-                $scope.title = "Pin Required";
-                $scope.description = "You pin is required in order to proceed.";
-                $scope.link = "#!/";
             }
 
             // Setup redirection

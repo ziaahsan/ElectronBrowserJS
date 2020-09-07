@@ -1,4 +1,8 @@
 {
+    "server": {
+        "port": 8000,
+        "sesssion_timeout": 6000
+    },
     "mysql": {
         "host": "",
         "user": "",
