@@ -18,7 +18,7 @@ const sessionStore =
     new mysqlStore({
         clearExpired: true,
         checkExpirationInterval: 900000,
-        expiration: config.server.session_timeout,
+        expiration: config.session.timeout,
         connectionLimit: 1,
         createDatabaseTable: true,
         charset: 'utf8mb4',
@@ -34,11 +34,11 @@ const sessionStore =
 
 // Setup session
 const sess = {
-    key: "Shh, its a key!",
-    secret: "Shh, its a secret!",
+    key: config.session.key,
+    secret: config.session.secret,
     resave: false,
     saveUninitialized: false,
-    cookie: { maxAge: config.server.session_timeout },
+    cookie: { maxAge: config.session.timeout, sameSite: 'none' },
     store: sessionStore,
     genid: () =>  { return uuidv4() }
 }

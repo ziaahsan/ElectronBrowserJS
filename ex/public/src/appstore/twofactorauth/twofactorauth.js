@@ -102,7 +102,6 @@ angular
                     // Default header
                     $scope.title = response.data.results[0].title;
                     $scope.description = response.data.results[0].description;
-                    $scope.link = "#!/";
 
                     // Default values for route with Params
                     $scope.token = response.data.results[0].secret;
@@ -137,6 +136,11 @@ angular
             $scope.redirect = function (path) {
                 $location.path(path);
             }
+
+            // Go back to the previous route[page]
+            $scope.back = function() { 
+                window.history.back();
+            };
         }];
     }
 

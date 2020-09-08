@@ -34,7 +34,6 @@ angular
                 // Default header
                 $scope.title = "Apps";
                 $scope.description = "Configure all your apps below.";
-                $scope.link = "#!/";
 
                 // Make initial /api/appstore request to get all items
                 $scope.requestItems();
@@ -59,6 +58,11 @@ angular
             $scope.redirect = function (path) {
                 $location.path(path);
             }
+
+            // Go back to the previous route[page]
+            $scope.back = function() { 
+                window.history.back();
+            };
         }];
     }
 

@@ -1,5 +1,7 @@
 "use strict";
 const config = require('config')
+const HTTP_CODE = require('../codes')
+
 // Setting up dev
 const isDev = config.server.isDev
 
@@ -8,6 +10,7 @@ const loginModel = require('../models/loginModel')
 const { check, validationResult } = require('express-validator')
 
 module.exports = (server, connection, store) => {
+    // Check if a session for a request is active
     server.get('/api/login', (req, res) => {
         // Construct the response default
         let response = {
@@ -25,9 +28,8 @@ module.exports = (server, connection, store) => {
                 return
             }
             
-            response.errors = "Not logged in."
+            response.errors = [ {message: HTTP_CODE['403']} ]
             response.code = 403
-            response.results = null
             
             // Sending response
             res.status(200).send(response)
@@ -35,6 +37,7 @@ module.exports = (server, connection, store) => {
         })
     })
 
+    // Authenticate request against email:pin params
     server.post(
         '/api/login',
         [
@@ -54,8 +57,6 @@ module.exports = (server, connection, store) => {
             store.get(req.sessionID, (error, session) => {
                 // Check if request.session doesnt have an email
                 if (session && session.email && session.userID) {
-                    response.errors = "Already logged in!"
-                    
                     // Sending response
                     res.status(200).send(response)
                     return
@@ -82,44 +83,39 @@ module.exports = (server, connection, store) => {
                 loginModel.authenticate(connection, email, pin, (error, results) => {
                     // Setup error based on dev mode
                     if (error) {
+                        response.errors = [ {message: HTTP_CODE['500']} ]
+                        response.code = 500
+
                         if (isDev) {
                             response.errors = error
-                            response.code = 500
-                            response.results = null
-
-                            res.status(500).send(response)
-                        } else {
-                            response.errors = "An error on our side"
-                            response.code = 500
-                            response.results = null
-
-                            res.status(200).send(response)
                         }
+                        
+                        res.status(200).send(response)
                         return
                     }
 
                     // Get the result from string to json and check for count
                     let jsonResults = JSON.parse(results)
-                    let count = jsonResults.count
-
                     // Save session
-                    if (count == 1) {
+                    if (jsonResults.count == 1) {
                         response.code = 200
+
                         req.session.userID = jsonResults.id
                         req.session.email = email
+
                         store.set(req.sessionID, req.session, (error) => {
                             if (error) {
                                 //@todo: Send error to devlog
                                 return
                             }
+                            
+                            // Set the results
+                            response.results = jsonResults
                         })
                     } else {
+                        response.errors = [ {message: HTTP_CODE['400']} ]
                         response.code = 400
                     }
-
-                    // Response data if !error
-                    response.errors = error
-                    response.results = jsonResults
 
                     // Show the response
                     res.status(200).send(response)

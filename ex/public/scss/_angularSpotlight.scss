@@ -80,7 +80,8 @@ $spotlight-responsive-width: 680px !default;
       }
     }
     form {
-      input[type=password] {
+      input[type=password],
+      input[type=text] {
         padding: 10px;
         border: 1px solid $border-color;
         width: 25px;
@@ -90,7 +91,13 @@ $spotlight-responsive-width: 680px !default;
         color: $primary-color;
         background-color: $secondary;
       }
-      input[type=password]:focus {
+      input[type=text] {
+        width: 50%;
+        font-size: 16px;
+        font-weight: 500;
+      }
+      input[type=password]:focus,
+      input[type=text]:focus {
         outline: 2px solid $primary-highlight;
       }
     }
@@ -186,6 +193,7 @@ $spotlight-responsive-width: 680px !default;
       position: relative;
       display: inline-block;
       padding-right: 8px;
+      cursor: pointer;
     }
     .title {
       font-size: 14px;

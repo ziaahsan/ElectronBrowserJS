@@ -1,6 +1,10 @@
 "use strict";
 const config = require('config')
+const HTTP_CODE = require('../codes')
+
+// Setup dev para
 const isDev = config.server.isDev
+
 // setup appstore model
 const appstoreModel = require('../models/appstoreModel')
 const { check, validationResult } = require('express-validator')
@@ -19,7 +23,7 @@ module.exports = (server, connection, store) => {
             // Check if request is authentic
             store.get(req.sessionID, (error, session) => {
                 if (!session || !session.email || !session.userID) {
-                    response.errors = "Authorization required!"
+                    response.errors = [ {message: HTTP_CODE['403']} ]
                     response.code = 403
                     
                     // Show the response
@@ -30,9 +34,8 @@ module.exports = (server, connection, store) => {
                 appstoreModel.getAll(connection, (error, results) => {
                     // Setup error based on dev mode
                     if (error) {
-                       response.errors = "An error occurred on our side."
+                        response.errors = [ {message: HTTP_CODE['500']} ]
                         response.code = 500
-                        response.results = null
 
                         if (isDev) {
                             response.errors = error
@@ -42,8 +45,6 @@ module.exports = (server, connection, store) => {
                         return
                     }
                     
-                    // Response data if !error
-                    response.errors = error
                     response.code = 200
                     response.results = JSON.parse(results)
     
@@ -68,7 +69,7 @@ module.exports = (server, connection, store) => {
             // Check if request is authentic
             store.get(req.sessionID, (error, session) => {
                 if (!session || !session.email || !session.userID) {
-                    response.errors = "Authorization required!"
+                    response.errors = [ {message: HTTP_CODE['403']} ]
                     response.code = 403
 
                     // Show the response
@@ -79,9 +80,8 @@ module.exports = (server, connection, store) => {
                 appstoreModel.getAllTwoFactorAuth(connection, session.userID, (error, results) => {
                     // Setup error based on dev mode
                     if (error) {
-                        response.errors = "An error occurred on our side."
+                        response.errors = [ {message: HTTP_CODE['500']} ]
                         response.code = 500
-                        response.results = null
 
                         if (isDev) {
                             response.errors = error
@@ -103,6 +103,7 @@ module.exports = (server, connection, store) => {
         }
     )
 
+    // Based n the token posted get the required info
     server.post(
         '/api/appstore/twofactorauth',
         [
@@ -120,7 +121,7 @@ module.exports = (server, connection, store) => {
             // Check if request is authentic
             store.get(req.sessionID, (error, session) => {
                 if (!session || !session.email || !session.userID) {
-                    response.errors = "Authorization required!"
+                    response.errors = [ {message: HTTP_CODE['403']} ]
                     response.code = 403
 
                     // Show the response
@@ -135,7 +136,6 @@ module.exports = (server, connection, store) => {
                 if (!errors.isEmpty()) {
                     response.errors = errors.array(),
                     response.code = 400
-                    response.results = null
                     
                     // Sending response
                     res.status(200).send(response)
@@ -147,9 +147,8 @@ module.exports = (server, connection, store) => {
                 appstoreModel.getTwoFactorAuthByToken(connection, session.userID, token, (error, results) => {
                     // Setup error based on dev mode
                     if (error) {
-                        response.errors = "An error occurred on our side."
+                        response.errors = [ {message: HTTP_CODE['500']} ]
                         response.code = 500
-                        response.results = null
 
                         if (isDev) {
                             response.errors = error
@@ -159,8 +158,6 @@ module.exports = (server, connection, store) => {
                         return
                     }
                     
-                    // Response data if !error
-                    response.errors = error
                     response.code = 200
                     response.results = JSON.parse(results)
     

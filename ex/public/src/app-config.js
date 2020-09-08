@@ -1,8 +1,9 @@
 "use strict";
 (function () {
     angular
-    .module('de.devjs.angular.app', ['ngRoute', 'ngAnimate', 'de.devjs.angular.login', 'de.devjs.angular.spotlight',
-                                        'de.devjs.angular.pins',
+    .module('de.devjs.angular.app', ['ngRoute', 'ngAnimate',
+                                        'de.devjs.angular.login',
+                                        'de.devjs.angular.spotlight', 'de.devjs.angular.pins',
                                         'de.devjs.angular.appstore', 'de.devjs.angular.twofactorauth'])
     .config((AngularSpotlightProvider, $routeProvider) => {
         // Routing
@@ -23,7 +24,13 @@
                     }
                 }
             })
-            .when("/appstore/twofactorauth/:token", { templateUrl : "src/appstore/twofactorauth/view.html" });
+            .when("/appstore/twofactorauth/:token", {
+                templateUrl : "src/appstore/twofactorauth/view.html",
+                resolve: { 'auth': function(AuthService) {
+                        return AuthService.authenticate()
+                    }
+                }
+            });
 
         // AngularSpotlightProvider Default Settings
         (() => {

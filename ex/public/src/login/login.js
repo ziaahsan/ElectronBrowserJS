@@ -4,8 +4,10 @@ angular
 .directive('loginOverlay', ['$timeout', '$http', '$compile', 'Login', function ($timeout, $http, $compile, Login) {
     // Key valus
     const KEY = {
+        ENTER: 13,
         BACKSPACE: 8,
     };
+
     // Root view element to append items to
     var $ngLoginOverlay;
 
@@ -23,31 +25,54 @@ angular
     //</summary>
     function controller() {
         let apiUrl = "http://localhost:8000/api/login";
-
+        // Local fields inputs
+        let emailPlaceholder = '', email = '', pin = '';
+        let form = {
+            email: {
+                id: 'pass-email'
+            },
+            pin: {
+                id: 'pass-pin'
+            }
+        }
         return ['$scope', '$location', function ($scope, $location) {
-            // Local pin
-            let pin = '';
-            let $formInputs = $("form#pass-pin :input");
+            // Pin form inputs
+            let $formPinInputs = null;
 
             // Clean up with angularJS
             $scope.$on('$destroy', function() {
-                window.removeEventListener('keyup', $scope.moveOnKey);
+                email = '';
+                pin = '';
+                
+                window.removeEventListener('keyup', $scope.emailListener);
+                window.removeEventListener('keyup', $scope.pinListener);
             });
 
             // Auto focus
-            $scope.focus = function () {
-                $ngLoginOverlay.find('input:first').focus().select()
+            $scope.focusEmail = function () {
+                $ngLoginOverlay.find(`form#${form.email.id} input:first`).focus().select();
+                $ngLoginOverlay.find(`form#${form.email.id} input`).val(emailPlaceholder);
+            }
+
+            // Auto focus
+            $scope.focusPin = function () {
+                $ngLoginOverlay.find(`form#${form.pin.id} input:first`).focus().select();
+                $formPinInputs = $(`form#${form.pin.id} :input`);
             }
 
             // As pin is input move forward
-            $scope.moveOnKey = function(event) {
-                var $passpin = $ngLoginOverlay.find('input:focus');
+            $scope.pinListener = function(event) {
+                let $passpin = $ngLoginOverlay.find('input:focus');
                 if ($passpin.length === 0) {
-                    $ngLoginOverlay.find('input:last').focus().select()
+                    // Retry focus
+                    $ngLoginOverlay.find(`form#${form.pin.id} input:first`).focus().select();
+
+                    // Try again to reselct
                     $passpin = $ngLoginOverlay.find('input:focus');
+                    if ($passpin.length === 0) return;
                 }
                 
-                let pinFields = $passpin.closest('form').find(':input');
+                let pinFields = $passpin.closest(`form#${form.pin.id}`).find(':input');
 
                 // Remvove and move back
                 if (event.keyCode === KEY.BACKSPACE) {
@@ -70,52 +95,87 @@ angular
                 // Upon hittin pin length 4
                 if (pin.length === 4) {
                     // Remove the listener
-                    window.removeEventListener('keyup', $scope.moveOnKey);
+                    window.removeEventListener('keyup', $scope.pinListener);
                     // Disable all inputs
-                    $formInputs.prop('disabled', true);
+                    $formPinInputs.prop('disabled', true);
                     // Setup a prmoise for request
                     new Promise(async resolove => {
-                        let response = await $http.post(apiUrl, {email: 'ahsan_m_zia@live.com', pin: pin});
+                        let response = await $http.post(apiUrl, {email: email, pin: pin});
                         resolove(response);
-                    }).then(async results => {
+                    }).then(results => {
                         // Reset pin
                         pin = '';
                         // Get the code and see if requests has errors
                         if (results.data.code !== 200) {
                             // Enable, clear and focus inputs
-                            $formInputs.prop('disabled', false);
-                            $formInputs.val('');
-                            $scope.focus();
+                            $formPinInputs.prop('disabled', false);
+                            $formPinInputs.val('');
+                            $scope.focusPin();
 
                             // Change border color of all inputs
-                            $formInputs.css({borderColor: '#e44c3c'});
+                            $formPinInputs.css({borderColor: '#e44c3c'});
 
                             // Add the listener back
-                            window.addEventListener('keyup', $scope.moveOnKey);
+                            window.addEventListener('keyup', $scope.pinListener);
                         } else {
                             // Change border color of all inputs
-                            $formInputs.css({borderColor: '#85e735'});
+                            $formPinInputs.css({borderColor: '#85e735'});
 
-                            // Wait 700 milliseconds and prevoius route[page]
-                            await new Promise(resolve => setTimeout(resolve, 700));
-                            $scope.back();
+                            // Head to prevoius route[page]
+                            window.history.back();
                         }
-                    })
+                    });
                 }
+            }
+
+            // Email key up 'enter' listener
+            $scope.emailListener = function(event) {
+                var $emailInput = $ngLoginOverlay.find('input:focus');
+                if ($emailInput.length === 0) {
+                    // Retry focus
+                    $ngLoginOverlay.find(`form#${form.email.id} input:first`).focus().select();
+
+                    // Try again to reselct
+                    $emailInput = $ngLoginOverlay.find('input:focus');
+                    if ($emailInput.length === 0) return;
+                }
+
+                // If enter is press, do:
+                if (event.keyCode === KEY.ENTER) {
+                    // Remove the listener
+                    window.removeEventListener('keyup', $scope.emailListener);
+                    email = $emailInput.val();
+
+                    // Reinitialize, and update
+                    $scope.init();
+                    $scope.$apply();
+                }
+
+                // Temporary holder
+                emailPlaceholder = $emailInput.val();
             }
 
             // Route with params initializer
             $scope.init = function() {
-                // Make the pin input focus
-                $scope.focus();
+                if (email === '') {
+                    $scope.form = 'email';
+                    // Setup listeners
+                    window.removeEventListener('keyup', $scope.pinListener);
+                    window.addEventListener('keyup', $scope.emailListener);
 
-                // Setup listeners
-                window.addEventListener('keyup', $scope.moveOnKey);
+                    // Default header
+                    $scope.title = "Email";
+                    $scope.description = "Your email is required to proceed.";
+                } else {
+                    $scope.form = 'pin';
+                    // Setup listeners
+                    window.removeEventListener('keyup', $scope.emailListener);
+                    window.addEventListener('keyup', $scope.pinListener);
 
-                // Default header
-                $scope.title = "Pin";
-                $scope.description = "Your pin is required to proceed.";
-                $scope.link = "#!/";
+                    // Default header
+                    $scope.title = "Pin";
+                    $scope.description = "Your pin is required to proceed.";
+                }
             }
 
             // Setup redirection
@@ -123,9 +183,19 @@ angular
                 $location.path(path);
             }
 
-            // Go back to the previous route[page]
+            // Go back to root page because of header component
             $scope.back = function() { 
-                window.history.back();
+                if ($scope.form === 'pin') {
+                    // Reset email since we want to go back
+                    email = '';
+
+
+                    // Reinitialize and update
+                    $scope.init();
+                    return;
+                }
+                // otherwise go to root
+                $scope.redirect('/');
             };
         }];
     }
@@ -134,6 +204,15 @@ angular
     // NG - linkage
     //</summary>
     function link(scope, element) {
+        // Setup the watch on $scope.form
+        scope.$watch('form', function () {
+            if (scope.form === 'email') {
+                scope.focusEmail();
+            } else {
+                scope.focusPin();
+            }
+        });
+
         // Root element from view.html
         $ngLoginOverlay = $(element);
         // Initalize

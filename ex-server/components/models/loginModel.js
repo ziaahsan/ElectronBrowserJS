@@ -12,7 +12,7 @@ class loginModel {
                 return
             }
 
-            // Send database results
+            // Send:callback database results[0] (note: that [0] index should always be valid due to query)
             result(null, JSON.stringify(results[0]))
         })
     }

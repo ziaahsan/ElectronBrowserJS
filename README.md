@@ -10,7 +10,7 @@ To clone and run this repository you'll need [Git](https://git-scm.com) and [Nod
 # Clone this repository
 git clone https://github.com/ziaahsan/electron-apps
 # Go into the repository
-cd ex
+cd ex, cd ex-server
 # Install dependencies
 npm install
 # Run the app
