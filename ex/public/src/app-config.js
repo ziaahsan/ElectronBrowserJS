@@ -24,7 +24,7 @@
                     }
                 }
             })
-            .when("/appstore/twofactorauth/:token", {
+            .when("/appstore/twofactorauth/:param", {
                 templateUrl : "src/appstore/twofactorauth/view.html",
                 resolve: { 'auth': function(AuthService) {
                         return AuthService.authenticate()

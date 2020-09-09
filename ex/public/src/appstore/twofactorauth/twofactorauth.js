@@ -26,7 +26,8 @@ angular
         // Set of templates
         let templates = {
             default: baseDir + 'twofactorauthOverlay.html',
-            twofactorauthdetails: baseDir + 'twofactorauthdetailsOverlay.html'
+            twofactorauthdetails: baseDir + 'twofactorauthdetailsOverlay.html',
+            twofactorauthadd: baseDir + 'twofactorauthaddOverlay.html'
         }
 
         return ['$scope', '$routeParams', '$location', '$interval', function ($scope, $routeParams, $location, $interval) {
@@ -35,12 +36,18 @@ angular
                 $interval.cancel($scope.refreshToken);
             });
 
+            // Initialize initial setup
+            $scope.routeParamAddInit = function() {
+                // Default header
+                $scope.title = "Add 2FA";
+                $scope.description = "Adding a new two factor authenticator.";
+            }
+
             // Route with params initializer
-            $scope.routeParamsInit = function() {
+            $scope.routeParamTokenInit = function() {
                 // Default header
                 $scope.title = "Requesting Token";
                 $scope.description = "Your token is being requested and will be shown below.";
-                $scope.link = "#!/";
 
                 // Default values for route with Params
                 $scope.token = '123456';
@@ -66,10 +73,36 @@ angular
                 // Default header
                 $scope.title = "2 Factor Auth";
                 $scope.description = "Configure your auths below.";
-                $scope.link = "#!/";
 
                 // Request token
                 $scope.requestItems();
+            }
+
+            // Create new auth
+            $scope.createAuth = async function() {
+                let data = {
+                    title: $ngTwoFactorAuthOverlay.find('input[name="title"]').val(),
+                    type: $ngTwoFactorAuthOverlay.find('input[name="type"]').val(),
+                    secret: $ngTwoFactorAuthOverlay.find('input[name="secret"]').val(),
+                    description: $ngTwoFactorAuthOverlay.find('input[name="description"]').val()
+                }
+
+                let response = await new Promise( resolve => $http.put(apiUrl, data).then(result => resolve(result)) );
+                switch(response.data.code) {
+                    case 403:
+                        $scope.redirect('/login');
+                        break
+                    case 400:
+                        console.log(response.data.errors)
+                        break
+                    case 201:
+                        console.log(response.data.results)
+                        $scope.back();
+                        break;                    
+                }
+
+                // Update the scope
+                $scope.$apply();
             }
 
             // Fetch items for init
@@ -88,12 +121,12 @@ angular
                 $scope.$apply();
             }
 
+            // Fetch item token
             $scope.requestItemSecret = async function() {
-                let response = await new Promise( resolve => $http.post(apiUrl, {token: $routeParams.token}).then(result => resolve(result)) );
-
+                let response = await new Promise( resolve => $http.post(apiUrl, {token: $routeParams.param}).then(result => resolve(result)) );
                 // Set the loading to false
                 $scope.isLoading = false;
-
+                //@todo: 400 error
                 // No response results
                 if (response.data.code !== 403) {
                     // Get data resul
@@ -118,12 +151,21 @@ angular
             // Setup route based templates
             $scope.getTemplateUrl = function (element) {
                 // Get the :token parameter from URI
-                if ($routeParams.token) {
-                    // Initialize some things
-                    $scope.routeParamsInit();
+                if ($routeParams.param) {
+                    if ($routeParams.param.length === 8) {
+                        // Initialize some things
+                        $scope.routeParamTokenInit();
+                        
+                        // Send back the default template
+                        return templates.twofactorauthdetails;
+                    } else if ($routeParams.param === 'add') {
+                        // Adding route params for add
+                        $scope.routeParamAddInit();
 
-                    // Send back the default template
-                    return templates.twofactorauthdetails;
+                        // Send back the default template
+                        return templates.twofactorauthadd;
+                    }
+                    //@todo: Maybe 404?
                 }
 
                 // Return with initial

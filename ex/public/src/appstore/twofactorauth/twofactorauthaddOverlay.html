@@ -1,0 +1,35 @@
+<div class="ng-spotlight ng-appstore-overlay">
+    <div ng-include="'src/navigation/header.html'"></div>
+    <form class="ng-add">
+        <div class="element col-6">
+            <div class="info">
+                <span class="title">Title</span>
+                <span class="description">Provide any name your 2FA card.</span>
+            </div>
+            <input type="text" name="title" />
+        </div>
+        <div class="element col-4">
+            <div class="info">
+                <span class="title">Type</span>
+                <span class="description">What kind of 2FA is this?</span>
+            </div>
+            <input type="text" name="type" />
+        </div>
+        <div class="element col-4">
+            <div class="info">
+                <span class="title">Secret</span>
+                <span class="description">Your providers secret code.</span>
+            </div>
+            <input type="text" name="secret" />
+        </div>
+        <div class="element col-16">
+            <div class="info">
+                <span class="title">Description</span>
+                <span class="description">Provide description for your authenticator.</span>
+            </div>
+            <input type="text" name="description" />
+        </div>
+
+        <button type="submit" value="submit" ng-click="createAuth()">Add <span><i class="las la-long-arrow-alt-right"></i></button>
+    </form>
+</div>

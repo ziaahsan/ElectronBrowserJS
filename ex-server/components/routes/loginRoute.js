@@ -100,7 +100,7 @@ module.exports = (server, connection, store) => {
                     if (jsonResults.count == 1) {
                         response.code = 200
 
-                        req.session.userID = jsonResults.id
+                        req.session.userID = jsonResults.token
                         req.session.email = email
 
                         store.set(req.sessionID, req.session, (error) => {

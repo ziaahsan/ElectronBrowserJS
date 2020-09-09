@@ -45,6 +45,7 @@ const sess = {
 
 // Server setup
 const server = express()
+//@todo: Need to add cors but ...
 // server.use(cors({origin: 'http://example.com', optionsSuccessStatus: 200}))
 server.use(bodyParser.urlencoded({extended: true}))
 server.use(bodyParser.json())
@@ -53,6 +54,7 @@ server.use(session(sess))
 // require routes
 require('./components/routes/indexRoot')(server, connection, sessionStore);
 require('./components/routes/appstoreRoute')(server, connection, sessionStore);
+require('./components/routes/twofactorauthRoute')(server, connection, sessionStore);
 require('./components/routes/loginRoute')(server, connection, sessionStore);
 
 // App's port
