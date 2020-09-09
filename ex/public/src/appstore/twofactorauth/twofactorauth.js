@@ -45,6 +45,9 @@ angular
 
             // Route with params initializer
             $scope.routeParamTokenInit = function() {
+                // Setup delete alert
+                $scope.delete = false;
+
                 // Default header
                 $scope.title = "Requesting Token";
                 $scope.description = "Your token is being requested and will be shown below.";
@@ -77,15 +80,30 @@ angular
                 // Request token
                 $scope.requestItems();
             }
+            
+            // Delete a auth alert
+            $scope.deleteAuthAlert = function() {
+                $scope.delete = true;
+                $interval.cancel($scope.refreshToken);
+            }
+            
+            // Delete auth
+            $scope.deleteAuth = async function() {
+                if ($routeParams.param) {
+                    if ($routeParams.param.length === 8) {
+                        await new Promise( resolve => $http.delete(apiUrl + `/${$routeParams.param}`).then(result => resolve(result)) );
+                        $scope.back();
+                    }
+                }
+            }
 
             // Create new auth
             $scope.createAuth = async function() {
-                let data = {
-                    title: $ngTwoFactorAuthOverlay.find('input[name="title"]').val(),
-                    type: $ngTwoFactorAuthOverlay.find('input[name="type"]').val(),
-                    secret: $ngTwoFactorAuthOverlay.find('input[name="secret"]').val(),
-                    description: $ngTwoFactorAuthOverlay.find('input[name="description"]').val()
-                }
+                const inputTypes = ['title', 'type', 'secret', 'description'];
+                let data = {}
+                inputTypes.forEach((type, index) => {
+                    data[type] = $ngTwoFactorAuthOverlay.find(`input[name="${type}"]`).val();
+                });
 
                 let response = await new Promise( resolve => $http.put(apiUrl, data).then(result => resolve(result)) );
                 switch(response.data.code) {
@@ -93,10 +111,30 @@ angular
                         $scope.redirect('/login');
                         break
                     case 400:
-                        console.log(response.data.errors)
-                        break
+                        let $errors = $(response.data.errors);
+                        Object.keys(data).forEach((type, index) => {
+                            let error = '';
+                            // Setup error message
+                            $errors.each((index, item) => {
+                                if (item.param === type) {
+                                    error = item.msg;
+                                    return;
+                                }
+                            });
+
+                            // Set up error accorind the input type'name'
+                            let $input = $ngTwoFactorAuthOverlay.find(`input[name="${type}"]`);
+                            if (error !== '') {
+                                $input.css({borderColor: '#e44c3c'});
+                                $("form.ng-add > button").html('Retry <i class="las la-long-arrow-alt-right"></i>')
+                            } else {
+                                $input.css({borderColor: '#85e735'});
+                            }
+                            // Setup the error in error box
+                            $input.prev().find('.error').html(error);
+                        });
+                        break;
                     case 201:
-                        console.log(response.data.results)
                         $scope.back();
                         break;                    
                 }

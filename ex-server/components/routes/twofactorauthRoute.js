@@ -128,10 +128,10 @@ module.exports = (server, connection, store) => {
         '/api/appstore/twofactorauth',
         [
             // Setup body checks
-            check('title', "Invalid title").isAlphanumeric().trim().escape().isLength({min: 3, max: 32}).withMessage('Length of title must be between 3 - 32'),
-            check('type', "Invalid type").isAlphanumeric().trim().escape().notEmpty(),
-            check('secret', "Invalid secret").trim().escape().notEmpty(),
-            check('description', "Invalid description").isAlphanumeric().trim().escape()
+            check('title', "Invalid title").isAlphanumeric().withMessage('Title must be alphanumeric').trim().escape().isLength({min: 3, max: 32}).withMessage('Length of title must be between 3 - 32.'),
+            check('type', "Invalid type").isAlphanumeric().withMessage('Type must be alphanumeric').trim().escape().notEmpty().withMessage('Type cannot be blank.'),
+            check('secret', "Invalid secret").trim().escape().notEmpty().withMessage('Secret cannot be blank.'),
+            check('description', "Invalid description").trim().escape()
         ],
         (req, res) => {
             // Construct the response default
@@ -170,7 +170,7 @@ module.exports = (server, connection, store) => {
                 
                 // Setup server defaults
                 body.user = session.userID
-                body.command = ':tt:tt'
+                body.command = `:2FA:${body.title}`
                 body.relative_link = '/appstore/twofactorauth'
                 
                 let newauth = new twofactorauthModel(body)
@@ -221,10 +221,11 @@ module.exports = (server, connection, store) => {
                     return
                 }
 
-                // Get the param :token and decode uri
+                // Get the param :token
+                // @todo sanitization
                 let { token } = req.params;
                 
-                twofactorauthModel.delete(connection, session.userID, token, (error, results) => {
+                twofactorauthModel.remove(connection, session.userID, token, (error, results) => {
                     // Setup error based on dev mode
                     if (error) {
                         response.errors = [ {message: HTTP_CODE['500']} ]

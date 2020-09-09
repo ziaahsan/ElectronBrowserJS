@@ -1,6 +1,5 @@
 <div class="ng-spotlight ng-appstore-overlay">
     <div ng-include="'src/navigation/header.html'"></div>
-    <div ng-if="twoFactorAuthItems === null" ng-include="'src/navigation/loading.html'"></div>
     <div class="ng-cards" ng-if="twoFactorAuthItems !== null">
         <div class="ng-card ng-add-card" ng-click="redirect('/appstore/twofactorauth/add')">
             <div class="ng-info">
@@ -11,13 +10,9 @@
         </div>
         <div class="ng-card" ng-repeat="twoFactorAuthItem in twoFactorAuthItems" ng-click="redirect(twoFactorAuthItem.relative_link)">
             <div class="ng-info">
-                <span class="icon">
-                    <i class="las la-shield-alt"></i>
-                </span>
                 <span class="title">{{twoFactorAuthItem.title}}</span>
                 <span class="command">{{twoFactorAuthItem.command}}</span>
-                <span class="description">{{twoFactorAuthItem.description}}</span>
-                <button class="ng-delete">Delete</button>
+                <span class="description">{{twoFactorAuthItem.description.substr(0, 40)}}</span>
             </div>
         </div>
     </div>
