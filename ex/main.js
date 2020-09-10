@@ -1,6 +1,7 @@
 "use strict";
 // Modules to control application life and create native browser window
 const { app, globalShortcut, ipcMain } = require('electron')
+const { createWindow } = require('./components/window/create')
 const requests = require('./components/window/requests')
 
 // Setting up IPC
@@ -19,7 +20,6 @@ ipcMain.handle('ng-requests', async (event, data) => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
-const { createWindow } = require('./components/window/create')
 app.on('ready', () => {
-   let mainWindow = createWindow('public/index.html')
+   createWindow('public/index.html')
 })

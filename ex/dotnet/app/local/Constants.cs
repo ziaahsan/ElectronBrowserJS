@@ -1,7 +1,9 @@
 using System;
 
-namespace App.Local {
-    class Constants {
+namespace App.Local
+{
+    class Constants
+    {
         public static readonly String ROOT_SEARCH_DIR = @"C:\";
 
         public static readonly String LOG_DIR = @".\logs";

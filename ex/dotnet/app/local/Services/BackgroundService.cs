@@ -5,8 +5,10 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 // @Ref: https://docs.microsoft.com/en-us/dotnet/architecture/microservices/multi-container-microservice-net-applications/background-tasks-with-ihostedservice
-namespace App.Local.Services {
-    public abstract class BackgroundService : IHostedService, IDisposable {
+namespace App.Local.Services
+{
+    public abstract class BackgroundService : IHostedService, IDisposable
+    {
         private readonly ILogger<BackgroundService> _logger;
 
         private Task _executingTask;
@@ -14,11 +16,13 @@ namespace App.Local.Services {
 
         protected abstract Task ExecuteAsync(CancellationToken stoppingToken);
 
-        public BackgroundService(ILogger<BackgroundService> logger) {
+        public BackgroundService(ILogger<BackgroundService> logger)
+        {
             _logger = logger;
         }
 
-        public virtual Task StartAsync(CancellationToken cancellationToken) {
+        public virtual Task StartAsync(CancellationToken cancellationToken)
+        {
             _logger.LogInformation("Background Service running.");
 
             // Store the task we're executing
@@ -26,7 +30,8 @@ namespace App.Local.Services {
 
             // If the task is completed then return it,
             // this will bubble cancellation and failure to the caller
-            if (_executingTask.IsCompleted) {
+            if (_executingTask.IsCompleted)
+            {
                 return _executingTask;
             }
 
@@ -34,16 +39,21 @@ namespace App.Local.Services {
             return Task.CompletedTask;
         }
 
-        public virtual async Task StopAsync(CancellationToken cancellationToken) {
+        public virtual async Task StopAsync(CancellationToken cancellationToken)
+        {
             // Stop called without start
-            if (_executingTask == null) {
+            if (_executingTask == null)
+            {
                 return;
             }
 
-            try {
+            try
+            {
                 // Signal cancellation to the executing method
                 _stoppingCts.Cancel();
-            } finally {
+            }
+            finally
+            {
                 // Wait until the task completes or the stop token triggers
                 await Task.WhenAny(_executingTask, Task.Delay(Timeout.Infinite,
                                                             cancellationToken));
@@ -51,7 +61,8 @@ namespace App.Local.Services {
 
         }
 
-        public virtual void Dispose() {
+        public virtual void Dispose()
+        {
             _stoppingCts.Cancel();
         }
     }
