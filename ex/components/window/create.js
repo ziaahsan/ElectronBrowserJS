@@ -6,77 +6,83 @@ const isDev = require('electron-is-dev');
 const { globalShortcut } = require('electron')
 const { BrowserWindow } = require('glasstron')
 
-// path config abs
+// Path config abs
 const path = require('path')
 
-let mainWindow = null
-let hidden = false
+// Set of windows
+const windows = new Set();
 
-module.exports = (app) => {
-  app.commandLine.appendSwitch("enable-transparent-visuals")
-  app.whenReady().then(() => {
-    createWindow()
-    function createWindow ()  {
-      mainWindow = new BrowserWindow({
-        backgroundColor: "#00000000",
-        frame: false,
-        transparent: true,
-        resizable: true,
+// Window
+exports.createWindow = (loadName) => {
+   let newWindow = null
 
-        minHeight: 900,
-        minWidth: 600,
-        
-        // skipTaskbar: true,
-  
-        blur: true,
-        blurType: "blurbehind",
-        vibrancy: "fullscreen-ui",
+   newWindow = new BrowserWindow({
+      show: false,
 
-        webPreferences: {
-          worldSafeExecuteJavaScript: true,
-          contextIsolation: true,
-          preload: path.join(__dirname, 'preload.js'),
-        }
-      })
-  
-      mainWindow.loadFile('public/index.html')
-      mainWindow.maximize()
+      backgroundColor: "#000000000",
+      frame: false,
+      transparent: true,
+      resizable: false,
 
-      // Register a 'ctrl+space' shortcut listener.
-      let ret = globalShortcut.register('ctrl+space', () => {
-        if (!hidden) {
-          mainWindow.hide()
-        } else {
-          mainWindow.show()
-        }
+      // skipTaskbar: true,
 
-        hidden = !hidden
-      })
+      blur: true,
+      blurType: "blurbehind",
+      vibrancy: "fullscreen-ui",
 
-      if ((!ret || !globalShortcut.isRegistered('ctrl+space')) && isDev)
-        console.log('ctrl+space shortcut failed!')
-  
-      if (isDev)
-        mainWindow.webContents.openDevTools()
-    }
+      webPreferences: {
+         worldSafeExecuteJavaScript: true,
+         contextIsolation: true,
+         preload: path.join(__dirname, 'preload.js')
+      }
+   })
 
-    app.on('activate', function () {
-      // On macOS it's common to re-create a window in the app when the
-      // dock icon is clicked and there are no other windows open.
-      if (BrowserWindow.getAllWindows().length === 0) createWindow()
-    })
-  })
-  
-  app.on('will-quit', () => {
-    // Unregister all shortcuts.
-    globalShortcut.unregisterAll()
-  })
+   if (loadName.indexOf('http') === 0) {
+      newWindow.loadURL(loadName)
+   } else {
+      newWindow.loadFile(loadName)
+   }
 
-  // Quit when all windows are closed, except on macOS. There, it's common
-  // for applications and their menu bar to stay active until the user quits
-  // explicitly with Cmd + Q.
-  app.on('window-all-closed', function () {
-    if (process.platform !== 'darwin') app.quit()
-  })
+   newWindow.maximize()
+
+   newWindow.once('ready-to-show', () => {
+      // if (isDev) newWindow.webContents.openDevTools()
+      newWindow.show()
+   });
+
+   newWindow.on('closed', () => {
+      windows.delete(newWindow);
+      newWindow = null;
+   });
+
+   windows.add(newWindow);
+   return newWindow;
 }
-  
+
+// module.exports = (app) => {
+//   // app.commandLine.appendSwitch("enable-transparent-visuals")
+
+//   app.on('ready', () => {
+//     this.createWindow()
+//   })
+//   app.whenReady().then(() => {
+//     createWindow()
+
+//     // if (isDev)
+//     //     mainWindow.webContents.openDevTools()
+//     app.on('activate', function() {
+//       // On macOS it's common to re-create a window in the app when the
+//       // dock icon is clicked and there are no other windows open.
+//       if (BrowserWindow.getAllWindows().length === 0) createWindow()
+//     })
+//   })
+
+//   app.on('will-quit', function() {})
+
+//   // Quit when all windows are closed, except on macOS. There, it's common
+//   // for applications and their menu bar to stay active until the user quits
+//   // explicitly with Cmd + Q.
+//   app.on('window-all-closed', function() {
+//     if (process.platform !== 'darwin') app.quit()
+//   })
+// }

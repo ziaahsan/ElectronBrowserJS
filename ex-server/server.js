@@ -15,39 +15,39 @@ const bodyParser = require('body-parser')
 
 // MySQL session storeage
 const sessionStore =
-    new mysqlStore({
-        clearExpired: true,
-        checkExpirationInterval: 900000,
-        expiration: config.session.timeout,
-        connectionLimit: 1,
-        createDatabaseTable: true,
-        charset: 'utf8mb4',
-        schema: {
-            tableName: 'lu_sessions',
-            columnNames: {
-                session_id: 'session_id',
-                expires: 'expires',
-                data: 'data'
-            }
-        }
-    }, connection)
+   new mysqlStore({
+      clearExpired: true,
+      checkExpirationInterval: 900000,
+      expiration: config.session.timeout,
+      connectionLimit: 1,
+      createDatabaseTable: true,
+      charset: 'utf8mb4',
+      schema: {
+         tableName: 'lu_sessions',
+         columnNames: {
+            session_id: 'session_id',
+            expires: 'expires',
+            data: 'data'
+         }
+      }
+   }, connection)
 
 // Setup session
 const sess = {
-    key: config.session.key,
-    secret: config.session.secret,
-    resave: false,
-    saveUninitialized: false,
-    cookie: { maxAge: config.session.timeout, sameSite: 'none' },
-    store: sessionStore,
-    genid: () =>  { return uuidv4() }
+   key: config.session.key,
+   secret: config.session.secret,
+   resave: false,
+   saveUninitialized: false,
+   cookie: { maxAge: config.session.timeout, sameSite: 'none' },
+   store: sessionStore,
+   genid: () => { return uuidv4() }
 }
 
 // Server setup
 const server = express()
 //@todo: Need to add cors but ...
 // server.use(cors({origin: 'http://example.com', optionsSuccessStatus: 200}))
-server.use(bodyParser.urlencoded({extended: true}))
+server.use(bodyParser.urlencoded({ extended: true }))
 server.use(bodyParser.json())
 server.use(session(sess))
 

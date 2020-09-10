@@ -1,20 +1,18 @@
 {
-    "server": {
-        "port": 8000,
-        "sesssion_timeout": 6000
-    },
-
-    "session": {
-        "timeout": 60000,
-        "key": "",
-        "secret": ""
-    },
-
-    "mysql": {
-        "host": "",
-        "user": "",
-        "password": "",
-        "database": "",
-        "charset": "utf8mb4"
-    }
- }
+   "server": {
+      "port": 8000,
+      "sesssion_timeout": 6000
+   },
+   "session": {
+      "timeout": 60000,
+      "key": "",
+      "secret": ""
+   },
+   "mysql": {
+      "host": "",
+      "user": "",
+      "password": "",
+      "database": "",
+      "charset": "utf8mb4"
+   }
+}

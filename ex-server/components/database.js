@@ -6,17 +6,17 @@ const mysql = require('mysql')
 
 // Database connection
 const database = mysql.createConnection({
-    host     : config.mysql.host,
-    user     : config.mysql.user,
-    password : config.mysql.password,
-    database : config.mysql.database,
-    charset  : config.mysql.charset
+   host: config.mysql.host,
+   user: config.mysql.user,
+   password: config.mysql.password,
+   database: config.mysql.database,
+   charset: config.mysql.charset
 })
 
 // Connecting to database
 database.connect((error) => {
-    if (error) throw error
-    console.log("[App] MySQL Database Connected")
+   if (error) throw error
+   console.log("[App] MySQL Database Connected")
 });
 
 // Expor database

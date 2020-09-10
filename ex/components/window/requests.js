@@ -17,67 +17,67 @@ let queuedRequests = []
 
 // Simply adds icon to the data if it can
 async function attachIconToResults(data) {
-    return await new Promise((resolve, reject) => {
-        data = JSON.parse(data)
-        data.forEach(item => item = getWindowsIcons(item))
-        resolve(data)
-    })
+   return await new Promise((resolve, reject) => {
+      data = JSON.parse(data)
+      data.forEach(item => item = getWindowsIcons(item))
+      resolve(data)
+   })
 }
 
 //@todo: create all async tasks as try-catch
 class Requests {
-    static fetch = (event) => {
-        if (event.data.type == null || event.data.type == undefined || !validRequestTypes.includes(event.data.type)) return
+   static fetch = (event) => {
+      if (event.data.type == null || event.data.type == undefined || !validRequestTypes.includes(event.data.type)) return
 
-        // Already in queue
-        if (queuedRequests[event.data.type]) return
+      // Already in queue
+      if (queuedRequests[event.data.type]) return
 
-        // Add it to queue
-        queuedRequests[event.data.type] = event
-        
-        // Simply call and move on
-        switch(event.data.type) {
-            case validRequestTypes[0]:
-                this.requestPrograms(event)
-                break
-            case validRequestTypes[1]:
-                this.requestFolders(event)
-                break
-        }
-    }
+      // Add it to queue
+      queuedRequests[event.data.type] = event
 
-    static remove = (event) => {
-        if (queuedRequests[event.data.type])
-            delete queuedRequests[event.data.type]
-    }
+      // Simply call and move on
+      switch (event.data.type) {
+         case validRequestTypes[0]:
+            this.requestPrograms(event)
+            break
+         case validRequestTypes[1]:
+            this.requestFolders(event)
+            break
+      }
+   }
 
-    static requestPrograms = async (event) => {
-        // Setting up the c# request
-        conn.send(event.data.type, event.data.q)
+   static remove = (event) => {
+      if (queuedRequests[event.data.type])
+         delete queuedRequests[event.data.type]
+   }
 
-        let data = await conn.recievedPrograms()
-        data = await attachIconToResults(data)
+   static requestPrograms = async (event) => {
+      // Setting up the c# request
+      conn.send(event.data.type, event.data.q)
 
-        // Send data to front-end
-        event.sender.send('request-response', 'ng-spotlight', event.data.type, data)
+      let data = await conn.recievedPrograms()
+      data = await attachIconToResults(data)
 
-        // request completed remove it
-        this.remove(event)
-    }
+      // Send data to front-end
+      event.sender.send('request-response', 'ng-spotlight', event.data.type, data)
 
-    static requestFolders = async (event) => {
-        // Setting up the c# request
-        conn.send(event.data.type, event.data.q)
+      // request completed remove it
+      this.remove(event)
+   }
 
-        let data = await conn.recievedFolders()
-        data = await attachIconToResults(data)
+   static requestFolders = async (event) => {
+      // Setting up the c# request
+      conn.send(event.data.type, event.data.q)
 
-        // Send data to front-end
-        event.sender.send('request-response', 'ng-spotlight', event.data.type, data)
+      let data = await conn.recievedFolders()
+      data = await attachIconToResults(data)
 
-        // request completed remove it
-        this.remove(event)
-    }
+      // Send data to front-end
+      event.sender.send('request-response', 'ng-spotlight', event.data.type, data)
+
+      // request completed remove it
+      this.remove(event)
+   }
 }
 
 module.exports = Requests
