@@ -1,1 +1,1 @@
-.view.ng-leave{animation:scaleDownUp .3s ease both}.view.ng-enter{animation:scaleUpDown .3s ease both}@keyframes scaleDownUp{from{}to{opacity:0;transform:scale(1.05)}}@keyframes scaleUpDown{from{opacity:0;transform:scale(1.05)}}
+.view.ng-leave{animation:scaleDownUp 0.3s ease both}.view.ng-enter{animation:scaleUpDown 0.3s ease both}@keyframes scaleDownUp{from{}to{opacity:0;transform:scale(1.05)}}@keyframes scaleUpDown{from{opacity:0;transform:scale(1.05)}}

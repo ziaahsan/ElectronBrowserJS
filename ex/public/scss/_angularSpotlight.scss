@@ -8,7 +8,7 @@ $primary-highlight: #337ef1 !default;
 $icon-magnifier-color: #a6a6a6 !default;
 
 // Font
-$font-family: 'Open Sans', sans-serif !default;
+$font-family: "Open Sans", sans-serif !default;
 
 // Font colors
 $primary-color: rgba(255, 255, 255, $alpha) !default;
@@ -26,550 +26,563 @@ $spotlight-responsive-width: 680px !default;
 
 // Scroll bar
 ::-webkit-scrollbar {
-  background-color: transparent;
-  width: 5px;
+   background-color: transparent;
+   width: 5px;
 }
 ::-webkit-scrollbar-track {
-  background-color: transparent;
+   background-color: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background-color: $secondary;
-  border-radius: 22px;
+   background-color: $secondary;
+   border-radius: 22px;
 }
 
 // App
 .ng-spotlight {
-  // Global css default
-  a, a:link, a:active, a:visited, a:hover {
-    color: $primary-color;
-  }
-  // Delete text
-  span.delete {
-    position: relative;
-    width: auto;
-    display: block;
-    padding: 8px 6px;
-    color: $primary-color-error;
-    border-radius: 4px;
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-  }
-  // Gobal cols
-  @function column-width($col, $total:16) {  
-    @return percentage($col/$total);  
-  }
-  @for $i from 1 through 16 {  
-    .col-#{$i} { width: column-width($i)!important; };  
-  }
-  // Glbal form
-  form {
-    input[type=password],
-    input[type=text] {
-      padding: 10px;
-      border: 1px solid $border-color;
-      width: 25px;
-      height: 25px;
-      text-align: center;
-      font-size: 18px;
+   // Global css default
+   a,
+   a:link,
+   a:active,
+   a:visited,
+   a:hover {
       color: $primary-color;
-      background-color: $secondary;
-    }
-    input[type=text] {
-      width: 50%;
-      font-size: 16px;
-      font-weight: 500;
-    }
-    input[type=password]:focus,
-    input[type=text]:focus {
-      outline: 2px solid $primary-highlight;
-    }
-    button[type=submit] {
-      padding: 8px 6px;
-      background: $primary-highlight;
-      color: $primary-highlight-color;
-      border-radius: 4px;
-      border: none;
-      outline: none;
-      width: 114px;
-      cursor: pointer;
-    }
-  }
-  form.ng-add {
-    color: $primary-color;
-    background-color: $primary;
-    padding: 16px;
-    .element {
-      width: 48%;
-      display: inline-block;
-      margin: 0 16px 12px 0;
-      .info {
-        width: 100%;
-        margin-bottom: 6px;
-        .title {
-          font-size: 16px;
-          font-weight: 600;
-          display: block;
-          .astrik {
-            font-size: 12px;
-            position: relative;
-            color: $primary-color-error;
-            top: -5px;
-            left: -2px
-          }
-        }
-        .description {
-          font-size: 12px;
-          font-weight: 500;
-          display: block;
-        }
-        .error {
-          color: $primary-color-error;
-          font-weight: 600;
-        }
-      }
-      input[type=text] {
-        width: 98%;
-        text-align: left;
-        padding: 6px;
-      }
-    }
-    button[type=submit] {
-      position: absolute;
-      top: 20px;
-      right: 15px;
-      width: 82px;
-      padding: 8px 6px;
-    }
-  }
-  // Global loader
-  .ng-loading {
-    text-align: center;
-    color: $primary-color;
-    background-color: $primary;
-    min-height: 192px;
-    .icon {
-      position: absolute;
-      font-size: 28px;
-      top: 50%;
-      right: 50%;
-    }
-  }
-  // Global password pin
-  .ng-pass-pin {
-    color: $primary-color;
-    background-color: $primary;
-    text-align: center;
-    padding: 16px 0 32px 0;
-    .ng-info {
-      text-align: center;
-      position: relative;
-      margin: 0 0 12px 0;
-      .icon {
-        font-size: 42px;
-        color: #e44c3c;
-      }
-      .title {
-        font-size: 16px;
-        font-weight: 600;
-        display: block
-      }
-      .description {
-        font-size: 12px;
-        font-weight: 500;
-        display: block;
-      }
-    }
-  }
-  // Global dialogs
-  .ng-success-dialog {
-    padding: 42px 6px;
-    color: $primary-color;
-    background-color: $primary;
-    .ng-info {
-      text-align: center;
-      position: relative;
-      padding: 12px;
-      .title {
-        font-size: 24px;
-        font-weight: 600;
-        display: block;
-        margin-bottom: 7px;
-      }
-      .hint {
-        font-size: 12px;
-        display: block;
-      }
-      .description {
-        font-size: 12px;
-        font-weight: 500;
-      }
-    }
-  }
-  // Global cards
-  .ng-cards {
-    padding: 12px 6px;
-    color: $primary-color;
-    background-color: $primary;
-    max-height: 312px;
-    overflow-y: scroll;
-    display: flex;
-    flex-wrap: wrap;
-    .ng-card {
-      width: 23%;
-      min-height: 87px;
-      border-radius: 4px;
-      margin: 4px 6px;
-      display: inline-block;
-      .ng-info {
-        position: relative;
-        padding: 12px;
-        .icon {
-          position: absolute;
-          top: 7px;
-          right: 4px;
-          opacity: 0.975;
-          font-size: 22px;
-        }
-        .title {
-          font-size: 16px;
-          font-weight: 600;
-          display: block;
-          width: calc(100% - 42px);
-          text-transform: capitalize;
-          text-overflow: ellipsis;
-          overflow: hidden;
-        }
-        .command {
-          font-size: 11px;
-          font-weight: 600;
-          color: darken($primary-color-dark, 20);
-          display: block;
-          width: calc(100% - 42px);
-          text-transform: capitalize;
-        }
-        .description {
-          font-size: 12px;
-          font-weight: 500;
-          word-break: break-word;
-        }
-        .description::first-letter {
-          text-transform: uppercase;
-        }
-      }
-    }
-    .ng-card:hover {
-      background-color: $secondary;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    .ng-add-card {
-      background: $primary-highlight;
-      color: $primary-highlight-color;
-      .command {
-        color: $primary-highlight-color!important;
-      }
-    }
-    .ng-add-card:hover {
-      background: $primary-highlight;
-    }
-  }
-  // Global header
-  .ng-header {
-    height: auto;
-    color: $primary-color;
-    background-color: $primary;
-    padding: 16px;
-    text-align: left;
-    border-bottom: 1px solid $border-color;
-    .icon-left {
-      position: relative;
-      display: inline-block;
-      padding-right: 8px;
-      cursor: pointer;
-    }
-    .title {
-      font-size: 14px;
-      font-weight: 600;
-      display: block;
-      max-width: 80%;
-      text-transform: capitalize;
-    }
-    .description {
-      font-size: 12px;
-      font-weight: 500;
-      max-width: 80%;
-      line-height: 22px;
-      padding-left: 28px;
-      text-overflow: ellipsis;
-      overflow: hidden;
-      display: flex;
-    }
-    .description::first-letter {
-      text-transform: capitalize;
-    }
-  }
+   }
 
+   // Delete text
+   span.delete {
+      position: relative;
+      width: auto;
+      display: block;
+      padding: 8px 6px;
+      color: $primary-color-error;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+   }
+
+   // Gobal cols
+   @function column-width($col, $total: 16) {
+      @return percentage($col/$total);
+   }
+   @for $i from 1 through 16 {
+      .col-#{$i} {
+         width: column-width($i) !important;
+      }
+   }
+
+   // Glbal form
+   form {
+      input[type="password"],
+      input[type="text"] {
+         padding: 10px;
+         border: 1px solid $border-color;
+         width: 25px;
+         height: 25px;
+         text-align: center;
+         font-size: 18px;
+         color: $primary-color;
+         background-color: $secondary;
+      }
+      input[type="text"] {
+         width: 50%;
+         font-size: 16px;
+         font-weight: 500;
+      }
+      input[type="password"]:focus,
+      input[type="text"]:focus {
+         outline: 2px solid $primary-highlight;
+      }
+      button[type="submit"] {
+         padding: 8px 6px;
+         background: $primary-highlight;
+         color: $primary-highlight-color;
+         border-radius: 4px;
+         border: none;
+         outline: none;
+         width: 114px;
+         cursor: pointer;
+      }
+   }
+   form.ng-add {
+      color: $primary-color;
+      background-color: $primary;
+      padding: 16px;
+      .element {
+         width: 48%;
+         display: inline-block;
+         margin: 0 16px 12px 0;
+         .info {
+            width: 100%;
+            margin-bottom: 6px;
+            .title {
+               font-size: 16px;
+               font-weight: 600;
+               display: block;
+               .astrik {
+                  font-size: 12px;
+                  position: relative;
+                  color: $primary-color-error;
+                  top: -5px;
+                  left: -2px;
+               }
+            }
+            .description {
+               font-size: 12px;
+               font-weight: 500;
+               display: block;
+            }
+            .error {
+               color: $primary-color-error;
+               font-weight: 600;
+            }
+         }
+         input[type="text"] {
+            width: 98%;
+            text-align: left;
+            padding: 6px;
+         }
+      }
+      button[type="submit"] {
+         position: absolute;
+         top: 20px;
+         right: 15px;
+         width: 82px;
+         padding: 8px 6px;
+      }
+   }
+
+   // Global loader
+   .ng-loading {
+      text-align: center;
+      color: $primary-color;
+      background-color: $primary;
+      min-height: 192px;
+      .icon {
+         position: absolute;
+         font-size: 28px;
+         top: 50%;
+         right: 50%;
+      }
+   }
+
+   // Global password pin
+   .ng-pass-pin {
+      color: $primary-color;
+      background-color: $primary;
+      text-align: center;
+      padding: 16px 0 32px 0;
+      .ng-info {
+         text-align: center;
+         position: relative;
+         margin: 0 0 12px 0;
+         .icon {
+            font-size: 42px;
+            color: #e44c3c;
+         }
+         .title {
+            font-size: 16px;
+            font-weight: 600;
+            display: block;
+         }
+         .description {
+            font-size: 12px;
+            font-weight: 500;
+            display: block;
+         }
+      }
+   }
+
+   // Global dialogs
+   .ng-success-dialog {
+      padding: 42px 6px;
+      color: $primary-color;
+      background-color: $primary;
+      .ng-info {
+         text-align: center;
+         position: relative;
+         padding: 12px;
+         .title {
+            font-size: 24px;
+            font-weight: 600;
+            display: block;
+            margin-bottom: 7px;
+         }
+         .hint {
+            font-size: 12px;
+            display: block;
+         }
+         .description {
+            font-size: 12px;
+            font-weight: 500;
+         }
+      }
+   }
+
+   // Global cards
+   .ng-cards {
+      padding: 12px 6px;
+      color: $primary-color;
+      background-color: $primary;
+      max-height: 312px;
+      overflow-y: scroll;
+      display: flex;
+      flex-wrap: wrap;
+      .ng-card {
+         width: 23%;
+         min-height: 87px;
+         border-radius: 4px;
+         margin: 4px 6px;
+         display: inline-block;
+         .ng-info {
+            position: relative;
+            padding: 12px;
+            .icon {
+               position: absolute;
+               top: 7px;
+               right: 4px;
+               opacity: 0.975;
+               font-size: 22px;
+            }
+            .title {
+               font-size: 16px;
+               font-weight: 600;
+               display: block;
+               width: calc(100% - 42px);
+               text-transform: capitalize;
+               text-overflow: ellipsis;
+               overflow: hidden;
+            }
+            .command {
+               font-size: 11px;
+               font-weight: 600;
+               color: darken($primary-color-dark, 20);
+               display: block;
+               width: calc(100% - 42px);
+               text-transform: capitalize;
+            }
+            .description {
+               font-size: 12px;
+               font-weight: 500;
+               word-break: break-word;
+            }
+            .description::first-letter {
+               text-transform: uppercase;
+            }
+         }
+      }
+      .ng-card:hover {
+         background-color: $secondary;
+         border-radius: 4px;
+         cursor: pointer;
+      }
+      .ng-add-card {
+         background: $primary-highlight;
+         color: $primary-highlight-color;
+         .command {
+            color: $primary-highlight-color !important;
+         }
+      }
+      .ng-add-card:hover {
+         background: $primary-highlight;
+      }
+   }
+
+   // Global header
+   .ng-header {
+      height: auto;
+      color: $primary-color;
+      background-color: $primary;
+      padding: 16px;
+      text-align: left;
+      border-bottom: 1px solid $border-color;
+      .icon-left {
+         position: relative;
+         display: inline-block;
+         padding-right: 8px;
+         cursor: pointer;
+      }
+      .title {
+         font-size: 14px;
+         font-weight: 600;
+         display: block;
+         max-width: 80%;
+         text-transform: capitalize;
+      }
+      .description {
+         font-size: 12px;
+         font-weight: 500;
+         max-width: 80%;
+         line-height: 22px;
+         padding-left: 28px;
+         text-overflow: ellipsis;
+         overflow: hidden;
+         display: flex;
+      }
+      .description::first-letter {
+         text-transform: capitalize;
+      }
+   }
 
    // Login, Pins, AppStore overlay
    &.ng-login-overlay,
    &.ng-pins-overlay,
    &.ng-appstore-overlay {
-    position: relative;
-    z-index: 9;
-    width: 100%;
-    font-size: 12px;
-    letter-spacing: 0.3px;
-
-    font-family: $font-family;
-    box-shadow: 0 12px 15px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19);
-    border-radius: 6px;
-    overflow: hidden;
-
-    @media only screen and (min-width: $spotlight-responsive-width) {
-      margin: 0 auto;
-      width: $ng-spotlight-w;
-    }
-  }
-
-  // Spotlight overlay
-  &.ng-spotlight-overlay {
-    position: relative;
-    z-index: 9;
-    width: 100%;
-    font-size: 12px;
-    letter-spacing: 0.3px;
-
-    @if $overlay-border-color != "none" {
-      border: 1px solid $overlay-border-color;
-    }
-
-    font-family: $font-family;
-    box-shadow: 0 12px 15px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19);
-    border-radius: 6px;
-    overflow: hidden;
-
-    @media only screen and (min-width: $spotlight-responsive-width) {
-      margin: 0 auto;
-      margin-bottom: 6px;
-      width: $ng-spotlight-w;
-    }
-
-    .ng-spotlight-searchbar {
-      z-index: 10;
       position: relative;
-      height: 55px;
-      background-color: $primary;
-      border-bottom: 1px solid $border-color;
+      z-index: 9;
+      width: 100%;
+      font-size: 12px;
+      letter-spacing: 0.3px;
 
-      .ng-spotlight-icon {
-        $magnifier-height: 22px;
-        $magnifier-margin: (55 - $magnifier-height) / 2;
+      font-family: $font-family;
+      box-shadow: 0 12px 15px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19);
+      border-radius: 6px;
+      overflow: hidden;
 
-        position: absolute;
-        height: 22px;
-        width: 22px;
-        margin: $magnifier-margin;
-        background-size: cover;
+      @media only screen and (min-width: $spotlight-responsive-width) {
+         margin: 0 auto;
+         width: $ng-spotlight-w;
+      }
+   }
 
-        @media only screen and (min-width: $spotlight-responsive-width) {
-          position: static;
-          float: left;
-        }
+   // Spotlight overlay
+   &.ng-spotlight-overlay {
+      position: relative;
+      z-index: 9;
+      width: 100%;
+      font-size: 12px;
+      letter-spacing: 0.3px;
 
-        svg {
-          fill: $icon-magnifier-color;
-        }
+      @if $overlay-border-color != "none" {
+         border: 1px solid $overlay-border-color;
       }
 
-      .ng-spotlight-input {
-        background-color: transparent;
-        font-size: 1.7em;
-        padding: 0;
-        margin: 0;
-        outline: none !important;
-        height: 55px;
-        max-width: 100% !important;
-        border: none !important;
-        color: $primary-color;
-        font-weight: 100;
-        padding-left: 55px;
-        padding-right: 50px;
-        box-sizing: border-box;
-        &.empty {
-          width: 100% !important;
-        }
+      font-family: $font-family;
+      box-shadow: 0 12px 15px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19);
+      border-radius: 6px;
+      overflow: hidden;
 
-        @media only screen and (min-width: $spotlight-responsive-width) {
-          float: left;
-          max-width: 350px !important;
-          box-sizing: content-box;
-          padding: 0;
-          &.empty {
-            width: 400px !important;
-          }
-        }
-
-        &:-ms-input-placeholder {
-          color: $primary-color-dark;
-        }
-        &:-moz-placeholder {
-          color: $primary-color-dark;
-        }
-        &::-moz-placeholder {
-          color: $primary-color-dark;
-        }
-        &::-webkit-input-placeholder {
-          color: $primary-color-dark;
-        }
+      @media only screen and (min-width: $spotlight-responsive-width) {
+         margin: 0 auto;
+         margin-bottom: 6px;
+         width: $ng-spotlight-w;
       }
 
-      .ng-spotlight-input-after {
-        display: none;
-        color: $primary-color-dark;
-        line-height: 55px;
-        font-weight: 600;
-        @media only screen and (min-width: $spotlight-responsive-width) {
-          display: block;
-        }
+      .ng-spotlight-searchbar {
+         z-index: 10;
+         position: relative;
+         height: 55px;
+         background-color: $primary;
+         border-bottom: 1px solid $border-color;
+
+         .ng-spotlight-icon {
+            $magnifier-height: 22px;
+            $magnifier-margin: (55 - $magnifier-height) / 2;
+
+            position: absolute;
+            height: 22px;
+            width: 22px;
+            margin: $magnifier-margin;
+            background-size: cover;
+
+            @media only screen and (min-width: $spotlight-responsive-width) {
+               position: static;
+               float: left;
+            }
+
+            svg {
+               fill: $icon-magnifier-color;
+            }
+         }
+
+         .ng-spotlight-input {
+            background-color: transparent;
+            font-size: 1.7em;
+            padding: 0;
+            margin: 0;
+            outline: none !important;
+            height: 55px;
+            max-width: 100% !important;
+            border: none !important;
+            color: $primary-color;
+            font-weight: 100;
+            padding-left: 55px;
+            padding-right: 50px;
+            box-sizing: border-box;
+            &.empty {
+               width: 100% !important;
+            }
+
+            @media only screen and (min-width: $spotlight-responsive-width) {
+               float: left;
+               max-width: 350px !important;
+               box-sizing: content-box;
+               padding: 0;
+               &.empty {
+                  width: 400px !important;
+               }
+            }
+
+            &:-ms-input-placeholder {
+               color: $primary-color-dark;
+            }
+            &:-moz-placeholder {
+               color: $primary-color-dark;
+            }
+            &::-moz-placeholder {
+               color: $primary-color-dark;
+            }
+            &::-webkit-input-placeholder {
+               color: $primary-color-dark;
+            }
+         }
+
+         .ng-spotlight-input-after {
+            display: none;
+            color: $primary-color-dark;
+            line-height: 55px;
+            font-weight: 600;
+            @media only screen and (min-width: $spotlight-responsive-width) {
+               display: block;
+            }
+         }
+
+         .ng-spotlight-results-icon {
+            display: none;
+            position: absolute;
+            top: (55px - 32px)/2;
+            right: 20px;
+            line-height: 31px;
+            height: 32px;
+            width: 32px;
+            font-size: 31px;
+            color: $primary-color;
+            background-size: cover;
+
+            @media only screen and (min-width: $spotlight-responsive-width) {
+               display: block;
+            }
+         }
       }
-
-      .ng-spotlight-results-icon {
-        display: none;
-        position: absolute;
-        top: (55px - 32px)/2;
-        right: 20px;
-        line-height: 31px;
-        height: 32px;
-        width: 32px;
-        font-size: 31px;
-        color: $primary-color;
-        background-size: cover;
-
-        @media only screen and (min-width: $spotlight-responsive-width) {
-          display: block;
-        }
-      }
-    }
-    .ng-spotlight-info-panel {
-      min-height: 172px;
-      color: $primary-color;
-      background-color: $primary;
-      .icons {
-        padding: 12px 0 0 0;
-        text-align: center;
-        color: #e44c3c;
-        font-size: 42px;
-      }
-      p {
-        padding: 8px 42px 22px 42px;
-        text-align: center;
-        font-size: 13px;
-        font-weight: 500;
-        max-width: 650px;
-        margin: 0 auto;
-        line-height: 22px;
-      }
-
-    }
-    .ng-spotlight-results-panel {
-      min-height: 375px;
-
-      .ng-spotlight-results-list {
-        border-right: 1px solid $border-color;
-        position: absolute;
-        width: 100%;
-        height: calc(100% - 55px);
-        overflow: hidden;
-        overflow-y: auto;
-        user-select: none;
-        background-color: $primary;
-
-        @media only screen and (min-width: $spotlight-responsive-width) {
-          width: 290px;
-        }
-
-        ul {
-          min-height: calc(100% - 55px);
-        }
-
-        ul, li {
-          width: 100%;
-          margin: 0;
-          padding: 0;
-          list-style-type: none;
-        }
-
-        .ng-spotlight-results-list-header {
-          font-size: 12px;
-          font-weight: 600;
-          background-color: $secondary;
-          color: $primary-color;
-          text-transform: capitalize;
-          padding: 4px 0 4px 25px;
-        }
-
-        .ng-spotlight-results-list-item {
-          font-size: 13px;
-          color: $primary-color;
-          padding: 6px 0 6px 25px;
-          word-break: break-all;
-          max-width: 265px;
-          cursor: pointer;
-
-          &.open-search-page {
-            border-top: 1px solid $border-color;
-          }
-
-          .ng-spotlight-item-icon {
-            margin: 0 10px 0 0;
-            float: left;
-            height: 16px;
-            width: 16px;
-            font-size: 15px;
+      .ng-spotlight-info-panel {
+         min-height: 172px;
+         color: $primary-color;
+         background-color: $primary;
+         .icons {
+            padding: 12px 0 0 0;
             text-align: center;
-            color: $primary-color;
-          }
-
-          &.active {
-            color: $primary-color;
-            background-color: $primary-highlight;
-          }
-
-          .ng-spotlight-item-name {
-            display: flex;
-            width: auto;
-            font-size: 12px;
+            color: #e44c3c;
+            font-size: 42px;
+         }
+         p {
+            padding: 8px 42px 22px 42px;
+            text-align: center;
+            font-size: 13px;
             font-weight: 500;
-          }
-
-          .info {
-            margin-left: 5px;
-            color: darken($primary-color, 20);
-            word-break: break-word;
-            display: flex;
-            width: 85%;
-          }
-        }
+            max-width: 650px;
+            margin: 0 auto;
+            line-height: 22px;
+         }
       }
-      .ng-spotlight-results-detail {
-        display: none;
-        margin-left: 290px;
-        width: ($ng-spotlight-w - 290);
-        height: 375px;
-        color: $primary-color;
-        background-color: $primary;
-        overflow-y: auto;
-        @media only screen and (min-width: $spotlight-responsive-width) {
-          display: block;
-        }
+      .ng-spotlight-results-panel {
+         min-height: 375px;
 
-        a {
-          color: $primary-color;
-        }
+         .ng-spotlight-results-list {
+            border-right: 1px solid $border-color;
+            position: absolute;
+            width: 100%;
+            height: calc(100% - 55px);
+            overflow: hidden;
+            overflow-y: auto;
+            user-select: none;
+            background-color: $primary;
 
-        @import "search-result-details/default";
+            @media only screen and (min-width: $spotlight-responsive-width) {
+               width: 290px;
+            }
+
+            ul {
+               min-height: calc(100% - 55px);
+            }
+
+            ul,
+            li {
+               width: 100%;
+               margin: 0;
+               padding: 0;
+               list-style-type: none;
+            }
+
+            .ng-spotlight-results-list-header {
+               font-size: 12px;
+               font-weight: 600;
+               background-color: $secondary;
+               color: $primary-color;
+               text-transform: capitalize;
+               padding: 4px 0 4px 25px;
+            }
+
+            .ng-spotlight-results-list-item {
+               font-size: 13px;
+               color: $primary-color;
+               padding: 6px 0 6px 25px;
+               word-break: break-all;
+               max-width: 265px;
+               cursor: pointer;
+
+               &.open-search-page {
+                  border-top: 1px solid $border-color;
+               }
+
+               .ng-spotlight-item-icon {
+                  margin: 0 10px 0 0;
+                  float: left;
+                  height: 16px;
+                  width: 16px;
+                  font-size: 15px;
+                  text-align: center;
+                  color: $primary-color;
+               }
+
+               &.active {
+                  color: $primary-color;
+                  background-color: $primary-highlight;
+               }
+
+               .ng-spotlight-item-name {
+                  display: flex;
+                  width: auto;
+                  font-size: 12px;
+                  font-weight: 500;
+               }
+
+               .info {
+                  margin-left: 5px;
+                  color: darken($primary-color, 20);
+                  word-break: break-word;
+                  display: flex;
+                  width: 85%;
+               }
+            }
+         }
+         .ng-spotlight-results-detail {
+            display: none;
+            margin-left: 290px;
+            width: ($ng-spotlight-w - 290);
+            height: 375px;
+            color: $primary-color;
+            background-color: $primary;
+            overflow-y: auto;
+            @media only screen and (min-width: $spotlight-responsive-width) {
+               display: block;
+            }
+
+            a {
+               color: $primary-color;
+            }
+
+            @import "search-result-details/default";
+         }
       }
-    }
-  }
+   }
 }

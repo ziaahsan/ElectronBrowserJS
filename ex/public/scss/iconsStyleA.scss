@@ -30,29 +30,121 @@ $video-icon: "../icons/styleA/files/video.png";
 $web-icon: "../icons/styleA/files/web.png";
 
 // Kinds
-.calendar-icon        { background: url($calendar-icon); background-size: cover; height: inherit; }
-.communication-icon   { background: url($communication-icon); background-size: cover; height: inherit; }
-.contacts-icon        { background: url($contacts-icon); background-size: cover; height: inherit; }
-.document-icon        { background: url($document-icon); background-size: cover; height: inherit; }
-.mail-icon            { background: url($mail-icon); background-size: cover; height: inherit; }
-.feed-icon            { background: url($feed-icon); background-size: cover; height: inherit; }
-.folder-icon          { background: url($folder-icon); background-size: cover; height: inherit; }
-.games-icon           { background: url($games-icon); background-size: cover; height: inherit; }
-.message-icon         { background: url($message-icon); background-size: cover; height: inherit; }
-.journal-icon         { background: url($journal-icon); background-size: cover; height: inherit; }
-.link-icon            { background: url($link-icon); background-size: cover; height: inherit; }
-.movie-icon           { background: url($audio-icon); background-size: cover; height: inherit; }
-.music-icon           { background: url($audio-icon); background-size: cover; height: inherit; }
-.note-icon            { background: url($note-icon); background-size: cover; height: inherit; }
-.picture-icon         { background: url($image-icon); background-size: cover; height: inherit; }
-.playlist-icon        { background: url($audio-icon); background-size: cover; height: inherit; }
-.program-icon         { background: url($exec-icon); background-size: cover; height: inherit; }
-.tv-icon              { background: url($audio-icon); background-size: cover; height: inherit; }
-.search-icon          { background: url($search-icon); background-size: cover; height: inherit; }
-.task-icon            { background: url($note-icon); background-size: cover; height: inherit; }
-.video-icon           { background: url($video-icon); background-size: cover; height: inherit; }
-.web-icon             { background: url($web-icon); background-size: cover; height: inherit; }
-.unknown-icon         { background: url($unknown-icon); background-size: cover; height: inherit; }
+.calendar-icon {
+   background: url($calendar-icon);
+   background-size: cover;
+   height: inherit;
+}
+.communication-icon {
+   background: url($communication-icon);
+   background-size: cover;
+   height: inherit;
+}
+.contacts-icon {
+   background: url($contacts-icon);
+   background-size: cover;
+   height: inherit;
+}
+.document-icon {
+   background: url($document-icon);
+   background-size: cover;
+   height: inherit;
+}
+.mail-icon {
+   background: url($mail-icon);
+   background-size: cover;
+   height: inherit;
+}
+.feed-icon {
+   background: url($feed-icon);
+   background-size: cover;
+   height: inherit;
+}
+.folder-icon {
+   background: url($folder-icon);
+   background-size: cover;
+   height: inherit;
+}
+.games-icon {
+   background: url($games-icon);
+   background-size: cover;
+   height: inherit;
+}
+.message-icon {
+   background: url($message-icon);
+   background-size: cover;
+   height: inherit;
+}
+.journal-icon {
+   background: url($journal-icon);
+   background-size: cover;
+   height: inherit;
+}
+.link-icon {
+   background: url($link-icon);
+   background-size: cover;
+   height: inherit;
+}
+.movie-icon {
+   background: url($audio-icon);
+   background-size: cover;
+   height: inherit;
+}
+.music-icon {
+   background: url($audio-icon);
+   background-size: cover;
+   height: inherit;
+}
+.note-icon {
+   background: url($note-icon);
+   background-size: cover;
+   height: inherit;
+}
+.picture-icon {
+   background: url($image-icon);
+   background-size: cover;
+   height: inherit;
+}
+.playlist-icon {
+   background: url($audio-icon);
+   background-size: cover;
+   height: inherit;
+}
+.program-icon {
+   background: url($exec-icon);
+   background-size: cover;
+   height: inherit;
+}
+.tv-icon {
+   background: url($audio-icon);
+   background-size: cover;
+   height: inherit;
+}
+.search-icon {
+   background: url($search-icon);
+   background-size: cover;
+   height: inherit;
+}
+.task-icon {
+   background: url($note-icon);
+   background-size: cover;
+   height: inherit;
+}
+.video-icon {
+   background: url($video-icon);
+   background-size: cover;
+   height: inherit;
+}
+.web-icon {
+   background: url($web-icon);
+   background-size: cover;
+   height: inherit;
+}
+.unknown-icon {
+   background: url($unknown-icon);
+   background-size: cover;
+   height: inherit;
+}
 
 // Archive
 .a-icon,
@@ -84,7 +176,11 @@ $web-icon: "../icons/styleA/files/web.png";
 .zip-icon,
 .zipx-icon,
 .xz-icon,
-.pak-icon                 { background: url($archive-icon); background-size: cover; height: inherit; }
+.pak-icon {
+   background: url($archive-icon);
+   background-size: cover;
+   height: inherit;
+}
 
 // Audio
 .aac-icon,
@@ -106,7 +202,11 @@ $web-icon: "../icons/styleA/files/web.png";
 .sid-icon,
 .wav-icon,
 .wma-icon,
-.xm-icon                { background: url($audio-icon); background-size: cover; height: inherit; }
+.xm-icon {
+   background: url($audio-icon);
+   background-size: cover;
+   height: inherit;
+}
 
 // Book
 .mobi-icon,
@@ -117,7 +217,11 @@ $web-icon: "../icons/styleA/files/web.png";
 .azw6-icon,
 .azw-icon,
 .cbr-icon,
-.cbz-icon               { background: url($book-icon); background-size: cover; height: inherit; }
+.cbz-icon {
+   background: url($book-icon);
+   background-size: cover;
+   height: inherit;
+}
 
 // Code
 .c-icon,
@@ -151,7 +255,11 @@ $web-icon: "../icons/styleA/files/web.png";
 .diff-icon,
 .patch-icon,
 .html-icon,
-.js-icon                { background: url($code-icon); background-size: cover; height: inherit; }
+.js-icon {
+   background: url($code-icon);
+   background-size: cover;
+   height: inherit;
+}
 
 // Exec
 .exe-icon,
@@ -161,14 +269,22 @@ $web-icon: "../icons/styleA/files/web.png";
 .sh-icon,
 .bat-icon,
 .lnk-icon,
-.crx-icon               { background: url($exec-icon); background-size: cover; height: inherit; }
+.crx-icon {
+   background: url($exec-icon);
+   background-size: cover;
+   height: inherit;
+}
 
 // Fonts
 .eot-icon,
 .otf-icon,
 .ttf-icon,
 .woff-icon,
-.woff2-icon             { background: url($font-icon); background-size: cover; height: inherit; }
+.woff2-icon {
+   background: url($font-icon);
+   background-size: cover;
+   height: inherit;
+}
 
 // Image
 .max-icon,
@@ -194,7 +310,11 @@ $web-icon: "../icons/styleA/files/web.png";
 .gpx-icon,
 .kml-icon,
 .kmz-icon,
-.webp-icon             { background: url($image-icon); background-size: cover; height: inherit; }
+.webp-icon {
+   background: url($image-icon);
+   background-size: cover;
+   height: inherit;
+}
 
 // Sheet
 .ods-icon,
@@ -202,12 +322,19 @@ $web-icon: "../icons/styleA/files/web.png";
 .xlsx-icon,
 .csv-icon,
 .ics-icon,
-.vcf-icon              { background: url($sheet-icon); background-size: cover; height: inherit; }
+.vcf-icon {
+   background: url($sheet-icon);
+   background-size: cover;
+   height: inherit;
+}
 
 // Slide
 .ppt-icon,
-.odp-icon              { background: url($slide-icon); background-size: cover; height: inherit; }
-
+.odp-icon {
+   background: url($slide-icon);
+   background-size: cover;
+   height: inherit;
+}
 
 // Text
 .doc-icon,
@@ -225,7 +352,11 @@ $web-icon: "../icons/styleA/files/web.png";
 .tex-icon,
 .txt-icon,
 .wpd-icon,
-.wps-icon              { background: url($text-icon); background-size: cover; height: inherit; }
+.wps-icon {
+   background: url($text-icon);
+   background-size: cover;
+   height: inherit;
+}
 
 // Video
 .aaf-icon,
@@ -260,10 +391,18 @@ $web-icon: "../icons/styleA/files/web.png";
 .vob-icon,
 .webm-icon,
 .wmv-icon,
-.yuv-icon           { background: url($video-icon); background-size: cover; height: inherit; }
+.yuv-icon {
+   background: url($video-icon);
+   background-size: cover;
+   height: inherit;
+}
 
 // Settings
 .dll-icon,
 .lib-icon,
 .meta-icon,
-.md-icon            { background: url($settings-icon); background-size: cover; height: inherit; }
+.md-icon {
+   background: url($settings-icon);
+   background-size: cover;
+   height: inherit;
+}

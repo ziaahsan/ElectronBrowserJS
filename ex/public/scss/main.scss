@@ -1,39 +1,39 @@
 // Import Fonts
-$font-family: 'Open Sans', sans-serif !default;
+$font-family: "Open Sans", sans-serif !default;
 
 $results-list-bg: rgba(0, 0, 0, 0.567) !default;
 $toolbar-btn-bg: rgba(0, 0, 0, 0.2) !default;
 $toolbar-btn-hover: rgba(255, 255, 255, 0.3) !default;
 * {
-    margin: 0;
-    padding: 0;
+   margin: 0;
+   padding: 0;
 }
 
 body {
-    background-color: transparent;
-    font-family: $font-family;
-    overflow: hidden;
+   background-color: transparent;
+   font-family: $font-family;
+   overflow: hidden;
 }
 .view {
-    position: absolute;
-    display: block;
-    width: 100%;
-    height: auto;
-    top: 20%;
+   position: absolute;
+   display: block;
+   width: 100%;
+   height: auto;
+   top: 20%;
 }
 .toolbar {
-    background-color: $toolbar-btn-bg;
-    position: absolute;
-    top: 0;
-    right: 0;
-    padding: 15px 0;
-    font-size: 12px;
-    .btn {
-        color: #fffcff;
-        padding: 15px;
-        text-decoration: none;
-    }
-    .btn:hover {
-        background-color: $toolbar-btn-hover;
-    }
+   background-color: $toolbar-btn-bg;
+   position: absolute;
+   top: 0;
+   right: 0;
+   padding: 15px 0;
+   font-size: 12px;
+   .btn {
+      color: #fffcff;
+      padding: 15px;
+      text-decoration: none;
+   }
+   .btn:hover {
+      background-color: $toolbar-btn-hover;
+   }
 }
