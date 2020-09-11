@@ -54,6 +54,15 @@ angular
                $scope.$apply();
             }
 
+            // Request window URL
+            $scope.requestAppURL = function (url) {
+               if (url.indexOf('http') === 0) {
+                  window.postMessage({ type: 'open-app-in-window', q: url });
+               } else {
+                  $scope.redirect(url);
+               }
+            }
+
             // Setup redirection
             $scope.redirect = function (path) {
                $location.path(path);

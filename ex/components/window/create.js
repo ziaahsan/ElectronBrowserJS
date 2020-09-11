@@ -10,10 +10,10 @@ const { BrowserWindow } = require('glasstron')
 const path = require('path')
 
 // Set of windows
-const windows = new Set();
+const windows = new Set()
 
 // Window
-exports.createWindow = (loadName) => {
+exports.createWindow = (loadName, maximize, blur) => {
    let newWindow = null
 
    newWindow = new BrowserWindow({
@@ -26,7 +26,7 @@ exports.createWindow = (loadName) => {
 
       // skipTaskbar: true,
 
-      blur: true,
+      blur: blur,
       blurType: "blurbehind",
       vibrancy: "fullscreen-ui",
 
@@ -43,18 +43,21 @@ exports.createWindow = (loadName) => {
       newWindow.loadFile(loadName)
    }
 
-   newWindow.maximize()
+   if (maximize)
+      newWindow.maximize()
 
    newWindow.once('ready-to-show', () => {
       if (isDev) newWindow.webContents.openDevTools()
       newWindow.show()
       newWindow.focus()
-   });
+   })
 
    newWindow.on('closed', () => {
-      windows.delete(newWindow);
+      windows.delete(newWindow)
       newWindow = null;
-   });
+   })
+
+   newWindow.appName = loadName
 
    windows.add(newWindow);
    return newWindow;

@@ -37,6 +37,52 @@ $spotlight-responsive-width: 680px !default;
    border-radius: 22px;
 }
 
+// Toolbar window
+.ng-toolbar {
+   position: relative;
+   color: $primary-color;
+   background-color: $primary;
+   z-index: 9;
+   width: 100%;
+   min-height: 42px;
+   font-size: 12px;
+   letter-spacing: 0.3px;
+   font-family: $font-family;
+   border-radius: 6px;
+   overflow: hidden;
+   margin: 0 auto;
+   width: $ng-spotlight-w;
+   .tabs {
+      position: relative;
+      display: block;
+      text-align: center;
+      .no-open-msg {
+         position: absolute;
+         display: block;
+         right: 318px;
+         top: 15px;
+      }
+      .open-apps {
+         .app {
+            position: relative;
+            display: table-cell;
+            text-align: center;
+            border-radius: 2px;
+            padding: 0 8px;
+
+            border-right: 1px solid $border-color;
+            .icon {
+               position: relative;
+               display: block;
+               .fingerprint {
+                  color: #e44c3c;
+                  font-size: 32px
+               }
+            }
+         }
+      }
+   }
+}
 // App
 .ng-spotlight {
    // Global css default

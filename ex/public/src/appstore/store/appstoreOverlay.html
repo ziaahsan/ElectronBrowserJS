@@ -2,7 +2,7 @@
    <div ng-include="'src/navigation/header.html'"></div>
    <div ng-if="appstoreItems === null" ng-include="'src/navigation/loading.html'"></div>
    <div class="ng-cards" ng-if="appstoreItems !== null">
-      <div class="ng-card" ng-repeat="appstoreItem in appstoreItems" ng-click="redirect(appstoreItem.relative_link)">
+      <div class="ng-card" ng-repeat="appstoreItem in appstoreItems" ng-click="requestAppURL(appstoreItem.relative_link)">
          <div class="ng-info">
             <span class="title">{{appstoreItem.title}}</span>
             <span class="command">{{appstoreItem.command}}</span>

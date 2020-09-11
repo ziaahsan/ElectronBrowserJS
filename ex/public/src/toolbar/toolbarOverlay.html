@@ -1,0 +1,17 @@
+<div class="ng-toolbar">
+   <div class="tabs">
+      <span ng-if="openApps.length === 0" class="no-open-msg">You have no open apps.</span>
+      <div class="open-apps">
+         <span class="app" ng-click="requestToSwitchAppWindow('main')">
+            <span class="icon">
+               <span class="fingerprint"><i class="las la-fingerprint"></i></span>
+            </span>
+         </span>
+         <span ng-if="openApps.length !== 0" ng-repeat="openApp in openApps"  class="app" ng-click="requestToSwitchAppWindow(openApp.appName)">
+            <span class="icon">
+               <img src="{{openApp.icon}}" />
+            </span>
+         </div>
+      </div>
+   </div>
+</div>

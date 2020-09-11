@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+   <meta charset="UTF-8">
+   <meta http-equiv="Content-Security-Policy" content="
+            default-src 'self';
+            style-src 'self' https://fonts.googleapis.com 'sha256-1PxuDsPyGK6n+LZsMv0gG4lMX3i3XigG6h0CzPIjwrE=';
+            img-src 'self' data: https://www.google.com;
+            font-src 'self' https://fonts.gstatic.com;
+            connect-src 'self' http://localhost:8000;
+            script-src 'self';
+        ">
+
+   <title>Windows Search</title>
+
+   <!-- Required Dependencies -->
+   <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+   <link href="../node_modules/line-awesome/dist/line-awesome/css/line-awesome.min.css" type="text/css"
+      rel="stylesheet">
+
+   <!-- Fonts -->
+   <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400;1,600;1,700;1,800&display=swap"
+      rel="stylesheet">
+
+   <!-- Main CSS -->
+   <link href="css/main.min.css" type="text/css" rel="stylesheet">
+   <link href="css/animations.min.css" type="text/css" rel="stylesheet">
+   <link href="css/darkTheme.min.css" type="text/css" rel="stylesheet" id="angular-theme">
+
+   <!-- AngularJS -->
+   <script src="../node_modules/angular/angular.js"></script>
+   <script src="../node_modules/angular-route/angular-route.min.js"></script>
+   <script src="../node_modules/angular-animate/angular-animate.min.js"></script>
+
+   <script src="src/webbar-config.js"></script>
+   <script src="src/app-theme-config.js"></script>
+
+   <!-- Angular Components -->
+   <script src="src/toolbar/toolbar.js"></script>
+
+</head>
+
+<body ng-app="de.devjs.angular.app">
+   <ng-view class="webbar-view"></ng-view>
+</body>
+
+</html>
