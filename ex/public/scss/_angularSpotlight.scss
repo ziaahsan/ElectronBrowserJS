@@ -78,7 +78,18 @@ $spotlight-responsive-width: 680px !default;
                   color: #e44c3c;
                   font-size: 32px
                }
+               .cog {
+                  color: #eeeeee;
+                  font-size: 32px
+               }
             }
+            .active {
+               background-color: $secondary;
+            }
+         }
+         .app:hover {
+            background-color: $secondary;
+            cursor: pointer;
          }
       }
    }

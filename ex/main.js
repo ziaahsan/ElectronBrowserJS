@@ -1,16 +1,19 @@
 "use strict";
+// Setup storage for electron
+const Store = require('electron-store')
+const electronStore = new Store()
+
 // Modules to control application life and create native browser window
 const { app, globalShortcut, ipcMain } = require('electron')
-const { createWindow } = require('./components/window/create')
-const requests = require('./components/window/requests')
 
-let routes = {
-   index: 'public/index.html',
-   webbar: 'public/webbar.html'
-}
+const { createWindow } = require('./components/window/create')
+const { routes, windowOptions } = require('./components/window/options')
+
+const requests = require('./components/window/requests')
+const webbar = require('./components/window/webbar')
 
 // Save main and webbar window instance here
-let mainWindow = null, webbarWindow = null
+let parentWindow = null, spotlightWindow = null, webbarWindow = null
 
 // Setting up IPC
 ipcMain.handle('ng-requests', async (event, data) => {
@@ -18,49 +21,14 @@ ipcMain.handle('ng-requests', async (event, data) => {
    // We're adding data to the reqeust
    // because in the requests.fetch we want to event.sender.send
    switch (data.type) {
-      case 'open-app-in-window':
+      case 'open-app':
          if (data.q.indexOf('http') === 0) {
-            let newAppWindow = createWindow(data.q, true, true)
-            newAppWindow.setParentWindow(mainWindow)
-
-            let response = []
-            let childWindows = mainWindow.getChildWindows()
-            childWindows.forEach((item, index) => {
-               if (item.appName.indexOf('http') === 0) {
-                  let info = {
-                     appName: item.appName,
-                     icon: `https://www.google.com/s2/favicons?sz=24&domain_url=${item.appName}`
-                  }
-                  response.push(info)
-               }
-            })
-
-            // Send the webbar window an alert of open window
-            webbarWindow.webContents.send('request-response', 'ng-webbar', 'open-apps', response);
+            webbar.createNewWindow(parentWindow, webbarWindow, data.q, windowOptions.childWindowOptions)
          }
          break;
-      case 'switch-app-window':
-         if (data.q === 'main') {
-            // Minimize all children windows which are 'apps'
-            let childWindows = mainWindow.getChildWindows()
-            childWindows.forEach((item, index) => {
-               if (item.appName.indexOf('http') === 0) {
-                  item.minimize()
-               }
-            })
-         } else {
-            // Minimize all children windows which are not 'appName'
-            let childWindows = mainWindow.getChildWindows()
-            childWindows.forEach((item, index) => {
-               console.log(data.q, item.appName)
-               if (item.appName != data.q && item.appName != routes.webbar) {
-                  item.minimize()
-               }
-               if (item.appName === data.q) {
-                  item.maximize()
-               }
-            })
-         }
+      case 'switch-app':
+         let storageToken = data.q
+         webbar.resotreWindow(storageToken, parentWindow, webbarWindow)
          break
       case 'select-programs':
       case 'select-folders':
@@ -70,14 +38,26 @@ ipcMain.handle('ng-requests', async (event, data) => {
    }
 })
 
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.
+// When app's ready...
 app.on('ready', () => {
-   mainWindow = createWindow(routes.index, true, true)
+   // Setup blank parent window
+   parentWindow = createWindow(routes.blank.url, windowOptions.parentWindowOptions, routes.blank.icon)
+
+   // Setup spotlight
+   spotlightWindow = createWindow(routes.index.url, windowOptions.spotlightWindowOptions, routes.index.icon)
+   spotlightWindow.setParentWindow(parentWindow)
+
    // Setup the webbar
-   webbarWindow = createWindow(routes.webbar, false, false)
-   webbarWindow.setSize(800, 52)
+   webbarWindow = createWindow(routes.webbar.url, windowOptions.webbarWindowOptions, routes.webbar.icon)
+   webbarWindow.setSize(800, 43)
    webbarWindow.setPosition(560, 900)
-   webbarWindow.setParentWindow(mainWindow)
+   webbarWindow.setParentWindow(parentWindow)
    webbarWindow.setAlwaysOnTop(true)
+   webbarWindow.setClosable(false)
+   webbarWindow.setFocusable(false)
+   // Update the webbar on initial setup
+   webbarWindow.once('show', () => {
+      // Updat the webbar
+      webbar.update(webbarWindow)
+   })
 })

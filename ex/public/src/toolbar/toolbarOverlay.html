@@ -2,14 +2,12 @@
    <div class="tabs">
       <span ng-if="openApps.length === 0" class="no-open-msg">You have no open apps.</span>
       <div class="open-apps">
-         <span class="app" ng-click="requestToSwitchAppWindow('main')">
-            <span class="icon">
-               <span class="fingerprint"><i class="las la-fingerprint"></i></span>
+         <span ng-if="openApps.length !== 0" ng-repeat="openApp in openApps"  class="app" ng-click="requestToSwitchAppWindow(openApp.storageToken)">
+            <span ng-if="openApp.windowIcon.indexOf('http') === 0" class="icon">
+               <img src="{{openApp.windowIcon}}" />
             </span>
-         </span>
-         <span ng-if="openApps.length !== 0" ng-repeat="openApp in openApps"  class="app" ng-click="requestToSwitchAppWindow(openApp.appName)">
-            <span class="icon">
-               <img src="{{openApp.icon}}" />
+            <span ng-if="openApp.windowIcon.indexOf('http') !== 0" class="icon">
+               <span class="{{openApp.windowIcon}}"><i class="las la-{{openApp.windowIcon}}"></i></span>
             </span>
          </div>
       </div>

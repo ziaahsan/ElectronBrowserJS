@@ -57,7 +57,7 @@ angular
             // Request window URL
             $scope.requestAppURL = function (url) {
                if (url.indexOf('http') === 0) {
-                  window.postMessage({ type: 'open-app-in-window', q: url });
+                  window.postMessage({ type: 'open-app', q: url });
                } else {
                   $scope.redirect(url);
                }

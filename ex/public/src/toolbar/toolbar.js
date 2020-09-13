@@ -53,8 +53,8 @@ angular
             }
 
             // Switch the app windo
-            $scope.requestToSwitchAppWindow = function (appName) {
-               window.postMessage({ type: 'switch-app-window', q: appName });
+            $scope.requestToSwitchAppWindow = function (storageToken) {
+               window.postMessage({ type: 'switch-app', q: storageToken });
             }
 
             // Adds the open app to the toolbar
