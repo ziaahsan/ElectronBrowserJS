@@ -1,17 +1,9 @@
 "use strict";
 angular
-   .module('de.devjs.angular.toolbar', [])
-   .directive('toolbarOverlay', ['$timeout', '$http', '$compile', 'Toolbar', function ($timeout, $http, $compile, Toolbar) {
-      // Type of requests avaliable
-      const VALID_REQUESTS = {
-         TABS: {
-            NAME: "open-apps",
-            CATEGORY: "apps"
-         }
-      };
-
+   .module('de.devjs.angular.tabs', [])
+   .directive('tabsOverlay', ['$timeout', '$http', '$compile', 'Tabs', function ($timeout, $http, $compile, Tabs) {
       // Root view element to append items to
-      var $ngToolbarOverlay;
+      var $ngTabsOverlay;
 
       // Directive objects
       return {
@@ -19,7 +11,7 @@ angular
          replace: true,
          controller: controller(),
          link: link,
-         templateUrl: 'src/toolbar/toolbarOverlay.html'
+         templateUrl: 'src/webbar/tabs/tabsOverlay.html'
       };
 
       //<summary>
@@ -27,7 +19,8 @@ angular
       //</summary>
       function controller() {
          return ['$scope', '$location', function ($scope, $location) {
-            $scope.openApps = [];
+            $scope.tabs = [];
+            $scope.activeTab = '';
 
             // Clean up with angularJS
             $scope.$on('$destroy', function () {
@@ -46,7 +39,7 @@ angular
 
                // Check the name and perform
                switch (event.data.name) {
-                  case VALID_REQUESTS.TABS.NAME:
+                  case 'open-tabs':
                      $scope.addOpenApp(event);
                      break;
                }
@@ -54,12 +47,14 @@ angular
 
             // Switch the app windo
             $scope.requestToSwitchAppWindow = function (storageToken) {
-               window.postMessage({ type: 'switch-app', q: storageToken });
+               window.postMessage({ type: 'switch-tab', q: storageToken });
             }
 
-            // Adds the open app to the toolbar
+            // Adds the open app to the tabs
             $scope.addOpenApp = function (event) {
-               $scope.openApps = event.data.results;
+               console.log(event)
+               $scope.tabs = event.data.results.tabs;
+               $scope.activeTab = event.data.results.activeTab;
                $scope.$apply();
             }
 
@@ -75,14 +70,14 @@ angular
       //</summary>
       function link(scope, element) {
          // Root element from view.html
-         $ngToolbarOverlay = $(element);
+         $ngTabsOverlay = $(element);
          scope.init();
       }
    }]);
 
 angular
-   .module('de.devjs.angular.toolbar')
-   .provider("Toolbar", function () {
+   .module('de.devjs.angular.tabs')
+   .provider("Tabs", function () {
       return {
          $get: ['$http', '$q', function ($http, $q) {
             var that = this;

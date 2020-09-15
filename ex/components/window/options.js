@@ -1,7 +1,7 @@
 // Routes
 const windowRoutes = {
    blank: {
-      url: 'blank',
+      url: 'public/blank.html',
       icon: ''
    },
    index: {
@@ -17,16 +17,14 @@ const windowRoutes = {
 // Windows options
 const windowOptions = {
    parentWindowOptions: {
-      backgroundColor: '#000000000',
-      maximize: true,
-      blur: true,
-      transparent: true,
+      backgroundColor: '#ffffff',
+      blur: false,
+      transparent: false,
       saveWindowState: false,
    },
 
    spotlightWindowOptions: {
       backgroundColor: '#000000000',
-      maximize: true,
       blur: true,
       transparent: true,
       saveWindowState: true,
@@ -34,17 +32,15 @@ const windowOptions = {
 
    webbarWindowOptions: {
       backgroundColor: '#000000000',
-      maximize: false,
-      blur: false,
+      blur: true,
       transparent: true,
       saveWindowState: false,
    },
 
    childWindowOptions: {
       backgroundColor: '#ffffff',
-      maximize: true,
       blur: false,
-      transparent: true,
+      transparent: false,
       saveWindowState: true,
    }
 }

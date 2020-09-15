@@ -4,14 +4,23 @@ const isDev = require('electron-is-dev')
 // Generate token use
 const crypto = require('crypto-random-string')
 // Setup storage for electron
-const Store = require('electron-store')
-const electronStore = new Store({accessPropertiesByDotNotation: false})
+const store = require('electron-store')
+const electronStore = new store({accessPropertiesByDotNotation: false})
 // Setup consts for window
-const { globalShortcut } = require('electron')
 const { BrowserWindow } = require('glasstron')
-
 // Path config abs
 const path = require('path')
+
+// Window details
+exports.defaultWindowDetails =  {
+   width: 1366,
+   height: 768
+}
+
+// Returns the focused window
+exports.focusedWindow = () => {
+   return BrowserWindow.getFocusedWindow()
+}
 
 // Window
 exports.createWindow = (url, options, icon=null) => {
@@ -38,40 +47,49 @@ exports.createWindow = (url, options, icon=null) => {
       }
    })
 
-   newWindow.windowURL = url
    newWindow.windowOptions = options
    newWindow.windowKey = crypto({ length: 16, type: 'alphanumeric' })
 
-   if (url.indexOf('http') === 0) {
-      var key = crypto({ length: 16, type: 'alphanumeric' })
-      const host = new URL(url).host
-      newWindow.loadURL(url)
-      newWindow.windowName = host
-      newWindow.windowIcon = `https://www.google.com/s2/favicons?sz=24&domain_url=${host}`
-   } else {
-      var key = url
+   let storageToken = ""
+
+
+   // URL based on:
+   if (url.indexOf('public/') === 0) {
       newWindow.loadFile(url)
-      newWindow.windowName = url
-      newWindow.windowIcon = icon
+      storageToken = url
+   } else {
+      newWindow.loadURL(url)
+      storageToken = crypto({ length: 8, type: 'alphanumeric' })
    }
 
-   if (options.maximize)
-      newWindow.maximize()
-
    newWindow.once('ready-to-show', () => {
-      if (isDev) newWindow.webContents.openDevTools()
+      if (isDev)
+         newWindow.webContents.openDevTools()
+      
       newWindow.show()
       newWindow.focus()
+   })
+
+   // When tab spinner stops
+   newWindow.webContents.once('did-finish-load', () => {
+      // Save window to the store
+      if (options.saveWindowState) {
+         newWindow.windowTitle = newWindow.webContents.getTitle()
+         newWindow.windowURL = newWindow.webContents.getURL()
+         if (options.saveWindowState)
+            electronStore.set(storageToken, newWindow)
+      }
+   })
+
+   newWindow.webContents.once('page-favicon-updated', (event, favicons) => {
+      newWindow.windowIcon = favicons
+         if (options.saveWindowState)
+            electronStore.set(storageToken, newWindow)
    })
 
    newWindow.on('closed', () => {
       newWindow = null;
    })
-
-   // Save window to the store
-   if (options.saveWindowState) {
-      electronStore.set(key, newWindow)
-   }
-
+   
    return newWindow;
 }

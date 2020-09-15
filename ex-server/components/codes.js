@@ -1,3 +1,4 @@
+// HTTP request codes
 module.exports = {
    '100': 'Continue',
    '101': 'Switching Protocols',

@@ -37,60 +37,109 @@ $spotlight-responsive-width: 680px !default;
    border-radius: 22px;
 }
 
-// Toolbar window
-.ng-toolbar {
+// Webbar window
+.ng-webbar {
    position: relative;
    color: $primary-color;
-   background-color: $primary;
+   background-color: rgba($primary, 1);
    z-index: 9;
    width: 100%;
    min-height: 42px;
    font-size: 12px;
    letter-spacing: 0.3px;
    font-family: $font-family;
-   border-radius: 6px;
    overflow: hidden;
    margin: 0 auto;
-   width: $ng-spotlight-w;
+   display: flex;
+   .navigation {
+      position: relative;
+      width: 8%;
+      display: flex;
+      flex-wrap: nowrap;
+      .icon {
+         font-size: 18px;
+         padding: 4px;
+         position: relative;
+         display: inline-block;
+         background-color: rgba($primary, 1);
+         width: auto;
+         height: 34px;
+         line-height: 34px;
+         text-align: center;
+      }
+      .icon:hover {
+         background-color: $secondary;
+         cursor: pointer;
+      }
+      .fingerprint {
+         color: #e44c3c;
+         font-size: 32px;
+      }
+   }
+   .bar {
+      position: relative;
+      width: 25%;
+      display: flex;
+      .url {
+         position: relative;
+         width: 85%;
+         text-align: right;
+         display: block;
+         height: 18px;
+         line-height: 18px;
+         padding: 4px;
+         top: 14%;
+         border-radius: 2px;
+         font-weight: 500;
+         font-size: 12px;
+         .protocol {
+            font-weight: 600;
+            color: #6fe81f;
+         }
+      }
+      .settings {
+         position: relative;
+         width: 25px;
+         text-align: right;
+         display: block;
+         height: 18px;
+         line-height: 18px;
+         padding: 4px;
+         top: 14%;
+         border-radius: 2px;
+         font-weight: 500;
+         font-size: 18px;
+      }
+   }
    .tabs {
       position: relative;
-      display: block;
-      text-align: center;
-      .no-open-msg {
-         position: absolute;
-         display: block;
-         right: 318px;
-         top: 15px;
-      }
-      .open-apps {
-         .app {
+      width: 67%;
+      .icon {
+         font-size: 18px;
+         padding: 4px;
+         position: relative;
+         display: inline-block;
+         background-color: rgba($primary, 1);
+         width: 22px;
+         height: 34px;
+         line-height: 34px;
+         text-align: center;
+         margin: 0 5px 0 0;
+         .favicon {
+            width: 22px;
+            height: 22px;
+            background-size: cover;
             position: relative;
-            display: table-cell;
-            text-align: center;
-            border-radius: 2px;
-            padding: 0 8px;
-
-            border-right: 1px solid $border-color;
-            .icon {
-               position: relative;
-               display: block;
-               .fingerprint {
-                  color: #e44c3c;
-                  font-size: 32px
-               }
-               .cog {
-                  color: #eeeeee;
-                  font-size: 32px
-               }
-            }
-            .active {
-               background-color: $secondary;
-            }
+            display: block;
+            top: 14%;
+            margin: 0 auto;
+            border-radius: 4px;
+            background-color: $primary-color;
          }
-         .app:hover {
-            background-color: $secondary;
-            cursor: pointer;
-         }
+      }
+      .icon:hover {
+         background-color: $secondary;
+         cursor: pointer;
       }
    }
 }

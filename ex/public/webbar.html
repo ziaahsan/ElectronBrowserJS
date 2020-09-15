@@ -3,16 +3,16 @@
 
 <head>
    <meta charset="UTF-8">
-   <meta http-equiv="Content-Security-Policy" content="
+   <!-- <meta http-equiv="Content-Security-Policy" content="
             default-src 'self';
             style-src 'self' https://fonts.googleapis.com 'sha256-1PxuDsPyGK6n+LZsMv0gG4lMX3i3XigG6h0CzPIjwrE=';
-            img-src 'self' data: https://www.google.com;
+            img-src 'self' data: */fav*;
             font-src 'self' https://fonts.gstatic.com;
-            connect-src 'self' http://localhost:8000;
+            connect-src 'self' localhost:;
             script-src 'self';
-        ">
+        "> -->
 
-   <title>Windows Search</title>
+   <title>Windows Bar</title>
 
    <!-- Required Dependencies -->
    <script src="../node_modules/jquery/dist/jquery.min.js"></script>
@@ -38,11 +38,11 @@
    <script src="src/app-theme-config.js"></script>
 
    <!-- Angular Components -->
-   <script src="src/toolbar/toolbar.js"></script>
+   <script src="src/webbar/tabs/tabs.js"></script>
 
 </head>
 
-<body ng-app="de.devjs.angular.app">
+<body ng-app="de.devjs.angular.webbar">
    <ng-view class="webbar-view"></ng-view>
 </body>
 

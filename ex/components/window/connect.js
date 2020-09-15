@@ -7,7 +7,6 @@ const { ConnectionBuilder } = require("electron-cgi")
 // Setting up the connection with .Net
 var conn = null
 
-
 //@todo: async calls to try-catch
 //@todo: convert check for conn != null to something like conn.active?
 class Connect {

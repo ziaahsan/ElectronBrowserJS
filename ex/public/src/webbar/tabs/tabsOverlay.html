@@ -1,0 +1,27 @@
+<div class="ng-webbar">
+   <div class="navigation">
+      <span class="icon fingerprint" ng-click="requestToSwitchAppWindow('public/index.html')">
+         <i class="las la-fingerprint"></i>
+      </span>
+      <span class="icon">
+         <i class="las la-long-arrow-alt-left"></i>
+      </span>
+      <span class="icon">
+         <i class="las la-long-arrow-alt-right"></i>
+      </span>
+   </div>
+   <div class="tabs">
+      <span class="icon" ng-repeat="tab in tabs" ng-click="requestToSwitchAppWindow(tab.storageToken)" ng-if="tab.windowIcon.indexOf('http') === 0">
+         <span class="favicon" ng-style="{'background-image': 'url({{tab.windowIcon}})'}"></span>
+      </span>
+   </div>
+   <div class="bar">
+      <span class="url">
+         <span class="protocol">https://</span>
+         <span class="hostname">www.google.com</span>
+      </span>
+      <span class="settings">
+         <i class="las la-ellipsis-v"></i>
+      </span>
+   </div>
+</div>
