@@ -73,7 +73,7 @@ $spotlight-responsive-width: 680px !default;
       }
       .fingerprint {
          color: #e44c3c;
-         font-size: 32px;
+         font-size: 26px;
       }
    }
    .bar {
@@ -83,7 +83,7 @@ $spotlight-responsive-width: 680px !default;
       .url {
          position: relative;
          width: 85%;
-         text-align: right;
+         text-align: center;
          display: block;
          height: 18px;
          line-height: 18px;
@@ -92,9 +92,10 @@ $spotlight-responsive-width: 680px !default;
          border-radius: 2px;
          font-weight: 500;
          font-size: 12px;
+         background-color: rgba($secondary, 1);
          .protocol {
             font-weight: 600;
-            color: #6fe81f;
+            color: rgba(#6fe81f, 1);
          }
       }
       .settings {

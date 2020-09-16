@@ -12,7 +12,7 @@
             script-src 'self';
         "> -->
 
-   <title>Windows Bar</title>
+   <title>Webbar</title>
 
    <!-- Required Dependencies -->
    <script src="../node_modules/jquery/dist/jquery.min.js"></script>
@@ -35,14 +35,13 @@
    <script src="../node_modules/angular-animate/angular-animate.min.js"></script>
 
    <script src="src/webbar-config.js"></script>
-   <script src="src/app-theme-config.js"></script>
 
    <!-- Angular Components -->
-   <script src="src/webbar/tabs/tabs.js"></script>
+   <script src="src/webbar/webbar.js"></script>
 
 </head>
 
-<body ng-app="de.devjs.angular.webbar">
+<body ng-app="de.devjs.angular.app">
    <ng-view class="webbar-view"></ng-view>
 </body>
 

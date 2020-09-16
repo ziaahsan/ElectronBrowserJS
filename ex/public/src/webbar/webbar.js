@@ -1,9 +1,10 @@
 "use strict";
+
 angular
-   .module('de.devjs.angular.tabs', [])
-   .directive('tabsOverlay', ['$timeout', '$http', '$compile', 'Tabs', function ($timeout, $http, $compile, Tabs) {
+   .module('de.devjs.angular.webbar', [])
+   .directive('webbarOverlay', ['$timeout', '$http', '$compile', 'Webbar', function ($timeout, $http, $compile, Webbar) {
       // Root view element to append items to
-      var $ngTabsOverlay;
+      var $ngWebbarOverlay;
 
       // Directive objects
       return {
@@ -11,7 +12,7 @@ angular
          replace: true,
          controller: controller(),
          link: link,
-         templateUrl: 'src/webbar/tabs/tabsOverlay.html'
+         templateUrl: 'src/webbar/webbarOverlay.html'
       };
 
       //<summary>
@@ -19,8 +20,7 @@ angular
       //</summary>
       function controller() {
          return ['$scope', '$location', function ($scope, $location) {
-            $scope.tabs = [];
-            $scope.activeTab = '';
+            $scope.tabs = []
 
             // Clean up with angularJS
             $scope.$on('$destroy', function () {
@@ -39,23 +39,32 @@ angular
 
                // Check the name and perform
                switch (event.data.name) {
-                  case 'open-tabs':
-                     $scope.addOpenApp(event);
+                  case 'create-tab':
+                     if (!event.data.results) return
+                     if (event.data.results.tabId && event.data.results.favIcon) {
+                        $scope.createTab(event.data.results.tabId, event.data.results.favIcon);
+                     }
+                     break;
+                  case 'update-tab':
+                     if (!event.data.results) return
+                     angular.forEach($scope.tabs, function(element, key) {
+                        if (element.tabId === event.data.results.tabId) {
+                           element.favIcon = event.data.results.favIcon
+                        }
+                     });
+                     $scope.$apply()
                      break;
                }
             }
 
             // Switch the app windo
             $scope.requestToSwitchAppWindow = function (storageToken) {
-               window.postMessage({ type: 'switch-tab', q: storageToken });
+               window.postMessage({ type: 'switch-window', q: storageToken });
             }
 
-            // Adds the open app to the tabs
-            $scope.addOpenApp = function (event) {
-               console.log(event)
-               $scope.tabs = event.data.results.tabs;
-               $scope.activeTab = event.data.results.activeTab;
-               $scope.$apply();
+            $scope.createTab = function (id, favIcon) {
+               $scope.tabs.push({tabId: id, favIcon: favIcon})
+               $scope.$apply()
             }
 
             // Setup redirection
@@ -70,14 +79,14 @@ angular
       //</summary>
       function link(scope, element) {
          // Root element from view.html
-         $ngTabsOverlay = $(element);
+         $ngWebbarOverlay = $(element);
          scope.init();
       }
    }]);
 
 angular
-   .module('de.devjs.angular.tabs')
-   .provider("Tabs", function () {
+   .module('de.devjs.angular.webbar')
+   .provider("Webbar", function () {
       return {
          $get: ['$http', '$q', function ($http, $q) {
             var that = this;

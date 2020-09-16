@@ -11,14 +11,14 @@
       </span>
    </div>
    <div class="tabs">
-      <span class="icon" ng-repeat="tab in tabs" ng-click="requestToSwitchAppWindow(tab.storageToken)" ng-if="tab.windowIcon.indexOf('http') === 0">
-         <span class="favicon" ng-style="{'background-image': 'url({{tab.windowIcon}})'}"></span>
+      <span class="icon" ng-repeat="tab in tabs" ng-click="requestToSwitchAppWindow(tab.token)">
+         <span class="favicon" ng-style="{'background-image': 'url(' + tab.favIcon + ')'}"></span>
       </span>
    </div>
    <div class="bar">
       <span class="url">
-         <span class="protocol">https://</span>
-         <span class="hostname">www.google.com</span>
+         <span class="protocol"><i class="las la-lock"></i></span>
+         <span class="title">Line Awesome — Free Beautiful Icon Font</span>
       </span>
       <span class="settings">
          <i class="las la-ellipsis-v"></i>
