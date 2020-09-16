@@ -1,18 +1,19 @@
 <div class="ng-webbar">
    <div class="navigation">
-      <span class="icon fingerprint" ng-click="requestToSwitchAppWindow('public/index.html')">
+      <span class="icon fingerprint" ng-click="switchTab('spotlight')">
          <i class="las la-fingerprint"></i>
       </span>
-      <span class="icon">
+      <span class="icon" ng-click="canGoBack()">
          <i class="las la-long-arrow-alt-left"></i>
       </span>
-      <span class="icon">
+      <span class="icon" ng-click="canGoForward()">
          <i class="las la-long-arrow-alt-right"></i>
       </span>
    </div>
    <div class="tabs">
-      <span class="icon" ng-repeat="tab in tabs" ng-click="requestToSwitchAppWindow(tab.token)">
-         <span class="favicon" ng-style="{'background-image': 'url(' + tab.favIcon + ')'}"></span>
+      <span class="icon" ng-repeat="tab in tabs" ng-click="switchTab(tab.tabId)">
+         <span ng-if="tab.isLoading" class="favicon" ng-style="{'background-image': 'url(icons/spinner.gif)'}"></span>
+         <span ng-if="!tab.isLoading" class="favicon" ng-style="{'background-image': 'url(' + tab.favIcon + ')'}"></span>
       </span>
    </div>
    <div class="bar">

@@ -81,6 +81,7 @@ class CustomBrowserWindow {
       this.browserWindow.show()
       this.browserWindow.focus()
 
+      this.browserWindow.tabId = this.id
       this.browserWindow.url = this.browserWindow.webContents.getURL()
       this.browserWindow.created = new Date()
    }.bind(this) // Add the scope of the class to function
@@ -193,6 +194,10 @@ module.exports = class BrowserWindows {
       this.spotlightWindow.create()
    }
 
+   getFocusedWindow = function () {
+      return BrowserWindow.getFocusedWindow()
+   }
+
    openWindowByURL = function (token, urlString) {
       if (this.parentWindow === null)
          throw "Parent window is mssing!"
@@ -226,26 +231,49 @@ module.exports = class BrowserWindows {
    }
 
    createTab = function (urlString) {
-      let webbarWindowContext = this.webbarWindow.getBrowserWindow()
       let token = crypto({ length: 8, type: 'alphanumeric' })
       let response = {
          tabId: token,
-         favIcon: this.spinnerURL
+         isLoading: true,
+         favIcon: '',
+         title: 'Untitled'
       }
+
+      // Send the tab to be created response
       this.sendWebbar('create-tab', response)
 
       let customBrowserWindow = this.openWindowByURL(token, urlString)
       let customBrowserWindowContext = customBrowserWindow.getBrowserWindow()
+
       // Attach events before creating the
-      customBrowserWindowContext.webContents.once('page-favicon-updated', function (event, favIcons) {
+      customBrowserWindowContext.webContents.on('did-start-loading', function () {
+         response.isLoading = true
+         this.sendWebbar('update-tab', response)
+      }.bind(this))
+
+      customBrowserWindowContext.webContents.on('did-stop-loading', function () {
+         response.isLoading = false
+         this.sendWebbar('update-tab', response)
+      }.bind(this))
+
+      customBrowserWindowContext.webContents.on('page-favicon-updated', function (event, favIcons) {
          if (favIcons.length > 0) {
             response.favIcon = favIcons[0]
-            this.sendWebbar('update-tab', response)
          }
+         this.sendWebbar('update-tab', response)
       }.bind(this))
 
       // Create the window
       customBrowserWindow.create()
+   }
+
+   switchTab = function (tabId) {
+      this.parentWindow.getBrowserWindow().getChildWindows().forEach((childWindow, index) => {
+         if (childWindow.tabId === tabId) {
+            childWindow.focus()
+            childWindow.show()
+         }
+      })
    }
 
    sendWebbar = function (name, response) {

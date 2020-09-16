@@ -41,30 +41,36 @@ angular
                switch (event.data.name) {
                   case 'create-tab':
                      if (!event.data.results) return
-                     if (event.data.results.tabId && event.data.results.favIcon) {
-                        $scope.createTab(event.data.results.tabId, event.data.results.favIcon);
-                     }
+                     $scope.tabs.push(event.data.results)
+                     $scope.$apply()
                      break;
                   case 'update-tab':
                      if (!event.data.results) return
                      angular.forEach($scope.tabs, function(element, key) {
                         if (element.tabId === event.data.results.tabId) {
+                           element.isLoading = event.data.results.isLoading
                            element.favIcon = event.data.results.favIcon
+                           element.title = event.data.results.title
                         }
                      });
                      $scope.$apply()
                      break;
+                  case 'focused-tab':
+                     break
                }
             }
 
             // Switch the app windo
-            $scope.requestToSwitchAppWindow = function (storageToken) {
-               window.postMessage({ type: 'switch-window', q: storageToken });
+            $scope.switchTab = function (tabId) {
+               window.postMessage({ type: 'switch-tab', q: tabId });
             }
 
-            $scope.createTab = function (id, favIcon) {
-               $scope.tabs.push({tabId: id, favIcon: favIcon})
-               $scope.$apply()
+            $scope.canGoBack = function () {
+               window.postMessage({ type: 'can-go-back'});
+            }
+
+            $scope.canGoForward = function () {
+               window.postMessage({ type: 'can-go-forward'});
             }
 
             // Setup redirection
