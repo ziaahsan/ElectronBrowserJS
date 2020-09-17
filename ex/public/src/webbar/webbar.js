@@ -21,6 +21,7 @@ angular
       function controller() {
          return ['$scope', '$location', function ($scope, $location) {
             $scope.tabs = []
+            $scope.focusedTab = {}
 
             // Clean up with angularJS
             $scope.$on('$destroy', function () {
@@ -56,6 +57,10 @@ angular
                      $scope.$apply()
                      break;
                   case 'focused-tab':
+                     if (!event.data.results) return
+                     $scope.focusedTab = event.data.results
+                     $scope.focusedTab.isTrusted = event.isTrusted
+                     $scope.$apply()
                      break
                }
             }

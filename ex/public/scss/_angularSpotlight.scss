@@ -58,7 +58,7 @@ $spotlight-responsive-width: 680px !default;
       flex-wrap: nowrap;
       .icon {
          font-size: 18px;
-         padding: 4px;
+         padding: 4px 6px;
          position: relative;
          display: inline-block;
          background-color: rgba($primary, 1);
@@ -68,12 +68,14 @@ $spotlight-responsive-width: 680px !default;
          text-align: center;
       }
       .icon:hover {
-         background-color: $secondary;
          cursor: pointer;
       }
       .fingerprint {
+         font-size: 32px;
          color: #e44c3c;
-         font-size: 26px;
+         background-color: $secondary;
+         border-right: 1px solid $border-color;
+         margin-right: 5px;
       }
    }
    .bar {
@@ -82,7 +84,7 @@ $spotlight-responsive-width: 680px !default;
       display: flex;
       .url {
          position: relative;
-         width: 85%;
+         width: 100%;
          text-align: center;
          display: block;
          height: 18px;
@@ -93,9 +95,16 @@ $spotlight-responsive-width: 680px !default;
          font-weight: 500;
          font-size: 12px;
          background-color: rgba($secondary, 1);
-         .protocol {
+         text-overflow: ellipsis;
+         overflow: hidden;
+         word-break: break-all;
+         .protocol-trusted {
             font-weight: 600;
             color: rgba(#6fe81f, 1);
+         }
+         .protocol-otherwise {
+            font-weight: 600;
+            color: rgba(#e44c3c, 1);
          }
       }
       .settings {
@@ -115,31 +124,56 @@ $spotlight-responsive-width: 680px !default;
    .tabs {
       position: relative;
       width: 67%;
+      background-color: rgba($primary, 1);
+      margin: 0 8px;
+      border-left: 1px solid $border-color;
+      border-right: 1px solid $border-color;
+      padding: 0 8px;
       .icon {
          font-size: 18px;
          padding: 4px;
          position: relative;
          display: inline-block;
-         background-color: rgba($primary, 1);
          width: 22px;
          height: 34px;
          line-height: 34px;
          text-align: center;
          margin: 0 5px 0 0;
+         .indicator {
+            position: relative;
+            width: 4px;
+            height: 4px;
+            border-radius: 2px;
+            background: #e44c3c;
+            display: block;
+            top: 24%;
+            text-align: center;
+            margin: 0 auto;
+         }
          .favicon {
             width: 22px;
             height: 22px;
-            background-size: cover;
             position: relative;
             display: block;
             top: 14%;
             margin: 0 auto;
             border-radius: 4px;
             background-color: $primary-color;
+            .icon {
+               width: 10px;
+               height: 10px;
+               background-size: cover;
+               position: relative;
+               display: block;
+               top: 12%;
+               left: 9%;
+               background-color: inherit;
+               border-radius: 4px;
+               margin: 0;
+            }
          }
       }
       .icon:hover {
-         background-color: $secondary;
          cursor: pointer;
       }
    }

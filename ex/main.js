@@ -1,4 +1,7 @@
 "use strict";
+// Setup storage for electron
+const store = require('electron-store')
+const electronStore = new store({accessPropertiesByDotNotation: false})
 // Modules to control application life and create native browser window
 const { app, ipcMain } = require('electron')
 const requests = require('./components/window/requests');
@@ -43,4 +46,18 @@ ipcMain.handle('ng-requests', async (event, data) => {
 app.on('ready', () => {
    // Setup the windowHandler settings and window
    browserWindows.setupInitialBrowserWindows()
+})
+
+// When app has changed window focus
+app.on('browser-window-focus', (event, window) => {
+   let tabInfo = {
+      tabId: window.tabId,
+      title: window.title,
+   }
+
+   browserWindows.sendWebbar('focused-tab', tabInfo) 
+})
+
+app.on('will-quit', () => {
+   //@todo: Setup session storage here
 })

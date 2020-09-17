@@ -3,6 +3,13 @@
 
 <head>
    <meta charset="UTF-8">
+   <meta name="viewport" content="
+            width=device-width,
+            initial-scale=1.0,
+            maximum-scale=1.0,
+            user-scalable=no,
+            minimal-ui
+         ">
    <meta http-equiv="Content-Security-Policy" content="
             default-src 'self';
             style-src 'self';
@@ -15,8 +22,8 @@
    <title>Blank Page</title>
 </head>
 
-<body ng-app="de.devjs.angular.webbar">
-   <ng-view class="webbar-view"></ng-view>
+<body class="blank-background">
+   <ng-view></ng-view>
 </body>
 
 </html>

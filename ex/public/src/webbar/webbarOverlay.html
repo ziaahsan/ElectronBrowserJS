@@ -12,14 +12,20 @@
    </div>
    <div class="tabs">
       <span class="icon" ng-repeat="tab in tabs" ng-click="switchTab(tab.tabId)">
-         <span ng-if="tab.isLoading" class="favicon" ng-style="{'background-image': 'url(icons/spinner.gif)'}"></span>
-         <span ng-if="!tab.isLoading" class="favicon" ng-style="{'background-image': 'url(' + tab.favIcon + ')'}"></span>
+         <span ng-if="tab.isLoading" class="favicon">
+            <span class="icon" ng-style="{'background-image': 'url(icons/spinner.gif)'}"></span>
+         </span>
+         <span ng-if="!tab.isLoading" class="favicon">
+            <span class="icon" ng-style="{'background-image': 'url(' + tab.favIcon + ')'}"></span>
+         </span>
+         <span ng-if="focusedTab.tabId === tab.tabId" class="indicator"></span>
       </span>
    </div>
    <div class="bar">
       <span class="url">
-         <span class="protocol"><i class="las la-lock"></i></span>
-         <span class="title">Line Awesome — Free Beautiful Icon Font</span>
+         <span ng-if="focusedTab.isTrusted" class="protocol-trusted"><i class="las la-lock"></i></span>
+         <span ng-if="!focusedTab.isTrusted" class="protocol-otherwise"><i class="las la-unlock"></i></span>
+         <span class="title">{{focusedTab.title}}</span>
       </span>
       <span class="settings">
          <i class="las la-ellipsis-v"></i>

@@ -1,11 +1,9 @@
 // Generate token use
 const crypto = require('crypto-random-string')
-// Setup storage for electron
-const store = require('electron-store')
-const electronStore = new store({accessPropertiesByDotNotation: false})
 // Setup is dev
 const isDev = require('electron-is-dev')
 // Setup consts for window
+const { session } = require('electron')
 const { BrowserWindow } = require('glasstron')
 // Path config abs
 const path = require('path')
@@ -17,28 +15,29 @@ class CustomBrowserWindow {
       this.options = options
       this.browserWindow = new BrowserWindow({
          show: false,
-   
+
          backgroundColor: this.options.backgroundColor,
-         
+
          frame: this.options.frame,
-         
+         parent: this.options.parentBrowserWindow,
+
          transparent: this.options.transparent,
-         
 
          focusable: this.options.focusable,
          closable: this.options.closable,
          maximizable: this.maximizable,
          resizable: this.options.resizable,
 
+         center: this.options.center,
          width: this.options.width,
          height: this.options.height,
-   
+
          // skipTaskbar: true,
-   
+
          blur: this.options.blur,
          blurType: "blurbehind",
          vibrancy: "fullscreen-ui",
-   
+
          webPreferences: {
             worldSafeExecuteJavaScript: true,
             contextIsolation: true,
@@ -52,15 +51,15 @@ class CustomBrowserWindow {
    }
 
    create = async function () {
-      if (this.options.center)
-         this.browserWindow.center()
-      
-      if (this.options.parentBrowserWindow !== null)
-         this.browserWindow.setParentWindow(this.options.parentBrowserWindow)
-
       if (this.options.position !== null)
          this.browserWindow.setPosition(this.options.position.x, this.options.position.y)
 
+      session.defaultSession.cookies.get({})
+         .then((cookies) => {
+            console.log(cookies)
+         }).catch((error) => {
+            console.log(error)
+         })
       // Events Must be initialized before the load
       // Setup readyToShow
       this.browserWindow.once('ready-to-show', this._readyToShowListener)
@@ -68,32 +67,35 @@ class CustomBrowserWindow {
       // URL based on:
       if (this.url.indexOf('public/') === 0) {
          await this.browserWindow.loadFile(this.url)
-      
+
       } else {
          await this.browserWindow.loadURL(this.url)
       }
    }
 
-   _readyToShowListener = function() {
-      if (isDev)
-         this.browserWindow.webContents.openDevTools()
-      
+   _readyToShowListener = function () {
+      // if (isDev)
+      // this.browserWindow.webContents.openDevTools()
+
       this.browserWindow.show()
       this.browserWindow.focus()
 
       this.browserWindow.tabId = this.id
-      this.browserWindow.url = this.browserWindow.webContents.getURL()
       this.browserWindow.created = new Date()
    }.bind(this) // Add the scope of the class to function
 }
 
 module.exports = class BrowserWindows {
-   constructor () {
-      this.parentWindow,
-      this.webbarWindow,
-      this.spotlightWindow = null, null, null
+   constructor() {
+      this.parentWindow = null
+      this.webbarWindow = null
+      this.spotlightWindow = null
 
       this.spinnerURL = 'icons/spinner.gif'
+   }
+
+   getFocusedWindow = function () {
+      return BrowserWindow.getFocusedWindow()
    }
 
    setupInitialBrowserWindows = function () {
@@ -103,7 +105,6 @@ module.exports = class BrowserWindows {
          backgroundColor: '#ffffff',
          frame: false,
          transparent: false,
-         
 
          focusable: true,
          closable: true,
@@ -134,7 +135,7 @@ module.exports = class BrowserWindows {
 
       let parentWidnowContext = this.parentWindow.getBrowserWindow()
       let parentPosition = parentWidnowContext.getPosition()
-      
+
       let id = 'webbar'
       let url = 'public/webbar.html'
       let options = {
@@ -149,7 +150,7 @@ module.exports = class BrowserWindows {
 
          width: 1366,
          height: 42,
-         
+
          blur: false,
 
          center: false,
@@ -167,7 +168,7 @@ module.exports = class BrowserWindows {
 
       let parentWidnowContext = this.parentWindow.getBrowserWindow()
       let parentPosition = parentWidnowContext.getPosition()
-      
+
       let id = 'spotlight'
       let url = 'public/index.html'
       let options = {
@@ -182,7 +183,7 @@ module.exports = class BrowserWindows {
 
          width: 1366,
          height: 726,
-         
+
          blur: true,
 
          center: false,
@@ -194,17 +195,13 @@ module.exports = class BrowserWindows {
       this.spotlightWindow.create()
    }
 
-   getFocusedWindow = function () {
-      return BrowserWindow.getFocusedWindow()
-   }
-
-   openWindowByURL = function (token, urlString) {
+   setupChildBrowserWindow = function (token, urlString) {
       if (this.parentWindow === null)
          throw "Parent window is mssing!"
 
       let parentWidnowContext = this.parentWindow.getBrowserWindow()
       let parentPosition = parentWidnowContext.getPosition()
-      
+
       let id = token
       let url = urlString
       let options = {
@@ -219,7 +216,7 @@ module.exports = class BrowserWindows {
 
          width: 1366,
          height: 726,
-         
+
          blur: false,
 
          center: false,
@@ -232,36 +229,21 @@ module.exports = class BrowserWindows {
 
    createTab = function (urlString) {
       let token = crypto({ length: 8, type: 'alphanumeric' })
-      let response = {
+      let tabInfo = {
          tabId: token,
          isLoading: true,
          favIcon: '',
          title: 'Untitled'
       }
 
-      // Send the tab to be created response
-      this.sendWebbar('create-tab', response)
+      // Send the tab to be created with its info
+      this.sendWebbar('create-tab', tabInfo)
 
-      let customBrowserWindow = this.openWindowByURL(token, urlString)
-      let customBrowserWindowContext = customBrowserWindow.getBrowserWindow()
+      // Custom browserwindow
+      let customBrowserWindow = this.setupChildBrowserWindow(token, urlString)
 
-      // Attach events before creating the
-      customBrowserWindowContext.webContents.on('did-start-loading', function () {
-         response.isLoading = true
-         this.sendWebbar('update-tab', response)
-      }.bind(this))
-
-      customBrowserWindowContext.webContents.on('did-stop-loading', function () {
-         response.isLoading = false
-         this.sendWebbar('update-tab', response)
-      }.bind(this))
-
-      customBrowserWindowContext.webContents.on('page-favicon-updated', function (event, favIcons) {
-         if (favIcons.length > 0) {
-            response.favIcon = favIcons[0]
-         }
-         this.sendWebbar('update-tab', response)
-      }.bind(this))
+      // Attach events
+      this.attachEventsToBrowserWindow(customBrowserWindow, tabInfo)
 
       // Create the window
       customBrowserWindow.create()
@@ -274,6 +256,32 @@ module.exports = class BrowserWindows {
             childWindow.show()
          }
       })
+   }
+
+   attachEventsToBrowserWindow = function (customBrowserWindow, tabInfo) {
+      let browserWindowContext = customBrowserWindow.getBrowserWindow()
+
+      browserWindowContext.webContents.on('did-start-loading', function () {
+         tabInfo.isLoading = true
+         this.sendWebbar('update-tab', tabInfo)
+      }.bind(this))
+
+      browserWindowContext.webContents.on('did-stop-loading', function () {
+         tabInfo.isLoading = false
+         this.sendWebbar('update-tab', tabInfo)
+      }.bind(this))
+
+      browserWindowContext.webContents.on('page-favicon-updated', function (event, favIcons) {
+         if (favIcons.length > 0) {
+            tabInfo.favIcon = favIcons[0]
+            this.sendWebbar('update-tab', tabInfo)
+         }
+      }.bind(this))
+
+      browserWindowContext.webContents.on('page-title-updated', function (event, title, explicitSet) {
+         tabInfo.title = title
+         this.sendWebbar('focused-tab', tabInfo)
+      }.bind(this))
    }
 
    sendWebbar = function (name, response) {
