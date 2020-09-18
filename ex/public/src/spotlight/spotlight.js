@@ -31,14 +31,14 @@ angular
          replace: true,
          controller: controller(),
          link: link,
-         templateUrl: 'src/spotlight/spotlightOverlay.html'
+         templateUrl: 'app://src/spotlight/spotlightOverlay.html'
       };
 
       //<summary>
       // NG - controller
       //</summary>
       function controller() {
-         return ['$scope', function ($scope) {
+         return ['$scope', '$location', function ($scope, $location) {
             // Setup the defaules
             $scope.searchInputInfo = AngularSpotlight.getSearchInputInfoSearching();
             $scope.spotlightPlaceholder = AngularSpotlight.getSpotlightPlaceholder();
@@ -261,6 +261,7 @@ angular
                }
             };
 
+            // Watch for the specific element:selectedItemIndex
             $scope.$watch('selectedItemIndex', function () {
                $timeout(function () {
                   if ($scope.selectedItemIndex !== undefined) {
@@ -268,6 +269,11 @@ angular
                   }
                }, 100);
             });
+
+            // Setup redirection
+            $scope.redirect = function (path) {
+               $location.path(path);
+            }
 
             // Local reset search params
             function resetSearch() {

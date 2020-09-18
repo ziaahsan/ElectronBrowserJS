@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="de.devjs.angular.app">
 
 <head>
    <meta charset="UTF-8">
@@ -11,51 +11,51 @@
             minimal-ui
          ">
    <meta http-equiv="Content-Security-Policy" content="
-            default-src 'self';
-            style-src 'self' https://fonts.googleapis.com 'sha256-1PxuDsPyGK6n+LZsMv0gG4lMX3i3XigG6h0CzPIjwrE=';
-            img-src 'self' data:;
-            font-src 'self' https://fonts.gstatic.com;
-            connect-src 'self' http://localhost:8000;
-            script-src 'self';
+            default-src 'self' app: node:;
+            style-src   'self' app: node: https://fonts.googleapis.com 'sha256-1PxuDsPyGK6n+LZsMv0gG4lMX3i3XigG6h0CzPIjwrE=';
+            img-src     'self' app: node: data:;
+            font-src    'self' app: node: https://fonts.gstatic.com;
+            connect-src 'self' app: node: http://localhost:8000;
+            script-src  'self' app: node:;
         ">
 
-   <title>Windows Search</title>
+   <title ng-bind="pageTitle">App</title>
 
    <!-- Required Dependencies -->
-   <script src="../node_modules/jquery/dist/jquery.min.js"></script>
-   <link href="../node_modules/line-awesome/dist/line-awesome/css/line-awesome.min.css" type="text/css"
+   <script src="node://node_modules/jquery/dist/jquery.min.js"></script>
+   <link href="node://node_modules/line-awesome/dist/line-awesome/css/line-awesome.min.css" type="text/css"
       rel="stylesheet">
 
    <!-- Fonts -->
    <link
       href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400;1,600;1,700;1,800&display=swap"
-      rel="stylesheet">
+      type="text/css" rel="stylesheet">
 
    <!-- Main CSS -->
-   <link href="css/main.min.css" type="text/css" rel="stylesheet">
-   <link href="css/animations.min.css" type="text/css" rel="stylesheet">
-   <link href="css/darkTheme.min.css" type="text/css" rel="stylesheet" id="angular-theme">
-   <link href="css/iconsStyleA.min.css" type="text/css" rel="stylesheet" id="angular-icon-theme">
+   <link href="app://css/main.min.css" type="text/css" rel="stylesheet">
+   <link href="app://css/animations.min.css" type="text/css" rel="stylesheet">
+   <link href="app://css/darkTheme.min.css" type="text/css" rel="stylesheet" id="angular-theme">
+   <link href="app://css/iconsStyleA.min.css" type="text/css" rel="stylesheet" id="angular-icon-theme">
 
    <!-- AngularJS -->
-   <script src="../node_modules/angular/angular.js"></script>
-   <script src="../node_modules/angular-route/angular-route.min.js"></script>
-   <script src="../node_modules/angular-animate/angular-animate.min.js"></script>
+   <script src="node://node_modules/angular/angular.js"></script>
+   <script src="node://node_modules/angular-route/angular-route.min.js"></script>
+   <script src="node://node_modules/angular-animate/angular-animate.min.js"></script>
 
-   <script src="src/app-config.js"></script>
-   <script src="src/app-theme-config.js"></script>
+   <script src="app://src/app-config.js"></script>
+   <script src="app://src/app-theme-config.js"></script>
 
    <!-- Angular Components -->
-   <script src="src/jquery.autogrow.js"></script>
-   <script src="src/login/login.js"></script>
-   <script src="src/pins/pins.js"></script>
-   <script src="src/spotlight/spotlight.js"></script>
-   <script src="src/appstore/store/appstore.js"></script>
-   <script src="src/appstore/twofactorauth/twofactorauth.js"></script>
+   <script src="app://src/jquery.autogrow.js"></script>
+   <script src="app://src/login/login.js"></script>
+   <script src="app://src/pins/pins.js"></script>
+   <script src="app://src/spotlight/spotlight.js"></script>
+   <script src="app://src/appstore/store/appstore.js"></script>
+   <script src="app://src/appstore/twofactorauth/twofactorauth.js"></script>
 
 </head>
 
-<body ng-app="de.devjs.angular.app">
+<body>
    <div class="toolbar">
       <!-- <a href="#" data-toggle="ng-spotlight" class="btn"><span class="las la-search"></span></a> -->
       <a class="btn btn-theme" data-theme="dark">Dark</a>

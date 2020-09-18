@@ -38,7 +38,7 @@ const sess = {
    secret: config.session.secret,
    resave: false,
    saveUninitialized: false,
-   cookie: { maxAge: config.session.timeout, sameSite: 'none' },
+   cookie: { maxAge: config.session.timeout },
    store: sessionStore,
    genid: () => { return uuidv4() }
 }
@@ -46,7 +46,7 @@ const sess = {
 // Server setup
 const server = express()
 //@todo: Need to add cors but ...
-// server.use(cors({origin: 'http://example.com', optionsSuccessStatus: 200}))
+server.use(cors( {origin: 'app://', optionsSuccessStatus: 200} ))
 server.use(bodyParser.urlencoded({ extended: true }))
 server.use(bodyParser.json())
 server.use(session(sess))

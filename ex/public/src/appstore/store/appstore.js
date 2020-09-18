@@ -11,7 +11,7 @@ angular
          replace: true,
          controller: controller(),
          link: link,
-         templateUrl: 'src/appstore/store/appstoreOverlay.html'
+         templateUrl: 'app://src/appstore/store/appstoreOverlay.html'
       }
 
       //<summary>

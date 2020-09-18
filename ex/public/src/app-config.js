@@ -8,10 +8,11 @@
       .config((AngularSpotlightProvider, $routeProvider) => {
          // Routing
          $routeProvider
-            .when("/", { templateUrl: "src/spotlight/view.html" })
-            .when("/login", { templateUrl: "src/login/view.html" })
+            .when("/", { templateUrl: "app://src/spotlight/view.html", pageTitle: 'Explore the web' })
+            .when("/login", { templateUrl: "app://src/login/view.html", pageTitle: 'Login' })
             .when("/appstore", {
-               templateUrl: "src/appstore/store/view.html",
+               templateUrl: "app://src/appstore/store/view.html",
+               pageTitle: 'Appstore',
                resolve: {
                   'auth': function (AuthService) {
                      return AuthService.authenticate()
@@ -19,7 +20,8 @@
                }
             })
             .when("/appstore/twofactorauth", {
-               templateUrl: "src/appstore/twofactorauth/view.html",
+               templateUrl: "app://src/appstore/twofactorauth/view.html",
+               pageTitle: '2FA',
                resolve: {
                   'auth': function (AuthService) {
                      return AuthService.authenticate()
@@ -27,7 +29,8 @@
                }
             })
             .when("/appstore/twofactorauth/:param", {
-               templateUrl: "src/appstore/twofactorauth/view.html",
+               templateUrl: "app://src/appstore/twofactorauth/view.html",
+               pageTitle: '2FA',
                resolve: {
                   'auth': function (AuthService) {
                      return AuthService.authenticate()
@@ -63,7 +66,13 @@
          })();
       })
       .run(function ($rootScope, $location) {
-         //If the route change failed due to authentication error, redirect them out
+         $rootScope.$on("$routeChangeSuccess", function(event, current, previous){
+            // Change page pageTitle, based on Route information
+            $rootScope.pageTitle = current.$$route.pageTitle;
+            console.log(window.location)
+         });
+         
+         // If the route change failed due to authentication error, redirect them out
          $rootScope.$on('$routeChangeError', function (event, current, previous, rejection) {
             if (rejection === 'Not Authenticated') {
                $location.path('/login');
@@ -76,6 +85,7 @@
          return {
             authenticate: async function () {
                let response = await new Promise(resolve => $http.get(apiUrl).then(result => resolve(result)));
+               console.log(response)
                //Authentication logic here
                if (response.data.code === 200) {
                   //If authenticated, return anything you want, probably a user object

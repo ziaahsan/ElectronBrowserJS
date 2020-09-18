@@ -19,7 +19,7 @@
       <div class="ng-spotlight-results-icon"
          ng-if="!searchResultsCount || searchTerm.length === 0 || searchResultsCount == 0">
          <div class="ng-spotlight-item-icon">
-            <a href="#!/appstore"><i class="las la-cog la-xs"></i></a>
+            <span ng-click="redirect('/appstore')"><i class="las la-cog la-xs"></i></span>
          </div>
       </div>
       <div class="ng-spotlight-results-icon" ng-if="searchTerm.length > 0">

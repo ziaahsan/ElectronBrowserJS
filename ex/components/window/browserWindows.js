@@ -3,7 +3,6 @@ const crypto = require('crypto-random-string')
 // Setup is dev
 const isDev = require('electron-is-dev')
 // Setup consts for window
-const { session } = require('electron')
 const { BrowserWindow } = require('glasstron')
 // Path config abs
 const path = require('path')
@@ -14,6 +13,7 @@ class CustomBrowserWindow {
       this.url = url
       this.options = options
       this.browserWindow = new BrowserWindow({
+         devTools: isDev,
          show: false,
 
          backgroundColor: this.options.backgroundColor,
@@ -32,15 +32,16 @@ class CustomBrowserWindow {
          width: this.options.width,
          height: this.options.height,
 
-         // skipTaskbar: true,
-
          blur: this.options.blur,
          blurType: "blurbehind",
          vibrancy: "fullscreen-ui",
 
          webPreferences: {
+            partition: this.options.partition,
+            sandbox: true,
             worldSafeExecuteJavaScript: true,
             contextIsolation: true,
+            enableRemoteModule: false,
             preload: path.join(__dirname, 'preload.js')
          }
       })
@@ -54,28 +55,16 @@ class CustomBrowserWindow {
       if (this.options.position !== null)
          this.browserWindow.setPosition(this.options.position.x, this.options.position.y)
 
-      session.defaultSession.cookies.get({})
-         .then((cookies) => {
-            console.log(cookies)
-         }).catch((error) => {
-            console.log(error)
-         })
       // Events Must be initialized before the load
       // Setup readyToShow
       this.browserWindow.once('ready-to-show', this._readyToShowListener)
 
-      // URL based on:
-      if (this.url.indexOf('public/') === 0) {
-         await this.browserWindow.loadFile(this.url)
-
-      } else {
-         await this.browserWindow.loadURL(this.url)
-      }
+      // Wait for url to load
+      await this.browserWindow.loadURL(this.url)
    }
 
    _readyToShowListener = function () {
-      // if (isDev)
-      // this.browserWindow.webContents.openDevTools()
+      if (isDev) this.browserWindow.webContents.openDevTools()
 
       this.browserWindow.show()
       this.browserWindow.focus()
@@ -86,7 +75,9 @@ class CustomBrowserWindow {
 }
 
 module.exports = class BrowserWindows {
-   constructor() {
+   constructor(partition) {
+      this.partition = partition
+
       this.parentWindow = null
       this.webbarWindow = null
       this.spotlightWindow = null
@@ -94,13 +85,13 @@ module.exports = class BrowserWindows {
       this.spinnerURL = 'icons/spinner.gif'
    }
 
-   getFocusedWindow = function () {
+   getFocusedBrowserWindow = function () {
       return BrowserWindow.getFocusedWindow()
    }
 
    setupInitialBrowserWindows = function () {
       let id = 'parent'
-      let url = 'public/blank.html'
+      let url = 'app://blank.html'
       let options = {
          backgroundColor: '#ffffff',
          frame: false,
@@ -118,7 +109,9 @@ module.exports = class BrowserWindows {
 
          center: true,
          parentBrowserWindow: null,
-         position: null
+         position: null,
+
+         partition: this.partition
       }
 
       this.parentWindow = new CustomBrowserWindow(id, url, options)
@@ -137,9 +130,9 @@ module.exports = class BrowserWindows {
       let parentPosition = parentWidnowContext.getPosition()
 
       let id = 'webbar'
-      let url = 'public/webbar.html'
+      let url = 'app://webbar.html'
       let options = {
-         backgroundColor: '#000000000',
+         backgroundColor: '#ffffff',
          frame: false,
          transparent: false,
 
@@ -155,7 +148,9 @@ module.exports = class BrowserWindows {
 
          center: false,
          parentBrowserWindow: parentWidnowContext,
-         position: { x: parentPosition[0], y: parentPosition[1] }
+         position: { x: parentPosition[0], y: parentPosition[1] },
+
+         partition: this.partition
       }
 
       this.webbarWindow = new CustomBrowserWindow(id, url, options)
@@ -170,7 +165,7 @@ module.exports = class BrowserWindows {
       let parentPosition = parentWidnowContext.getPosition()
 
       let id = 'spotlight'
-      let url = 'public/index.html'
+      let url = 'app://index.html'
       let options = {
          backgroundColor: '#000000000',
          frame: false,
@@ -188,7 +183,9 @@ module.exports = class BrowserWindows {
 
          center: false,
          parentBrowserWindow: parentWidnowContext,
-         position: { x: parentPosition[0], y: parentPosition[1] + 42 }
+         position: { x: parentPosition[0], y: parentPosition[1] + 42 },
+
+         partition: this.partition
       }
 
       this.spotlightWindow = new CustomBrowserWindow(id, url, options)
@@ -221,7 +218,9 @@ module.exports = class BrowserWindows {
 
          center: false,
          parentBrowserWindow: parentWidnowContext,
-         position: { x: parentPosition[0], y: parentPosition[1] + 42 }
+         position: { x: parentPosition[0], y: parentPosition[1] + 42 },
+
+         partition: this.partition
       }
 
       return new CustomBrowserWindow(id, url, options)
