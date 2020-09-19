@@ -12,7 +12,7 @@ angular
          replace: true,
          controller: controller(),
          link: link,
-         templateUrl: 'app://src/webbar/webbarOverlay.html'
+         templateUrl: 'src/webbar/webbarOverlay.html'
       };
 
       //<summary>

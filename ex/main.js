@@ -1,15 +1,13 @@
 "use strict";
-// Session app partition
-const partition = 'persist:app'
 // Setup path
 const path = require('path')
+// Modules to control application life and create native browser window
+const { app, ipcMain } = require('electron')
 // Custom requests
 const requests = require('./components/window/requests');
-// Modules to control application life and create native browser window
-const { protocol, app, session, ipcMain } = require('electron')
 // Setup the browserWindows instance
 const BrowserWindows = require('./components/window/browserWindows');
-let browserWindows = new BrowserWindows(partition)
+let browserWindows = new BrowserWindows()
 
 // Setting up IPC
 ipcMain.handle('ng-requests', async (event, data) => {
@@ -47,39 +45,13 @@ ipcMain.handle('ng-requests', async (event, data) => {
    }
 })
 
-// Register custom protocols for node, resoruces and app files
-protocol.registerSchemesAsPrivileged([
-   { scheme: 'app', privileges: { secure: true, corsEnabled: true } },
-   { scheme: 'node', privileges: { secure: true, corsEnabled: true } },
-]);
-
-// When app's ready...
+// When app's initialized
 app.whenReady().then(() => {
-   const sess = session.fromPartition(partition)
-
-   sess.cookies.on('changed', (event, cookie, cause, removed) => {
-      console.log(cookie)
-   })
-
-   sess.webRequest.onBeforeSendHeaders((details, callback) => {
-      details.requestHeaders['origin'] = 'app://';
-      callback({ cancel: false, requestHeaders: details.requestHeaders });
-    });
-
-   sess.protocol.registerFileProtocol('app', (request, callback) => {
-      const url = request.url.substr(6)
-      callback({ path: path.normalize(`${__dirname}/public/${url}`) })
-   })
-
-   sess.protocol.registerFileProtocol('node', (request, callback) => {
-      const url = request.url.substr(7)
-      callback({ path: path.normalize(`${__dirname}/${url}`) })
-   })
-
    browserWindows.setupInitialBrowserWindows()
 })
 
 // When app has changed window focus
+// @todo changes this maybe to somethign else??
 app.on('browser-window-focus', (event, window) => {
    let tabInfo = {
       tabId: window.tabId,
@@ -89,6 +61,6 @@ app.on('browser-window-focus', (event, window) => {
    browserWindows.sendWebbar('focused-tab', tabInfo)
 })
 
-app.on('will-quit', () => {
+app.on('will-quit', async () => {
    //@todo: Setup session storage here
 })

@@ -21,7 +21,7 @@ angular
         let apiUrl = "http://localhost:8000/api/appstore/twofactorauth";
 
         // Base Dir directory for 2FA
-        let baseDir = 'app://src/appstore/twofactorauth/';
+        let baseDir = 'src/appstore/twofactorauth/';
 
         // Set of templates
         let templates = {

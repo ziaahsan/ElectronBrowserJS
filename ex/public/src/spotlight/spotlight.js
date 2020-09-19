@@ -19,6 +19,10 @@ angular
          FOLDERS: {
             NAME: "select-folders",
             CATEGORY: "folders"
+         },
+         TAB: {
+            NAME: "create-tab",
+            CATEGORY: "tabs"
          }
       };
 
@@ -31,7 +35,7 @@ angular
          replace: true,
          controller: controller(),
          link: link,
-         templateUrl: 'app://src/spotlight/spotlightOverlay.html'
+         templateUrl: 'src/spotlight/spotlightOverlay.html'
       };
 
       //<summary>
@@ -100,12 +104,16 @@ angular
             // Setup searching
             $scope.search = function () {
                if ($scope.searchTerm.length > 0) {
-                  // Append the search results to empty list everytime?
-                  $scope.searchResults = []
+                  if ($scope.searchTerm.startsWith(':www.')) {
 
-                  // Requests to fetch from .Net
-                  $scope.postMessage(VALID_REQUESTS.PROGRAMS);
-                  $scope.postMessage(VALID_REQUESTS.FOLDERS);
+                  } else {
+                     // Append the search results to empty list everytime?
+                     $scope.searchResults = [];
+
+                     // Requests to fetch from .Net
+                     // $scope.postMessage(VALID_REQUESTS.PROGRAMS);
+                     // $scope.postMessage(VALID_REQUESTS.FOLDERS);
+                  }
                }
             };
 
@@ -121,8 +129,8 @@ angular
             };
 
             // Post message for processing requests
-            $scope.postMessage = function (request) {
-               window.postMessage({ type: request.NAME, q: $scope.searchTerm });
+            $scope.postMessage = function (type, term) {
+               window.postMessage({ type: type, q: term });
             }
 
             // Listen for message
@@ -255,7 +263,11 @@ angular
 
             // Open selected result item
             $scope.openResultItem = function () {
-               if ($scope.selectedItem.href) {
+               if ($scope.searchTerm.startsWith(':www.')) {
+                  console.log($scope.searchTerm.slice(1))
+                  let url = `https://${$scope.searchTerm.slice(1)}`
+                  $scope.postMessage('create-tab',  url)
+               } else if ($scope.selectedItem.href) {
                   // window.location.href = $scope.selectedItem.href;
                   // $ngSpotlightOverlay.hide();
                }
@@ -440,6 +452,7 @@ angular
                search: that.search($http, $q),
                getIconDescriptorForType: _iconConfig.getIconForType,
                getTemplateForType: _detailsTemplateConfig.getTemplateForType,
+               setSearchInputInfoSearching: _defaultSpotlightConfig.setSearchInputInfoSearching,
                getSearchInputInfoSearching: _defaultSpotlightConfig.getSearchInputInfoSearching,
                getSearchInputInfoNoResults: _defaultSpotlightConfig.getSearchInputInfoNoResults,
                getSpotlightPlaceholder: _defaultSpotlightConfig.getSpotlightPlaceholder,

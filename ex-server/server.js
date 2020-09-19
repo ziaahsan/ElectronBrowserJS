@@ -46,7 +46,7 @@ const sess = {
 // Server setup
 const server = express()
 //@todo: Need to add cors but ...
-server.use(cors( {origin: 'app://', optionsSuccessStatus: 200} ))
+server.use(cors())
 server.use(bodyParser.urlencoded({ extended: true }))
 server.use(bodyParser.json())
 server.use(session(sess))

@@ -11,7 +11,7 @@ angular
          replace: true,
          controller: controller(),
          link: link,
-         templateUrl: 'app://src/pins/pinsOverlay.html'
+         templateUrl: 'src/pins/pinsOverlay.html'
       };
 
       //<summary>

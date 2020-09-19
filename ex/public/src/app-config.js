@@ -8,11 +8,19 @@
       .config((AngularSpotlightProvider, $routeProvider) => {
          // Routing
          $routeProvider
-            .when("/", { templateUrl: "app://src/spotlight/view.html", pageTitle: 'Explore the web' })
-            .when("/login", { templateUrl: "app://src/login/view.html", pageTitle: 'Login' })
+            .when("/", { templateUrl: "src/spotlight/view.html", pageTitle: 'Explore the web' })
+            .when("/login", { templateUrl: "src/login/view.html", pageTitle: 'Login' })
             .when("/appstore", {
-               templateUrl: "app://src/appstore/store/view.html",
+               templateUrl: "src/appstore/store/view.html",
                pageTitle: 'Appstore',
+               resolve: {
+                  'auth': function (AuthService) {
+                     return AuthService.authenticate()
+                  }
+               }
+            }).when("/appstore/:param", {
+               templateUrl: "src/appstore/store/view.html",
+               pageTitle: 'Add a web app',
                resolve: {
                   'auth': function (AuthService) {
                      return AuthService.authenticate()
@@ -20,7 +28,7 @@
                }
             })
             .when("/appstore/twofactorauth", {
-               templateUrl: "app://src/appstore/twofactorauth/view.html",
+               templateUrl: "src/appstore/twofactorauth/view.html",
                pageTitle: '2FA',
                resolve: {
                   'auth': function (AuthService) {
@@ -29,7 +37,7 @@
                }
             })
             .when("/appstore/twofactorauth/:param", {
-               templateUrl: "app://src/appstore/twofactorauth/view.html",
+               templateUrl: "src/appstore/twofactorauth/view.html",
                pageTitle: '2FA',
                resolve: {
                   'auth': function (AuthService) {
@@ -66,12 +74,11 @@
          })();
       })
       .run(function ($rootScope, $location) {
-         $rootScope.$on("$routeChangeSuccess", function(event, current, previous){
+         $rootScope.$on("$routeChangeSuccess", function (event, current, previous) {
             // Change page pageTitle, based on Route information
             $rootScope.pageTitle = current.$$route.pageTitle;
-            console.log(window.location)
          });
-         
+
          // If the route change failed due to authentication error, redirect them out
          $rootScope.$on('$routeChangeError', function (event, current, previous, rejection) {
             if (rejection === 'Not Authenticated') {
@@ -85,7 +92,6 @@
          return {
             authenticate: async function () {
                let response = await new Promise(resolve => $http.get(apiUrl).then(result => resolve(result)));
-               console.log(response)
                //Authentication logic here
                if (response.data.code === 200) {
                   //If authenticated, return anything you want, probably a user object

@@ -11,20 +11,36 @@ angular
          replace: true,
          controller: controller(),
          link: link,
-         templateUrl: 'app://src/appstore/store/appstoreOverlay.html'
+         templateUrl: ''
       }
 
       //<summary>
       // NG - controller
       //</summary>
       function controller() {
-         let apiUrl = "http://localhost:8000/api/appstore";
+         let apiUrl = 'http://localhost:8000/api/appstore';
 
-         return ['$scope', '$location', function ($scope, $location) {
+         // Base Dir directory for 2FA
+         let baseDir = 'src/appstore/store/';
+
+         // Set of templates
+         let templates = {
+            default: baseDir + 'appstoreOverlay.html',
+            appstoreadd: baseDir + 'appstoreaddOverlay.html'
+         }
+
+         return ['$scope', '$routeParams', '$location', function ($scope, $routeParams, $location) {
             // Clean up with angularJS
             $scope.$on('$destroy', function () {
 
             });
+
+            // Initialize initial setup
+            $scope.routeParamAddInit = function() {
+               // Default header
+               $scope.title = "Add a web app";
+               $scope.description = "Adding a new website to your app store.";
+           }
 
             // Initialize initial setup
             $scope.init = function () {
@@ -32,7 +48,7 @@ angular
                $scope.appstoreItems = null;
 
                // Default header
-               $scope.title = "Apps";
+               $scope.title = 'Apps';
                $scope.description = "Configure all your apps below.";
 
                // Make initial /api/appstore request to get all items
@@ -63,6 +79,26 @@ angular
                }
             }
 
+            // Setup route based templates
+            $scope.getTemplateUrl = function (element) {
+               // Get the :token parameter from URI
+               if ($routeParams.param) {
+                  if ($routeParams.param === 'add') {
+                     // Adding route params for add
+                     $scope.routeParamAddInit();
+
+                     // Send back the default template
+                     return templates.appstoreadd;
+                  }
+               }
+
+               // Return with initial
+               $scope.init();
+
+               // Default template viewing for otherwise
+               return templates.default;
+            }
+
             // Setup redirection
             $scope.redirect = function (path) {
                $location.path(path);
@@ -81,7 +117,16 @@ angular
       function link(scope, element) {
          // Root element from view.html
          $ngAppStoreOverlay = $(element);
-         scope.init();
+
+         // Setup getContent func for ng-include
+         scope.getContentUrl = function () {
+            return scope.templateUrl;
+         }
+
+         // Depending on the URI get the approprite template
+         scope.templateUrl = scope.getTemplateUrl();
+         element.html(angular.element('<ng-include src="getContentUrl()"/>')).show();
+         $compile(element.contents())(scope);
       }
    }]);
 

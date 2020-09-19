@@ -13,7 +13,6 @@ class CustomBrowserWindow {
       this.url = url
       this.options = options
       this.browserWindow = new BrowserWindow({
-         devTools: isDev,
          show: false,
 
          backgroundColor: this.options.backgroundColor,
@@ -37,7 +36,6 @@ class CustomBrowserWindow {
          vibrancy: "fullscreen-ui",
 
          webPreferences: {
-            partition: this.options.partition,
             sandbox: true,
             worldSafeExecuteJavaScript: true,
             contextIsolation: true,
@@ -60,7 +58,11 @@ class CustomBrowserWindow {
       this.browserWindow.once('ready-to-show', this._readyToShowListener)
 
       // Wait for url to load
-      await this.browserWindow.loadURL(this.url)
+      if (this.url.startsWith('http')) {
+         await this.browserWindow.loadURL(this.url)
+      } else {
+         await this.browserWindow.loadFile(this.url)
+      }
    }
 
    _readyToShowListener = function () {
@@ -75,9 +77,7 @@ class CustomBrowserWindow {
 }
 
 module.exports = class BrowserWindows {
-   constructor(partition) {
-      this.partition = partition
-
+   constructor() {
       this.parentWindow = null
       this.webbarWindow = null
       this.spotlightWindow = null
@@ -91,7 +91,7 @@ module.exports = class BrowserWindows {
 
    setupInitialBrowserWindows = function () {
       let id = 'parent'
-      let url = 'app://blank.html'
+      let url = 'public/blank.html'
       let options = {
          backgroundColor: '#ffffff',
          frame: false,
@@ -109,9 +109,7 @@ module.exports = class BrowserWindows {
 
          center: true,
          parentBrowserWindow: null,
-         position: null,
-
-         partition: this.partition
+         position: null
       }
 
       this.parentWindow = new CustomBrowserWindow(id, url, options)
@@ -130,7 +128,7 @@ module.exports = class BrowserWindows {
       let parentPosition = parentWidnowContext.getPosition()
 
       let id = 'webbar'
-      let url = 'app://webbar.html'
+      let url = 'public/webbar.html'
       let options = {
          backgroundColor: '#ffffff',
          frame: false,
@@ -148,9 +146,7 @@ module.exports = class BrowserWindows {
 
          center: false,
          parentBrowserWindow: parentWidnowContext,
-         position: { x: parentPosition[0], y: parentPosition[1] },
-
-         partition: this.partition
+         position: { x: parentPosition[0], y: parentPosition[1] }
       }
 
       this.webbarWindow = new CustomBrowserWindow(id, url, options)
@@ -165,7 +161,7 @@ module.exports = class BrowserWindows {
       let parentPosition = parentWidnowContext.getPosition()
 
       let id = 'spotlight'
-      let url = 'app://index.html'
+      let url = 'public/index.html'
       let options = {
          backgroundColor: '#000000000',
          frame: false,
@@ -183,9 +179,7 @@ module.exports = class BrowserWindows {
 
          center: false,
          parentBrowserWindow: parentWidnowContext,
-         position: { x: parentPosition[0], y: parentPosition[1] + 42 },
-
-         partition: this.partition
+         position: { x: parentPosition[0], y: parentPosition[1] + 42 }
       }
 
       this.spotlightWindow = new CustomBrowserWindow(id, url, options)
