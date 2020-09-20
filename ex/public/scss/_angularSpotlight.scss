@@ -178,6 +178,7 @@ $spotlight-responsive-width: 680px !default;
       }
    }
 }
+
 // App
 .ng-spotlight {
    // Global css default
@@ -623,106 +624,6 @@ $spotlight-responsive-width: 680px !default;
             max-width: 650px;
             margin: 0 auto;
             line-height: 22px;
-         }
-      }
-      .ng-spotlight-results-panel {
-         min-height: 375px;
-
-         .ng-spotlight-results-list {
-            border-right: 1px solid $border-color;
-            position: absolute;
-            width: 100%;
-            height: calc(100% - 55px);
-            overflow: hidden;
-            overflow-y: auto;
-            user-select: none;
-            background-color: $primary;
-
-            @media only screen and (min-width: $spotlight-responsive-width) {
-               width: 290px;
-            }
-
-            ul {
-               min-height: calc(100% - 55px);
-            }
-
-            ul,
-            li {
-               width: 100%;
-               margin: 0;
-               padding: 0;
-               list-style-type: none;
-            }
-
-            .ng-spotlight-results-list-header {
-               font-size: 12px;
-               font-weight: 600;
-               background-color: $secondary;
-               color: $primary-color;
-               text-transform: capitalize;
-               padding: 4px 0 4px 25px;
-            }
-
-            .ng-spotlight-results-list-item {
-               font-size: 13px;
-               color: $primary-color;
-               padding: 6px 0 6px 25px;
-               word-break: break-all;
-               max-width: 265px;
-               cursor: pointer;
-
-               &.open-search-page {
-                  border-top: 1px solid $border-color;
-               }
-
-               .ng-spotlight-item-icon {
-                  margin: 0 10px 0 0;
-                  float: left;
-                  height: 16px;
-                  width: 16px;
-                  font-size: 15px;
-                  text-align: center;
-                  color: $primary-color;
-               }
-
-               &.active {
-                  color: $primary-color;
-                  background-color: $primary-highlight;
-               }
-
-               .ng-spotlight-item-name {
-                  display: flex;
-                  width: auto;
-                  font-size: 12px;
-                  font-weight: 500;
-               }
-
-               .info {
-                  margin-left: 5px;
-                  color: darken($primary-color, 20);
-                  word-break: break-word;
-                  display: flex;
-                  width: 85%;
-               }
-            }
-         }
-         .ng-spotlight-results-detail {
-            display: none;
-            margin-left: 290px;
-            width: ($ng-spotlight-w - 290);
-            height: 375px;
-            color: $primary-color;
-            background-color: $primary;
-            overflow-y: auto;
-            @media only screen and (min-width: $spotlight-responsive-width) {
-               display: block;
-            }
-
-            a {
-               color: $primary-color;
-            }
-
-            @import "search-result-details/default";
          }
       }
    }

@@ -2,6 +2,10 @@
 const crypto = require('crypto-random-string')
 // Setup is dev
 const isDev = require('electron-is-dev')
+// Eelectron storage
+const electronStore = require('electron-store');
+const savedTabStorage = new electronStore({accessPropertiesByDotNotation: false, name: 'SavedTabs'});
+
 // Setup consts for window
 const { BrowserWindow } = require('glasstron')
 // Path config abs
@@ -34,6 +38,8 @@ class CustomBrowserWindow {
          blur: this.options.blur,
          blurType: "blurbehind",
          vibrancy: "fullscreen-ui",
+
+         hasShadow: this.options.shadow,
 
          webPreferences: {
             sandbox: true,
@@ -94,7 +100,7 @@ module.exports = class BrowserWindows {
       let url = 'public/blank.html'
       let options = {
          backgroundColor: '#ffffff',
-         frame: false,
+         frame: true,
          transparent: false,
 
          focusable: true,
@@ -109,7 +115,9 @@ module.exports = class BrowserWindows {
 
          center: true,
          parentBrowserWindow: null,
-         position: null
+         position: null,
+
+         shadow: true
       }
 
       this.parentWindow = new CustomBrowserWindow(id, url, options)
@@ -120,7 +128,7 @@ module.exports = class BrowserWindows {
       this.setupSpotlightBrowserWindow()
    }
 
-   setupWebbarBrowserWindow = function () {
+   setupWebbarBrowserWindow = async function () {
       if (this.parentWindow === null)
          throw "Parent window is mssing!"
 
@@ -146,11 +154,17 @@ module.exports = class BrowserWindows {
 
          center: false,
          parentBrowserWindow: parentWidnowContext,
-         position: { x: parentPosition[0], y: parentPosition[1] }
+         position: { x: parentPosition[0], y: parentPosition[1] },
+
+         shadow: false
       }
 
       this.webbarWindow = new CustomBrowserWindow(id, url, options)
       this.webbarWindow.create()
+
+      this.webbarWindow.getBrowserWindow().on('show', function () {
+         this.restoreButDontOpenTabs()
+      }.bind(this))
    }
 
    setupSpotlightBrowserWindow = function () {
@@ -179,7 +193,9 @@ module.exports = class BrowserWindows {
 
          center: false,
          parentBrowserWindow: parentWidnowContext,
-         position: { x: parentPosition[0], y: parentPosition[1] + 42 }
+         position: { x: parentPosition[0], y: parentPosition[1] + 42 },
+
+         shadow: false
       }
 
       this.spotlightWindow = new CustomBrowserWindow(id, url, options)
@@ -214,14 +230,16 @@ module.exports = class BrowserWindows {
          parentBrowserWindow: parentWidnowContext,
          position: { x: parentPosition[0], y: parentPosition[1] + 42 },
 
-         partition: this.partition
+         shadow: false
       }
 
       return new CustomBrowserWindow(id, url, options)
    }
 
-   createTab = function (urlString) {
-      let token = crypto({ length: 8, type: 'alphanumeric' })
+   createTab = function (urlString, token='') {
+      if (token.length != 8)
+         token = crypto({ length: 8, type: 'alphanumeric' })
+      
       let tabInfo = {
          tabId: token,
          isLoading: true,
@@ -243,16 +261,47 @@ module.exports = class BrowserWindows {
    }
 
    switchTab = function (tabId) {
+      let canFocus = false
       this.parentWindow.getBrowserWindow().getChildWindows().forEach((childWindow, index) => {
          if (childWindow.tabId === tabId) {
             childWindow.focus()
             childWindow.show()
+            canFocus = true
          }
+      })
+
+      if (!canFocus) {
+         this.restoreSavedTab(tabId)
+      }
+   }
+
+   restoreSavedTab = function (tabId) {
+      let savedTabInfo = savedTabStorage.get(tabId)
+      if (!savedTabInfo.lastURL) return
+      this.createTab(savedTabInfo.lastURL, tabId)
+   }
+
+   restoreButDontOpenTabs = function () {
+      const savedTabs = JSON.parse(JSON.stringify(savedTabStorage.store))
+      Object.keys(savedTabs).forEach(tabId => {
+         const tab = savedTabs[tabId]
+         let tabInfo = {
+            tabId: tabId,
+            isLoading: false,
+            favIcon: tab.favIcon,
+            title: ''
+         }
+         
+         // Send the tab to be created with its info
+         this.sendWebbar('create-tab', tabInfo)
       })
    }
 
    attachEventsToBrowserWindow = function (customBrowserWindow, tabInfo) {
       let browserWindowContext = customBrowserWindow.getBrowserWindow()
+      browserWindowContext.on('close', function (event) {
+         this.sendWebbar('closed-tab', tabInfo)
+      }.bind(this))
 
       browserWindowContext.webContents.on('did-start-loading', function () {
          tabInfo.isLoading = true
@@ -267,6 +316,7 @@ module.exports = class BrowserWindows {
       browserWindowContext.webContents.on('page-favicon-updated', function (event, favIcons) {
          if (favIcons.length > 0) {
             tabInfo.favIcon = favIcons[0]
+            savedTabStorage.set(tabInfo.tabId, { lastURL: browserWindowContext.webContents.getURL(), favIcon: favIcons[0] })
             this.sendWebbar('update-tab', tabInfo)
          }
       }.bind(this))
@@ -275,10 +325,13 @@ module.exports = class BrowserWindows {
          tabInfo.title = title
          this.sendWebbar('focused-tab', tabInfo)
       }.bind(this))
+
+      browserWindowContext.webContents.on('did-start-navigation', function (event, url, isInPlace, isMainFrame, frameProcessId, frameRoutingId) {
+         savedTabStorage.set(tabInfo.tabId, { lastURL: url })
+      }.bind(this))
    }
 
    sendWebbar = function (name, response) {
-      var webbarWindowContext = this.webbarWindow.getBrowserWindow()
-      webbarWindowContext.webContents.send('request-response', 'ng-webbar', name, response)
+      this.webbarWindow.getBrowserWindow().webContents.send('request-response', 'ng-webbar', name, response)
    }
 }

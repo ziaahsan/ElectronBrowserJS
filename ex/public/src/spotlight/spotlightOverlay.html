@@ -11,24 +11,8 @@
                 C121.385,177.841,75.617,177.841,47.388,149.612z" />
          </svg>
       </div>
-      <input class="ng-spotlight-input" ng-class="{empty: searchTerm.length === 0}" type="text"
-         placeholder="{{spotlightPlaceholder}}" ng-model="searchTerm" ng-change="search()"
-         ng-model-options="{debounce: 250}" />
-      <div class="ng-spotlight-input-after" ng-if="searchInputInfo.length > 0  && searchTerm.length > 0">&mdash;
-         {{searchInputInfo}}</div>
-      <div class="ng-spotlight-results-icon"
-         ng-if="!searchResultsCount || searchTerm.length === 0 || searchResultsCount == 0">
-         <div class="ng-spotlight-item-icon">
-            <span ng-click="redirect('/appstore')"><i class="las la-cog la-xs"></i></span>
-         </div>
-      </div>
-      <div class="ng-spotlight-results-icon" ng-if="searchTerm.length > 0">
-         <img ng-if="!selectedItem.icon && getIconForType(selectedItem.type).type == url" class="ng-spotlight-item-icon"
-            ng-src="{{getIconForType(selectedItem.type).data}}" width="32" height="32">
-         <div ng-if="!selectedItem.icon && getIconForType(selectedItem.type).type == css"
-            class="ng-spotlight-item-icon {{getIconForType(selectedItem.type).data}}"></div>
-         <div ng-if="selectedItem.icon" class="ng-spotlight-item-icon {{selectedItem.icon}}"></div>
-      </div>
+      <input class="ng-spotlight-input" ng-class="{empty: searchTerm.length === 0}" type="text" ng-model="searchTerm"
+         placeholder="Search..." />
    </div>
    <div class="ng-spotlight-info-panel"
       ng-if="!searchResultsCount || searchTerm.length === 0 || searchResultsCount == 0">
@@ -40,33 +24,5 @@
          from authenticating passwords, searching files, or even finding the right Windows app right from the Windows
          store.
       </p>
-   </div>
-   <div class="ng-spotlight-results-panel" ng-if="searchTerm && searchTerm.length > 0 && searchResultsCount > 0">
-      <div class="ng-spotlight-results-list" ng-keydown="handleKeyDown($event)">
-         <ul>
-            <li class="ng-spotlight-results-category" ng-repeat="searchResult in searchResults"
-               ng-dblclick="openResultCategory()">
-               <div class="ng-spotlight-results-list-header">{{searchResult.name}}</div>
-               <ul>
-                  <li class="ng-spotlight-results-list-item" ng-repeat="resultItem in searchResult.items"
-                     ng-class="{active: resultItem.active === true}"
-                     ng-click="showResultItem(searchResult.name, $index)" ng-dblclick="openResultItem()">
-                     <img ng-if="!resultItem.icon && getIconForType(resultItem.type).type == url"
-                        class="ng-spotlight-item-icon" ng-src="{{getIconForType(resultItem.type).data}}">
-                     <div ng-if="!resultItem.icon && getIconForType(resultItem.type).type == css"
-                        class="ng-spotlight-item-icon {{getIconForType(resultItem.type).data}}"></div>
-                     <div ng-if="resultItem.icon" class="ng-spotlight-item-icon {{resultItem.icon}}"></div>
-                     <span class="ng-spotlight-item-name">{{resultItem.name.substr(0, 55)}}</span>
-                     <span class="info" ng-if="resultItem.info">
-                        {{resultItem.info}}
-                     </span>
-                  </li>
-               </ul>
-            </li>
-         </ul>
-      </div>
-      <div class="ng-spotlight-results-detail">
-         <spotlight-details></spotlight-details>
-      </div>
    </div>
 </div>

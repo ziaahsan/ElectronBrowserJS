@@ -45,33 +45,6 @@
                   }
                }
             });
-
-         // AngularSpotlightProvider Default Settings
-         (() => {
-            var toggleKey = 66; // B
-            AngularSpotlightProvider.setSearchInputInfoSearching("Searching...");
-            AngularSpotlightProvider.setSearchInputInfoNoResults("No Results");
-            AngularSpotlightProvider.setSpotlightPlaceholder("Windows Spotlight Search");
-            AngularSpotlightProvider.setSpotlightToggleCtrlKey(toggleKey);
-
-            // Adding search results
-            AngularSpotlightProvider.search = function ($http, $q) {
-               return function (term, searchResults) {
-                  var settings = $http.get('../config/default.json');
-                  return $q.all([settings]).then(responses => { return searchResults; });
-               }
-            }
-
-            // Adding custom templates
-            AngularSpotlightProvider.addTemplates({
-
-            });
-
-            // Adding custom icons
-            AngularSpotlightProvider.addIcons({
-
-            });
-         })();
       })
       .run(function ($rootScope, $location) {
          $rootScope.$on("$routeChangeSuccess", function (event, current, previous) {

@@ -42,12 +42,21 @@ angular
                switch (event.data.name) {
                   case 'create-tab':
                      if (!event.data.results) return
+                     let tabExists = false
+                     angular.forEach($scope.tabs, function (element, key) {
+                        if (element.tabId === event.data.results.tabId) {
+                           tabExists = true
+                        }
+                     })
+                     
+                     if (tabExists) return
+
                      $scope.tabs.push(event.data.results)
                      $scope.$apply()
                      break;
                   case 'update-tab':
                      if (!event.data.results) return
-                     angular.forEach($scope.tabs, function(element, key) {
+                     angular.forEach($scope.tabs, function (element, key) {
                         if (element.tabId === event.data.results.tabId) {
                            element.isLoading = event.data.results.isLoading
                            element.favIcon = event.data.results.favIcon
@@ -62,6 +71,13 @@ angular
                      $scope.focusedTab.isTrusted = event.isTrusted
                      $scope.$apply()
                      break
+                  case 'closed-tab':
+                     if (!event.data.results) return
+                     $scope.tabs = $scope.tabs.filter(function (item) {
+                        return item.tabId !== event.data.results.tabId;
+                     });
+                     $scope.$apply();
+                     break
                }
             }
 
@@ -71,11 +87,11 @@ angular
             }
 
             $scope.canGoBack = function () {
-               window.postMessage({ type: 'can-go-back'});
+               window.postMessage({ type: 'can-go-back' });
             }
 
             $scope.canGoForward = function () {
-               window.postMessage({ type: 'can-go-forward'});
+               window.postMessage({ type: 'can-go-forward' });
             }
 
             // Setup redirection
