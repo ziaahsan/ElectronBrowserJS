@@ -1,34 +1,48 @@
 "use strict";
-// Setup path
-const path = require('path')
+// Generate token use
+const crypto = require('crypto-random-string')
 // Modules to control application life and create native browser window
 const { app, ipcMain } = require('electron')
 // Setup the browserWindows instance
 const BrowserWindows = require('./components/window/browserWindows');
 let browserWindows = new BrowserWindows()
 
-// Setting up IPC
+// Setting up IPC for Windows
 ipcMain.handle('ng-requests', async (event, data) => {
    if (!data.type) return
 
-   // Get the focused window so we perform actions
-   let focusedWindow = browserWindows.getFocusedBrowserWindow()
+   // Setup the focused for all cases
+   let focusedWindow = browserWindows.focusedWindow()
 
    // Fire up based on which type of data
    switch (data.type) {
-      case 'create-tab':
-         browserWindows.createTab(data.q)
+      case 'create-new-window-indicator':
+         let windowId = crypto({ length: 8, type: 'alphanumeric' })
+         browserWindows.webbarWindow.sendResponse(data.type, {windowId: windowId, searchTerm: data.searchTerm})
          break
-      case 'switch-tab':
-         browserWindows.switchTab(data.q)
+      case 'create-new-http-window':
+         browserWindows.createHttpWindow(data.windowId, data.windowURL)
          break
-      case 'can-go-back':
-         if (focusedWindow === null) return
+      case 'focus-window':
+         (async () => {
+            try {
+               await browserWindows.focusTo(data.windowId)
+            } catch {
+               throw `Couldn't focus to requested window-${data.window.id}`
+            }
+         })()
+         break
+      case 'can-focus-window-go-back':
+         if (focusedWindow === null)
+            return
+
          if (focusedWindow.webContents.canGoBack())
             focusedWindow.webContents.goBack()
          break
-      case 'can-go-forward':
-         if (focusedWindow === null) return
+      case 'can-focus-window-go-forward':
+         if (focusedWindow === null)
+            return
+         
          if (focusedWindow.webContents.canGoForward())
             focusedWindow.webContents.goForward()
          break
@@ -37,16 +51,11 @@ ipcMain.handle('ng-requests', async (event, data) => {
 
 // When app's initialized
 app.whenReady().then(() => {
-   browserWindows.setupInitialBrowserWindows()
+   browserWindows.createDefaultWindows()
 })
 
-// When app has changed window focus
-// @todo changes this maybe to somethign else??
+// Whenever new browserWindows.focusTo is set or by default window is focused
 app.on('browser-window-focus', (event, window) => {
-   let tabInfo = {
-      tabId: window.tabId,
-      title: window.title,
-   }
-
-   browserWindows.sendWebbar('focused-tab', tabInfo)
+   if (!window.windowId) return
+   browserWindows.webbarWindow.sendResponse('focus-window', {windowId: window.windowId})
 })

@@ -1,31 +1,32 @@
 <div class="ng-webbar">
    <div class="navigation">
-      <span class="icon fingerprint" ng-click="switchTab('spotlight')">
+      <span class="icon fingerprint" ng-click="focusWindow('spotlight')">
          <i class="las la-fingerprint"></i>
       </span>
-      <span class="icon" ng-click="canGoBack()">
+      <span class="icon" ng-click="canFocusWindowGoBack()">
          <i class="las la-long-arrow-alt-left"></i>
       </span>
-      <span class="icon" ng-click="canGoForward()">
+      <span class="icon" ng-click="canFocusWindowGoForward()">
          <i class="las la-long-arrow-alt-right"></i>
       </span>
    </div>
    <div class="tabs">
-      <span class="icon" ng-repeat="tab in tabs" ng-click="switchTab(tab.tabId)">
-         <span ng-if="tab.isLoading" class="favicon">
+      <span class="icon" ng-repeat="(windowId, window) in windows track by windowId"
+         ng-click="focusWindow(windowId)" ng-if="windowId !== 'spotlight'">
+         <span ng-if="window.isLoading" class="favicon">
             <span class="icon" ng-style="{'background-image': 'url(icons/spinner.gif)'}"></span>
          </span>
-         <span ng-if="!tab.isLoading" class="favicon">
-            <span class="icon" ng-style="{'background-image': 'url(' + tab.favIcon + ')'}"></span>
+         <span ng-if="!window.isLoading" class="favicon">
+            <span class="icon" ng-style="{'background-image': 'url(' + window.favIcon + ')'}"></span>
          </span>
-         <span ng-if="focusedTab.tabId === tab.tabId" class="indicator"></span>
+         <span ng-if="focusedWindow !== null && focusedWindow.windowId === windowId" class="indicator"></span>
       </span>
    </div>
-   <div class="bar">
+   <div class="bar" ng-if="focusedWindow !== null">
       <span class="url">
-         <span ng-if="focusedTab.isTrusted" class="protocol-trusted"><i class="las la-lock"></i></span>
-         <span ng-if="!focusedTab.isTrusted" class="protocol-otherwise"><i class="las la-unlock"></i></span>
-         <span class="title">{{focusedTab.title}}</span>
+         <span ng-if="focusedWindow.isTrusted" class="protocol-trusted"><i class="las la-lock"></i></span>
+         <span ng-if="!focusedWindow.isTrusted" class="protocol-otherwise"><i class="las la-unlock"></i></span>
+         <span class="title">{{focusedWindow.title}}</span>
       </span>
       <span class="settings">
          <i class="las la-ellipsis-v"></i>

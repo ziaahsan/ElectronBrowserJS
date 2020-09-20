@@ -34,7 +34,9 @@ angular
                if (event.keyCode === KEY.ENTER) {
                   let searchTerm = $ngSpotlightOverlay.find('input').val();
                   $scope.focus();
-                  window.postMessage({ type: 'create-tab', q: searchTerm });
+                  
+                  // Send message to main for creating new http
+                  window.postMessage({ type: 'create-new-window-indicator', searchTerm: searchTerm });
                }
             }
 
@@ -44,7 +46,7 @@ angular
                window.addEventListener('keyup', $scope.keyup);
             }
 
-            // Auto focus
+            // Auto focus input
             $scope.focus = function () {
                if ($ngSpotlightOverlay.is(':visible')) {
                   $ngSpotlightOverlay.find('input').focus().select();
