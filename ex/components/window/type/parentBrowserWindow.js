@@ -8,7 +8,7 @@ module.exports = class ParentBrowserWindow extends CustomBrowserWindow {
       let url = 'public/blank.html'
       let options = {
          backgroundColor: '#ffffff',
-         frame: true,
+         frame: false,
          transparent: false,
 
          focusable: true,

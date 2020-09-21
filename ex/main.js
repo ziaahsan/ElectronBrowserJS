@@ -18,7 +18,7 @@ ipcMain.handle('ng-requests', async (event, data) => {
    switch (data.type) {
       case 'create-new-window-indicator':
          let windowId = crypto({ length: 8, type: 'alphanumeric' })
-         browserWindows.webbarWindow.sendResponse(data.type, {windowId: windowId, searchTerm: data.searchTerm})
+         browserWindows.webbarWindow.sendResponse(data.type, { windowId: windowId, searchTerm: data.searchTerm })
          break
       case 'create-new-http-window':
          browserWindows.createHttpWindow(data.windowId, data.windowURL)
@@ -42,7 +42,7 @@ ipcMain.handle('ng-requests', async (event, data) => {
       case 'can-focus-window-go-forward':
          if (focusedWindow === null)
             return
-         
+
          if (focusedWindow.webContents.canGoForward())
             focusedWindow.webContents.goForward()
          break
@@ -57,5 +57,5 @@ app.whenReady().then(() => {
 // Whenever new browserWindows.focusTo is set or by default window is focused
 app.on('browser-window-focus', (event, window) => {
    if (!window.windowId) return
-   browserWindows.webbarWindow.sendResponse('focus-window', {windowId: window.windowId})
+   browserWindows.webbarWindow.sendResponse('focus-window', { windowId: window.windowId })
 })

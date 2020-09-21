@@ -59,10 +59,12 @@ module.exports = class HttpBrowserWindow extends CustomBrowserWindow {
       }
    }
 
+   // Returns data on stored window
    static savedWindow = function(windowId) {
       return storage.get(windowId)
    }
 
+   // Restores all windows on the webbar
    static restoreAllWindowsFromStorage = function (webbarWindow) {
       return new Promise (resolve => {
          const windows = JSON.parse(JSON.stringify(storage.store))
@@ -80,6 +82,7 @@ module.exports = class HttpBrowserWindow extends CustomBrowserWindow {
    //</summary>
    _onBrowserWindowClose = function () {
       this.webbarWindow.sendResponse('close-window', { windowId: this.id })
+      storage.delete(this.id)
    }.bind(this)
 
    _didStartNavigation = function (event, url, isInPlace, isMainFrame, frameProcessId, frameRoutingId) {
