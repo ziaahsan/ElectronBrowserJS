@@ -11,12 +11,12 @@
             minimal-ui
          ">
    <meta http-equiv="Content-Security-Policy" content="
-            default-src 'self' app:;
-            style-src   'self' app: https://fonts.googleapis.com 'sha256-1PxuDsPyGK6n+LZsMv0gG4lMX3i3XigG6h0CzPIjwrE=';
-            img-src     'self' app: data:;
-            font-src    'self' app: https://fonts.gstatic.com;
-            connect-src 'self' app: http://localhost:8000;
-            script-src  'self' app:;
+            default-src 'self';
+            style-src   'self' https://fonts.googleapis.com 'sha256-1PxuDsPyGK6n+LZsMv0gG4lMX3i3XigG6h0CzPIjwrE=';
+            img-src     'self' data:;
+            font-src    'self' https://fonts.gstatic.com;
+            connect-src 'self' http://localhost:8000;
+            script-src  'self';
         ">
 
    <title ng-bind="pageTitle">App</title>

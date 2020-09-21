@@ -35,5 +35,6 @@ msbuild.wrn
 config/default.json
 node_modules
 cache/*
+extensions
 release-builds
 *.log

@@ -12,9 +12,11 @@ process.once('loaded', () => {
       if (event.source !== window || (event.data.type && event.data.name))
          return;
 
+      // @todo: Sperate the invoke: https://github.com/atomery/juli/blob/master/src/senders/index.js
       ipcRenderer.invoke('ng-requests', event.data);
    }, false)
 
    // Send it forward to NG from IPC-Main
+   // @todo: Setup listener like so: https://github.com/atomery/juli/blob/master/src/listeners/index.js
    ipcRenderer.on('request-response', (event, type, name, data) => window.postMessage({ type: type, name: name, results: data }));
 })

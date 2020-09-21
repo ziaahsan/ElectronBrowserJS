@@ -68,7 +68,7 @@ module.exports = class BrowserWindows {
          new URL(urlString)
       } catch {
          // Setup default url to google search
-         urlString = `https://www.google.com/search?q=${urlString}`
+         urlString = `https://www.google.com/search?q=${encodeURIComponent(urlString)}`
       }
 
       // All httpBrowserWindows require webbar aside from parent

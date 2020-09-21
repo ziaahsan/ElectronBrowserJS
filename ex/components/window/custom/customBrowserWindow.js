@@ -40,7 +40,11 @@ module.exports = class CustomBrowserWindow {
          hasShadow: this.options.shadow,
 
          webPreferences: {
+            devTools: isDev,
+            spellcheck: true,
             sandbox: true,
+            plugins: true,
+            nodeIntegration: false,
             worldSafeExecuteJavaScript: true,
             contextIsolation: true,
             enableRemoteModule: false,
@@ -58,13 +62,13 @@ module.exports = class CustomBrowserWindow {
    }
 
    loadFile = function () {
-      // Setup ready, and wait
+      // Setup ready, and return promise
       this.browserWindow.once('ready-to-show', this._readyToShowListener)
       return this.browserWindow.loadFile(this.url)
    }
 
    loadHttp = function () {
-      // Setup ready, and wait
+      // Setup ready, and return promise
       this.browserWindow.once('ready-to-show', this._readyToShowListener)
       return this.browserWindow.loadURL(this.url)
    }
@@ -74,9 +78,6 @@ module.exports = class CustomBrowserWindow {
       if (!this.browserWindow)
          throw "Something went wrong when loading the browser window?"
       
-      if (isDev)
-         this.browserWindow.webContents.openDevTools()
-
       this.browserWindow.show()
       this.browserWindow.focus()
    }.bind(this) //<-Add the scope of the class to function

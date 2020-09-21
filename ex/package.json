@@ -18,11 +18,14 @@
     "electron-packager": "^15.1.0"
   },
   "dependencies": {
+    "@cliqz/adblocker-electron": "^1.18.3",
     "angular": "^1.8.0",
     "angular-animate": "^1.8.0",
     "angular-route": "^1.8.0",
+    "cross-fetch": "^3.0.6",
     "crypto-random-string": "^3.3.0",
     "electron-cgi": "^1.0.6",
+    "electron-context-menu": "^2.3.0",
     "electron-is-dev": "^1.2.0",
     "electron-store": "^6.0.0",
     "glasstron": "0.0.4",

@@ -1,11 +1,21 @@
 "use strict";
+// Setup path
+const path = require('path')
 // Generate token use
 const crypto = require('crypto-random-string')
 // Modules to control application life and create native browser window
-const { app, ipcMain } = require('electron')
+const { app, ipcMain, session, remote } = require('electron')
+// ContextMenu
+const contextMenu = require('electron-context-menu')
+contextMenu()
 // Setup the browserWindows instance
 const BrowserWindows = require('./components/window/browserWindows');
 let browserWindows = new BrowserWindows()
+// Setup ad-blocker
+const { ElectronBlocker } = require('@cliqz/adblocker-electron')
+const fetch = require('cross-fetch')
+// Setup fs promises for ad-blocker caching
+const fsPromises = require('fs').promises;
 
 // Setting up IPC for Windows
 ipcMain.handle('ng-requests', async (event, data) => {
@@ -50,8 +60,18 @@ ipcMain.handle('ng-requests', async (event, data) => {
 })
 
 // When app's initialized
-app.whenReady().then(() => {
-   browserWindows.createDefaultWindows()
+app.whenReady().then(async () => {
+   // Electron ad-blocker
+   ElectronBlocker.fromPrebuiltAdsAndTracking(fetch, {
+      path: path.join(app.getPath('userData'), 'adblocker.bin'),
+      read: fsPromises.readFile,
+      write: fsPromises.writeFile,
+   }).then((blocker) => {
+      // Setup blocker for session
+      blocker.enableBlockingInSession(session.defaultSession);
+      // Setup windows
+      browserWindows.createDefaultWindows()
+   });
 })
 
 // Whenever new browserWindows.focusTo is set or by default window is focused
