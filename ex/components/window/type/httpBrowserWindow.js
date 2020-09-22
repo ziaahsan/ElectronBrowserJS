@@ -7,7 +7,7 @@ const CustomBrowserWindow = require('../custom/customBrowserWindow')
 
 // Simply class for any http browser window
 module.exports = class HttpBrowserWindow extends CustomBrowserWindow {
-   constructor(parentWindow, webbarWindow, windowId, httpURL) {
+   constructor(webbarWindow, windowId, httpURL) {
       let id = windowId
       let url = httpURL
       let options = {
@@ -23,14 +23,14 @@ module.exports = class HttpBrowserWindow extends CustomBrowserWindow {
          minimizable: false,
          maximizable: false,
 
-         width: parentWindow.options.width,
-         height: parentWindow.options.height - webbarWindow.options.height,
+         width: webbarWindow.options.width,
+         height: webbarWindow.options.height - webbarWindow.options.webbarHeight,
 
          center: false,
-         parentBrowserWindow: parentWindow.browserWindow,
+         parentBrowserWindow: webbarWindow.browserWindow,
          position: {
-            x: parentWindow.browserWindow.getPosition()[0],
-            y: parentWindow.browserWindow.getPosition()[1] + webbarWindow.options.height
+            x: webbarWindow.browserWindow.getPosition()[0],
+            y: webbarWindow.browserWindow.getPosition()[1] + webbarWindow.options.webbarHeight
          },
 
          shadow: false

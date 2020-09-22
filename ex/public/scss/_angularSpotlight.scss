@@ -44,7 +44,7 @@ $spotlight-responsive-width: 680px !default;
    background-color: rgba($primary, 1);
    z-index: 9;
    width: 100%;
-   min-height: 42px;
+   height: 42px;
    font-size: 12px;
    letter-spacing: 0.3px;
    font-family: $font-family;
@@ -60,13 +60,11 @@ $spotlight-responsive-width: 680px !default;
       -webkit-app-region: no-drag;
       .icon {
          font-size: 18px;
-         padding: 4px 6px;
+         padding: 0 6px;
          position: relative;
          display: inline-block;
-         background-color: rgba($primary, 1);
          width: auto;
-         height: 34px;
-         line-height: 34px;
+         line-height: 42px;
          text-align: center;
       }
       .icon:hover {
@@ -86,17 +84,17 @@ $spotlight-responsive-width: 680px !default;
       display: flex;
       .url {
          position: relative;
-         width: 100%;
+         width: 87%;
          text-align: center;
          display: block;
          height: 18px;
          line-height: 18px;
          padding: 4px;
-         top: 14%;
+         top: 17%;
          border-radius: 2px;
          font-weight: 500;
          font-size: 12px;
-         background-color: rgba($secondary, 1);
+         background-color: #232323;
          text-overflow: ellipsis;
          overflow: hidden;
          word-break: break-all;
@@ -111,13 +109,13 @@ $spotlight-responsive-width: 680px !default;
       }
       .settings {
          position: relative;
-         width: 25px;
-         text-align: right;
+         width: 7%;
+         text-align: center;
          display: block;
          height: 18px;
          line-height: 18px;
          padding: 4px;
-         top: 14%;
+         top: 17%;
          border-radius: 2px;
          font-weight: 500;
          font-size: 18px;
@@ -127,7 +125,6 @@ $spotlight-responsive-width: 680px !default;
    .tabs {
       position: relative;
       width: 67%;
-      background-color: rgba($primary, 1);
       margin: 0 8px;
       border-left: 1px solid $border-color;
       border-right: 1px solid $border-color;
@@ -138,19 +135,19 @@ $spotlight-responsive-width: 680px !default;
          position: relative;
          display: inline-block;
          width: 22px;
-         height: 34px;
-         line-height: 34px;
          text-align: center;
          margin: 0 5px 0 0;
+         top: 17%;
          -webkit-app-region: no-drag;
          .indicator {
-            position: relative;
+            position: absolute;
             width: 4px;
             height: 4px;
             border-radius: 2px;
             background: #e44c3c;
             display: block;
-            top: 24%;
+            top: 28px;
+            right: 13px;
             text-align: center;
             margin: 0 auto;
          }

@@ -16,6 +16,7 @@ module.exports = class CustomBrowserWindow {
 
       // Electron-Glasstron BrowserWindow
       this.browserWindow = new BrowserWindow({
+         title: 'My App',
          show: false,
 
          backgroundColor: this.options.backgroundColor,
@@ -49,7 +50,7 @@ module.exports = class CustomBrowserWindow {
             worldSafeExecuteJavaScript: true,
             contextIsolation: true,
             enableRemoteModule: false,
-            preload: path.join(__dirname, 'preload.js')
+            preload: path.join(__dirname, '..', 'preload.js')
          }
       })
 
