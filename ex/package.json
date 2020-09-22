@@ -28,7 +28,6 @@
     "electron-context-menu": "^2.3.0",
     "electron-is-dev": "^1.2.0",
     "electron-store": "^6.0.0",
-    "glasstron": "0.0.4",
     "jquery": "^3.5.1",
     "line-awesome": "^1.3.0"
   }

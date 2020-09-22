@@ -34,13 +34,7 @@ ipcMain.handle('ng-requests', async (event, data) => {
          browserWindows.createHttpWindow(data.windowId, data.windowURL)
          break
       case 'focus-window':
-         (async () => {
-            try {
-               await browserWindows.focusTo(data.windowId)
-            } catch {
-               throw `Couldn't focus to requested window-${data.window.id}`
-            }
-         })()
+         browserWindows.switchFocusTo(data.windowId)
          break
       case 'can-focus-window-go-back':
          if (focusedWindow === null)
@@ -74,7 +68,7 @@ app.whenReady().then(async () => {
    });
 })
 
-// Whenever new browserWindows.focusTo is set or by default window is focused
+// Whenever new browserWindows.switchFocusTo is set or by default window is focused
 app.on('browser-window-focus', (event, window) => {
    if (!window.windowId) return
    browserWindows.webbarWindow.sendResponse('focus-window', { windowId: window.windowId })

@@ -7,26 +7,26 @@ module.exports = class SpotlightBrowserWindow extends CustomBrowserWindow {
       let id = 'spotlight'
       let url = 'public/index.html'
       let options = {
-         backgroundColor: '#000000000',
+         backgroundColor: '#90000000',
+
          frame: false,
          transparent: true,
 
          focusable: true,
-         closable: true,
-         maximizable: true,
          resizable: false,
 
-         width: 1366,
-         height: 726,
+         closable: true,
+         minimizable: false,
+         maximizable: false,
 
-         blur: true,
+         width: parentWindow.options.width,
+         height: parentWindow.options.height - webbarWindow.options.height,
 
          center: false,
-
          parentBrowserWindow: parentWindow.browserWindow,
          position: {
             x: parentWindow.browserWindow.getPosition()[0],
-            y: parentWindow.browserWindow.getPosition()[1] + 42
+            y: parentWindow.browserWindow.getPosition()[1] + webbarWindow.options.height
          },
 
          shadow: false
@@ -42,11 +42,11 @@ module.exports = class SpotlightBrowserWindow extends CustomBrowserWindow {
       this.browserWindow.webContents.on('page-title-updated', this._pageTilteUpdated)
    }
 
-    //<summar>
+   //<summar>
    // All the listeners for this window
    //</summary>
    _onBrowserWindowClose = function () {
-      this.webbarWindow.sendResponse('close-window', {windowId: this.id})
+      this.webbarWindow.sendResponse('close-window', { windowId: this.id })
    }.bind(this)
 
    _pageTilteUpdated = function (event, title, explicitSet) {

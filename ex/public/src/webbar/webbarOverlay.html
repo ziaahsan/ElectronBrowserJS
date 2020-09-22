@@ -17,7 +17,8 @@
             <span class="icon" ng-style="{'background-image': 'url(icons/spinner.gif)'}"></span>
          </span>
          <span ng-if="!window.isLoading" class="favicon">
-            <span class="icon" ng-style="{'background-image': 'url(' + window.favIcon + ')'}"></span>
+            <span class="icon" ng-if="!window.favIcon || window.favIcon === ''" ng-style="{'background-image': 'url(icons/web.png)'}"></span>
+            <span class="icon" ng-if="window.favIcon && window.favIcon !== ''" ng-style="{'background-image': 'url(' + window.favIcon + ')'}"></span>
          </span>
          <span ng-if="focusedWindow !== null && focusedWindow.windowId === windowId" class="indicator"></span>
       </span>

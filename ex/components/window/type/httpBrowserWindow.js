@@ -11,26 +11,26 @@ module.exports = class HttpBrowserWindow extends CustomBrowserWindow {
       let id = windowId
       let url = httpURL
       let options = {
-         backgroundColor: '#ffffff',
+         backgroundColor: '#FFF',
+
          frame: false,
          transparent: false,
 
          focusable: true,
-         closable: true,
-         maximizable: true,
          resizable: false,
 
-         width: 1366,
-         height: 726,
+         closable: true,
+         minimizable: false,
+         maximizable: false,
 
-         blur: false,
+         width: parentWindow.options.width,
+         height: parentWindow.options.height - webbarWindow.options.height,
 
          center: false,
-
          parentBrowserWindow: parentWindow.browserWindow,
          position: {
             x: parentWindow.browserWindow.getPosition()[0],
-            y: parentWindow.browserWindow.getPosition()[1] + 42
+            y: parentWindow.browserWindow.getPosition()[1] + webbarWindow.options.height
          },
 
          shadow: false
@@ -45,35 +45,29 @@ module.exports = class HttpBrowserWindow extends CustomBrowserWindow {
    create = async function () {
       // Attach listeners
       this.browserWindow.on('close', this._onBrowserWindowClose)
-      this.browserWindow.webContents.on('did-start-navigation', this._didStartNavigation)
       this.browserWindow.webContents.on('did-start-loading', this._didSpinnerStartLoading)
       this.browserWindow.webContents.on('did-stop-loading', this._didSpinnerStopLoading)
       this.browserWindow.webContents.on('page-favicon-updated', this._pageFavIconUpdated)
       this.browserWindow.webContents.on('page-title-updated', this._pageTilteUpdated)
+      this.browserWindow.webContents.on('did-finish-load', this._didFinishLoad)
 
-      try {
-         // Load this.url window
-         await this.loadHttp()
-      } catch {
-         throw `http window-${this.id} was unable to load with ${this.url}!`
-      }
+      // Load this.url window
+      await this.loadHttp().catch(e => {
+         throw e.message
+      })
    }
 
-   // Returns data on stored window
-   static savedWindow = function(windowId) {
-      return storage.get(windowId)
-   }
+   saveWindowInfoToStorage = async function (type, value) {
+      // Save info
+      let windowId = this.id
+      await new Promise(resolve => {
+         let windowInfo = storage.get(windowId, {})
+         windowInfo[type] = value
 
-   // Restores all windows on the webbar
-   static restoreAllWindowsFromStorage = function (webbarWindow) {
-      return new Promise (resolve => {
-         const windows = JSON.parse(JSON.stringify(storage.store))
-         Object.keys(windows).forEach(windowId => {
-            const savedWindow = windows[windowId]
-            // Send the tab to be created with its info
-            webbarWindow.sendResponse('restore-window-indicator', { windowId: windowId, favIcon: savedWindow.favIcon })
-         })
+         storage.set(windowId, windowInfo)
          resolve()
+      }).catch(e => {
+         console.error(`[Storage] Could not set window-${this.id} storage correctly due to: ${e.message}`)
       })
    }
 
@@ -83,10 +77,6 @@ module.exports = class HttpBrowserWindow extends CustomBrowserWindow {
    _onBrowserWindowClose = function () {
       this.webbarWindow.sendResponse('close-window', { windowId: this.id })
       storage.delete(this.id)
-   }.bind(this)
-
-   _didStartNavigation = function (event, url, isInPlace, isMainFrame, frameProcessId, frameRoutingId) {
-      storage.set(this.id, { lastURL: url })
    }.bind(this)
 
    _didSpinnerStartLoading = function () {
@@ -104,7 +94,7 @@ module.exports = class HttpBrowserWindow extends CustomBrowserWindow {
          let response = { updateType: 'favIcon', windowId: this.id, favIcon: favIcons[0] }
          this.webbarWindow.sendResponse('update-window', response)
 
-         storage.set(this.id, { lastURL: this.browserWindow.webContents.getURL(), favIcon: favIcons[0] })
+         this.saveWindowInfoToStorage('favIcon', favIcons[0])
       }
    }.bind(this)
 
@@ -112,4 +102,30 @@ module.exports = class HttpBrowserWindow extends CustomBrowserWindow {
       let response = { updateType: 'title', windowId: this.id, title: title }
       this.webbarWindow.sendResponse('update-window', response)
    }.bind(this)
+
+   _didFinishLoad = function () {
+      this.saveWindowInfoToStorage('url', this.browserWindow.webContents.getURL())
+   }.bind(this)
+
+
+   //<summar>
+   // Class static methods, for quick access to some of the storage data
+   //</summary>
+   static getSavedWindow = function (windowId) {
+      // Returns data on stored window
+      return storage.get(windowId)
+   }
+
+   static restoreAllWindowsFromStorage = function (webbarWindow) {
+      // Restores all windows on the webbar
+      return new Promise(resolve => {
+         const windows = JSON.parse(JSON.stringify(storage.store))
+         Object.keys(windows).forEach(windowId => {
+            const savedWindow = windows[windowId]
+            // Send the tab to be created with its info
+            webbarWindow.sendResponse('restore-window-indicator', { windowId: windowId, favIcon: savedWindow.favIcon })
+         })
+         resolve()
+      })
+   }
 }

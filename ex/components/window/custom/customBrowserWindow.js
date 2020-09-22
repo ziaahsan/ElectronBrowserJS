@@ -4,8 +4,9 @@ const isDev = require('electron-is-dev')
 // Path config abs
 const path = require('path')
 // Setup consts for window
-const { BrowserWindow } = require('glasstron')
-// Custom browser window using electron-glasstron
+const { BrowserWindow } = require('electron')
+
+// Custom browser window using electron
 module.exports = class CustomBrowserWindow {
    constructor(id, url, options) {
       // Defaults
@@ -20,22 +21,22 @@ module.exports = class CustomBrowserWindow {
          backgroundColor: this.options.backgroundColor,
 
          frame: this.options.frame,
-         parent: this.options.parentBrowserWindow,
-
          transparent: this.options.transparent,
 
          focusable: this.options.focusable,
-         closable: this.options.closable,
-         maximizable: this.maximizable,
-         resizable: this.options.resizable,
+         // @https://www.electronjs.org/docs/api/frameless-window#transparent-window
+         // Setting resizable to true may make a transparent window stop working on some platforms.
+         resizable: this.options.transparent ? false : this.options.resizable,
 
-         center: this.options.center,
+         closable: this.options.closable,
+         minimizable: this.options.minimizable,
+         maximizable: this.maximizable,
+
          width: this.options.width,
          height: this.options.height,
 
-         blur: this.options.blur,
-         blurType: "blurbehind",
-         vibrancy: "fullscreen-ui",
+         center: this.options.center,
+         parent: this.options.parentBrowserWindow,
 
          hasShadow: this.options.shadow,
 
@@ -55,7 +56,7 @@ module.exports = class CustomBrowserWindow {
       // Setup position according to options
       if (this.options.position !== null)
          this.browserWindow.setPosition(this.options.position.x, this.options.position.y)
-      
+
       // Attach the windowId to this browserWindow since when
       // accessing getChildren we need to know what our window id is (besides @BrowserWindow.id)
       this.browserWindow.windowId = this.id
@@ -72,13 +73,27 @@ module.exports = class CustomBrowserWindow {
       this.browserWindow.once('ready-to-show', this._readyToShowListener)
       return this.browserWindow.loadURL(this.url)
    }
-   
-   // Setup the ready-to-show listener
+
+   //<summar>
+   // All the listeners for this window
+   //</summary>
    _readyToShowListener = function () {
       if (!this.browserWindow)
-         throw "Something went wrong when loading the browser window?"
-      
+         throw "Something went wrong with the browser window!?!"
+
       this.browserWindow.show()
       this.browserWindow.focus()
    }.bind(this) //<-Add the scope of the class to function
+
+
+   //<summar>
+   // Class static methods, for quick access to some of the electron.browserWindow functions and more to add
+   //</summary>
+   static openedWindows = function () {
+      return BrowserWindow.getAllWindows()
+   }
+
+   static focusedWindow = function () {
+      return BrowserWindow.getFocusedWindow()
+   }
 }

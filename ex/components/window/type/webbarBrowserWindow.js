@@ -7,22 +7,22 @@ module.exports = class WebbarBrowserWindow extends CustomBrowserWindow {
       let id = 'webbar'
       let url = 'public/webbar.html'
       let options = {
-         backgroundColor: '#ffffff',
+         backgroundColor: '#00000000',
+
          frame: false,
          transparent: false,
 
          focusable: false,
-         closable: false,
-         maximizable: true,
          resizable: false,
 
-         width: 1366,
+         closable: false,
+         minimizable: false,
+         maximizable: false,
+
+         width: parentWindow.options.width,
          height: 42,
 
-         blur: false,
-
          center: false,
-
          parentBrowserWindow: parentWindow.browserWindow,
          position: {
             x: parentWindow.browserWindow.getPosition()[0],
@@ -33,9 +33,29 @@ module.exports = class WebbarBrowserWindow extends CustomBrowserWindow {
       }
 
       super(id, url, options)
+
+      // Attach listeners
+      this.browserWindow.on('move', this._onBrowserWindowMove)
    }
 
    sendResponse = function (name, response) {
       this.browserWindow.webContents.send('request-response', 'ng-webbar', name, response)
    }
+
+   //<summar>
+   // All the listeners for this window
+   //</summary>
+   _onBrowserWindowMove = function () {
+      let position = this.browserWindow.getPosition()
+      for (let openedWindow of CustomBrowserWindow.openedWindows()) {
+         // Move all except the current webbar@browserWindow
+         if (openedWindow != this.browserWindow) {
+            if (openedWindow.windowId !== 'parent') {
+               openedWindow.setPosition(position[0], position[1] + this.options.height)
+            } else {
+               openedWindow.setPosition(position[0], position[1])
+            }
+         }
+      }
+   }.bind(this)
 }
