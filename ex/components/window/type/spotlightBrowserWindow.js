@@ -1,11 +1,10 @@
 "use strict";
 // Parent custom window
-const CustomBrowserWindow = require('../custom/customBrowserWindow')
+const CustomBrowserWindow = require('../custom/browserWindow')
 // Simply class for spotlight
 module.exports = class SpotlightBrowserWindow extends CustomBrowserWindow {
    constructor(webbarWindow) {
-      let id = 'spotlight'
-      let url = 'public/index.html'
+      let name = 'spotlight'
       let options = {
          backgroundColor: '#90000000',
 
@@ -15,7 +14,7 @@ module.exports = class SpotlightBrowserWindow extends CustomBrowserWindow {
          focusable: true,
          resizable: false,
 
-         closable: true,
+         closable: false,
          minimizable: false,
          maximizable: false,
 
@@ -32,25 +31,33 @@ module.exports = class SpotlightBrowserWindow extends CustomBrowserWindow {
          shadow: false
       }
 
-      super(id, url, options)
+      super(name, options)
 
       // Webbar window object
       this.webbarWindow = webbarWindow
+      this.webbarWindow.browserWindow.on('move', this._onWebBarBrowserWindowMove)
 
-      // Attach listeners
+      // BrowserWindo listeners
       this.browserWindow.on('close', this._onBrowserWindowClose)
+
+      // WebContents listeners
       this.browserWindow.webContents.on('page-title-updated', this._pageTilteUpdated)
    }
 
    //<summar>
    // All the listeners for this window
    //</summary>
+   _onWebBarBrowserWindowMove = function () {
+      // Maybe this can delay? but for now works as expected.
+      let webbarPosition = this.webbarWindow.browserWindow.getPosition()
+      this.browserWindow.setPosition(webbarPosition[0], webbarPosition[1] + this.webbarWindow.options.webbarHeight)
+   }.bind(this)
+
    _onBrowserWindowClose = function () {
-      this.webbarWindow.sendResponse('close-window', { windowId: this.id })
+
    }.bind(this)
 
    _pageTilteUpdated = function (event, title, explicitSet) {
-      let response = { updateType: 'title', windowId: this.id, title: title }
-      this.webbarWindow.sendResponse('update-window', response)
+
    }.bind(this)
 }

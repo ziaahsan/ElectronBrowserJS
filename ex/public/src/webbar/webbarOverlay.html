@@ -1,6 +1,6 @@
 <div class="ng-webbar">
    <div class="navigation">
-      <span class="icon fingerprint" ng-click="focusWindow('spotlight')">
+      <span class="icon fingerprint" ng-click="openSpotlight()">
          <i class="las la-fingerprint"></i>
       </span>
       <span class="icon" ng-click="canFocusWindowGoBack()">
@@ -12,13 +12,13 @@
    </div>
    <div class="tabs">
       <span class="icon" ng-repeat="(windowId, window) in windows track by windowId"
-         ng-click="focusWindow(windowId)" ng-if="windowId !== 'spotlight'">
+         ng-click="openWindow(windowId)" ng-if="windowId !== 'spotlight'">
          <span ng-if="window.isLoading" class="favicon">
             <span class="icon" ng-style="{'background-image': 'url(icons/spinner.gif)'}"></span>
          </span>
          <span ng-if="!window.isLoading" class="favicon">
-            <span class="icon" ng-if="!window.favIcon || window.favIcon === ''" ng-style="{'background-image': 'url(icons/web.png)'}"></span>
-            <span class="icon" ng-if="window.favIcon && window.favIcon !== ''" ng-style="{'background-image': 'url(' + window.favIcon + ')'}"></span>
+            <span class="icon" ng-if="!window.favicon || window.favicon === ''" ng-style="{'background-image': 'url(icons/web.png)'}"></span>
+            <span class="icon" ng-if="window.favicon && window.favicon !== ''" ng-style="{'background-image': 'url(' + window.favicon + ')'}"></span>
          </span>
          <span ng-if="focusedWindow !== null && focusedWindow.windowId === windowId" class="indicator"></span>
       </span>

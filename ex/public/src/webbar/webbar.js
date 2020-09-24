@@ -21,111 +21,93 @@ angular
       function controller() {
          return ['$scope', '$location', function ($scope, $location) {
             // Setup default windows...
-            $scope.windows = {
-               'spotlight': {
-                  isLoading: false,
-                  favIcon: '',
-                  title: ''
-               }
-            }
+            $scope.windows = {}
             $scope.focusedWindow = null
 
             // Clean up with angularJS
             $scope.$on('$destroy', function () {
-               window.removeEventListener('message', $scope.recieveMessage);
+               window.removeEventListener('message', $scope._onRestoreHttpWindows);
+               window.removeEventListener('message', $scope._onSpinner);
+               window.removeEventListener('message', $scope._onFavicon);
+               window.removeEventListener('message', $scope._onTitle);
             });
 
             // Route with params initializer
             $scope.init = function () {
-               window.addEventListener('message', $scope.recieveMessage);
+               window.addEventListener('message', $scope._onRestoreHttpWindows);
+               window.addEventListener('message', $scope._onSpinner);
+               window.addEventListener('message', $scope._onFavicon);
+               window.addEventListener('message', $scope._onTitle);
             }
 
-            // Listen for messages from ipcMain
-            $scope.recieveMessage = function (event) {
+            $scope._onRestoreHttpWindows = function (event) {
                if (event.source != window ||
-                  !event.data.type || event.data.type != 'ng-webbar') return;
+                  !event.data.name || event.data.name != 'ng-webbar') return;
+               if (event.data.type !== 'restore') return;
+               if (!event.data.results) return;
 
-               // Check the name and perform
-               switch (event.data.name) {
-                  case 'restore-window-indicator':
-                     if (!event.data.results) return;
-                     $scope.$apply(() => {
-                        // Save info
-                        let windowId = event.data.results.windowId;
-                        $scope.windows[windowId] = {
-                           isLoading: false,
-                           favIcon: event.data.results.favIcon,
-                           title: ''
-                        };
-                     });
-                     break
-                  case 'create-new-window-indicator':
-                     if (!event.data.results) return;
-                     $scope.$apply(() => {
-                        // Save info
-                        let windowId = event.data.results.windowId;
-                        $scope.windows[windowId] = {
-                           isLoading: true,
-                           favIcon: '',
-                           title: ''
-                        };
-                        // Request httpWindow for creation
-                        window.postMessage({ type: 'create-new-http-window', windowId: windowId, windowURL: event.data.results.searchTerm });
-                     });
-                     break
-                  case 'update-window':
-                     if (!event.data.results) return;
-                     if (!event.data.results.windowId || !event.data.results.updateType) return;
-
-                     // The window to be updated
-                     let windowId = event.data.results.windowId;
-
-                     // Seperate the window updates just incase multiple requests are incoming
-                     switch (event.data.results.updateType) {
-                        case 'spinner':
-                           $scope.windows[windowId].isLoading = event.data.results.isLoading;
-                           break;
-                        case 'favIcon':
-                           $scope.windows[windowId].favIcon = event.data.results.favIcon;
-                           break;
-                        case 'title':
-                           $scope.windows[windowId].title = event.data.results.title;
-                           break;
-                     }
-
-                     // Apply the new changes
-                     $scope.$apply();
-                     break;
-                  case 'focus-window':
-                     if ($scope.windows[event.data.results.windowId] === undefined) return
-                     // Apply these changes
-                     $scope.$apply(() => {
-                        $scope.focusedWindow = $scope.windows[event.data.results.windowId];
-                        $scope.focusedWindow.windowId = event.data.results.windowId;
-                        $scope.focusedWindow.isTrusted = event.isTrusted;
-                     });
-                     break
-                  case 'close-window':
-                     if (!event.data.results) return;
-                     if (!event.data.results.windowId) return;
-                     // Window has been closed from server side remove its information here
-                     $scope.$apply(() => {
-                        delete $scope.windows[event.data.results.windowId]
-                     });
-                     break
-               }
+               $scope.$apply(() => {
+                  for (const key in event.data.results) {
+                     $scope.windows[key] = event.data.results[key]
+                     $scope.windows[key].isLoading = false
+                  }
+               })
             }
 
-            $scope.focusWindow = function (id) {
-               window.postMessage({ type: 'focus-window', windowId: id });
+            $scope._onSpinner = function (event) {
+               if (event.source != window ||
+                  !event.data.name || event.data.name != 'ng-webbar') return;
+               if (event.data.type !== 'spinner') return;
+               if (!event.data.results) return;
+               if (!event.data.results.windowId) return;
+
+               let windowId = event.data.results.windowId;
+               if (!$scope.windows[windowId])
+                  $scope.windows[windowId] = {}
+
+               $scope.$apply(() => {
+                  $scope.windows[windowId].isLoading = event.data.results.isLoading
+               });
             }
 
-            $scope.canFocusWindowGoBack = function () {
-               window.postMessage({ type: 'can-focus-window-go-back' });
+            $scope._onFavicon = function (event) {
+               if (event.source != window ||
+                  !event.data.name || event.data.name != 'ng-webbar') return;
+               if (event.data.type !== 'favicon') return;
+               if (!event.data.results) return;
+               if (!event.data.results.windowId) return;
+
+               let windowId = event.data.results.windowId;
+               if (!$scope.windows[windowId])
+                  $scope.windows[windowId] = {}
+
+               $scope.$apply(() => {
+                  $scope.windows[windowId].favicon = event.data.results.favicon
+               });
             }
 
-            $scope.canFocusWindowGoForward = function () {
-               window.postMessage({ type: 'can-focus-window-go-forward' });
+            $scope._onTitle = function (event) {
+               if (event.source != window ||
+                  !event.data.name || event.data.name != 'ng-webbar') return;
+               if (event.data.type !== 'title') return;
+               if (!event.data.results) return;
+               if (!event.data.results.windowId) return;
+
+               let windowId = event.data.results.windowId;
+               if (!$scope.windows[windowId])
+                  $scope.windows[windowId] = {}
+
+               $scope.$apply(() => {
+                  $scope.windows[windowId].title = event.data.results.title
+               });
+            }
+
+            $scope.openSpotlight = function () {
+               window.postMessage({type: 'open-spotlight'})
+            }
+
+            $scope.openWindow = function (id) {
+               window.postMessage({type: 'open-window', windowId: id})
             }
 
             // Setup redirection

@@ -1,15 +1,16 @@
 "use strict";
+//
+const crypto = require('crypto-random-string')
 // Eelectron storage
 const ElectronStore = require('electron-store');
 const storage = new ElectronStore({ accessPropertiesByDotNotation: false, name: 'HttpBrowserWindows' });
 // Parent custom window
-const CustomBrowserWindow = require('../custom/customBrowserWindow')
+const CustomBrowserWindow = require('../custom/browserWindow')
 
 // Simply class for any http browser window
 module.exports = class HttpBrowserWindow extends CustomBrowserWindow {
-   constructor(webbarWindow, windowId, httpURL) {
-      let id = windowId
-      let url = httpURL
+   constructor(webbarWindow, windowId) {
+      let name = 'http'
       let options = {
          backgroundColor: '#FFF',
 
@@ -19,7 +20,7 @@ module.exports = class HttpBrowserWindow extends CustomBrowserWindow {
          focusable: true,
          resizable: false,
 
-         closable: true,
+         closable: false,
          minimizable: false,
          maximizable: false,
 
@@ -36,96 +37,94 @@ module.exports = class HttpBrowserWindow extends CustomBrowserWindow {
          shadow: false
       }
 
-      super(id, url, options)
+      super(name, options)
+
+      // Defaults
+      this.browserWindow.windowId = windowId === '' ? crypto({ length: 8, type: 'alphanumeric' }) : windowId
 
       // Webbar window object
       this.webbarWindow = webbarWindow
-   }
-
-   create = async function () {
-      // Attach listeners
+      this.webbarWindow.browserWindow.on('move', this._onWebBarBrowserWindowMove)
+      
+      // BrowserWindow listeners
       this.browserWindow.on('close', this._onBrowserWindowClose)
+
+      // Webcontents listeners
       this.browserWindow.webContents.on('did-start-loading', this._didSpinnerStartLoading)
       this.browserWindow.webContents.on('did-stop-loading', this._didSpinnerStopLoading)
-      this.browserWindow.webContents.on('page-favicon-updated', this._pageFavIconUpdated)
+      this.browserWindow.webContents.on('page-favicon-updated', this._pageFaviconUpdated)
       this.browserWindow.webContents.on('page-title-updated', this._pageTilteUpdated)
+      this.browserWindow.webContents.on('did-navigate-in-page', this._didNavigateInPage)
       this.browserWindow.webContents.on('did-finish-load', this._didFinishLoad)
 
-      // Load this.url window
-      await this.loadHttp().catch(e => {
-         throw e.message
-      })
+      // Initialize the window data to be stored
+      storage.set(this.browserWindow.windowId, {})
    }
 
-   saveWindowInfoToStorage = async function (type, value) {
-      // Save info
-      let windowId = this.id
-      await new Promise(resolve => {
-         let windowInfo = storage.get(windowId, {})
-         windowInfo[type] = value
+   //<summar>
+   // All the static methods
+   //</summary>
+   static getStoredWindows = function () {
+      return JSON.parse(JSON.stringify(storage.store))
+   }
 
-         storage.set(windowId, windowInfo)
-         resolve()
-      }).catch(e => {
-         console.error(`[Storage] Could not set window-${this.id} storage correctly due to: ${e.message}`)
-      })
+   static getStoredWindowById = function (id) {
+      return storage.get(id)
    }
 
    //<summar>
    // All the listeners for this window
    //</summary>
+   _onWebBarBrowserWindowMove = function () {
+      // Maybe this can delay? but for now works as expected.
+      let webbarPosition = this.webbarWindow.browserWindow.getPosition()
+      this.browserWindow.setPosition(webbarPosition[0], webbarPosition[1] + this.webbarWindow.options.webbarHeight)
+   }.bind(this)
+
    _onBrowserWindowClose = function () {
-      this.webbarWindow.sendResponse('close-window', { windowId: this.id })
-      storage.delete(this.id)
+
    }.bind(this)
 
    _didSpinnerStartLoading = function () {
-      let response = { updateType: 'spinner', windowId: this.id, isLoading: true }
-      this.webbarWindow.sendResponse('update-window', response)
+      this.webbarWindow
+         .browserWindow.webContents.send('window-spinner', this.browserWindow.windowId, true)
    }.bind(this)
 
    _didSpinnerStopLoading = function () {
-      let response = { updateType: 'spinner', windowId: this.id, isLoading: false }
-      this.webbarWindow.sendResponse('update-window', response)
+      this.webbarWindow
+         .browserWindow.webContents.send('window-spinner', this.browserWindow.windowId, false)
    }.bind(this)
 
-   _pageFavIconUpdated = function (event, favIcons) {
-      if (favIcons.length > 0) {
-         let response = { updateType: 'favIcon', windowId: this.id, favIcon: favIcons[0] }
-         this.webbarWindow.sendResponse('update-window', response)
+   _pageFaviconUpdated = function (event, favicons) {
+      if (favicons.length > 0) {
+         this.webbarWindow
+            .browserWindow.webContents.send('window-favicon', this.browserWindow.windowId, favicons[0])
 
-         this.saveWindowInfoToStorage('favIcon', favIcons[0])
+         let stored = storage.get(this.browserWindow.windowId)
+         stored.favicon = favicons[0]
+         storage.set(this.browserWindow.windowId, stored)
       }
    }.bind(this)
 
    _pageTilteUpdated = function (event, title, explicitSet) {
-      let response = { updateType: 'title', windowId: this.id, title: title }
-      this.webbarWindow.sendResponse('update-window', response)
+      if (title === '') title = 'Untitled'
+      this.webbarWindow
+         .browserWindow.webContents.send('window-title', this.browserWindow.windowId, title)
+
+      let stored = storage.get(this.browserWindow.windowId)
+      stored.title = title
+      storage.set(this.browserWindow.windowId, stored)
+   }.bind(this)
+
+   _didNavigateInPage = function (event, url, isMainFrame, fromProcessId, frameRoutingId) {
+      let stored = storage.get(this.browserWindow.windowId)
+      stored.url = url
+      storage.set(this.browserWindow.windowId, stored)
    }.bind(this)
 
    _didFinishLoad = function () {
-      this.saveWindowInfoToStorage('url', this.browserWindow.webContents.getURL())
+      let stored = storage.get(this.browserWindow.windowId)
+      stored.url = this.browserWindow.webContents.getURL()
+      storage.set(this.browserWindow.windowId, stored)
    }.bind(this)
-
-
-   //<summar>
-   // Class static methods, for quick access to some of the storage data
-   //</summary>
-   static getSavedWindow = function (windowId) {
-      // Returns data on stored window
-      return storage.get(windowId)
-   }
-
-   static restoreAllWindowsFromStorage = function (webbarWindow) {
-      // Restores all windows on the webbar
-      return new Promise(resolve => {
-         const windows = JSON.parse(JSON.stringify(storage.store))
-         Object.keys(windows).forEach(windowId => {
-            const savedWindow = windows[windowId]
-            // Send the tab to be created with its info
-            webbarWindow.sendResponse('restore-window-indicator', { windowId: windowId, favIcon: savedWindow.favIcon })
-         })
-         resolve()
-      })
-   }
 }

@@ -34,9 +34,8 @@ angular
                if (event.keyCode === KEY.ENTER) {
                   let searchTerm = $ngSpotlightOverlay.find('input').val();
                   $scope.focus();
-                  
                   // Send message to main for creating new http
-                  window.postMessage({ type: 'create-new-window-indicator', searchTerm: searchTerm });
+                  window.postMessage({type: 'open-url', url: searchTerm})
                }
             }
 

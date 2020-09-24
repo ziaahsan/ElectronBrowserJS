@@ -8,15 +8,14 @@ const { BrowserWindow } = require('electron')
 
 // Custom browser window using electron
 module.exports = class CustomBrowserWindow {
-   constructor(id, url, options) {
+   constructor(name, options) {
       // Defaults
-      this.id = id
-      this.url = url
+      this.name = name
       this.options = options
 
-      // Electron-Glasstron BrowserWindow
+      // Electron BrowserWindow
       this.browserWindow = new BrowserWindow({
-         title: 'My App',
+         title: this.name,
          show: false,
 
          backgroundColor: this.options.backgroundColor,
@@ -50,29 +49,25 @@ module.exports = class CustomBrowserWindow {
             worldSafeExecuteJavaScript: true,
             contextIsolation: true,
             enableRemoteModule: false,
-            preload: path.join(__dirname, '..', 'preload.js')
+            preload: path.join(__dirname, '..', '..', 'preloads', `${this.name}.js`)
          }
       })
 
       // Setup position according to options
       if (this.options.position !== null)
          this.browserWindow.setPosition(this.options.position.x, this.options.position.y)
-
-      // Attach the windowId to this browserWindow since when
-      // accessing getChildren we need to know what our window id is (besides @BrowserWindow.id)
-      this.browserWindow.windowId = this.id
    }
 
-   loadFile = function () {
+   loadFile = function (url) {
       // Setup ready, and return promise
       this.browserWindow.once('ready-to-show', this._readyToShowListener)
-      return this.browserWindow.loadFile(this.url)
+      return this.browserWindow.loadFile(url)
    }
 
-   loadHttp = function () {
+   loadHttp = function (url) {
       // Setup ready, and return promise
       this.browserWindow.once('ready-to-show', this._readyToShowListener)
-      return this.browserWindow.loadURL(this.url)
+      return this.browserWindow.loadURL(url)
    }
 
    //<summar>
@@ -85,16 +80,4 @@ module.exports = class CustomBrowserWindow {
       this.browserWindow.show()
       this.browserWindow.focus()
    }.bind(this) //<-Add the scope of the class to function
-
-
-   //<summar>
-   // Class static methods, for quick access to some of the electron.browserWindow functions and more to add
-   //</summary>
-   static openedWindows = function () {
-      return BrowserWindow.getAllWindows()
-   }
-
-   static focusedWindow = function () {
-      return BrowserWindow.getFocusedWindow()
-   }
 }

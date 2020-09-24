@@ -1,13 +1,8 @@
 "use strict";
-// URL
-const url = require('url')
-// Setup consts for window
-const CustomBrowserWindow = require('./custom/customBrowserWindow')
-// Custom BrowserWindows
+// Type of custom BrowserWindows
 const WebbarBrowserWindow = require('./type/webbarBrowserWindow')
-// Custom BrowserWindows instances only when needed
-let SpotlightBrowserWindow = null
-let HttpBrowserWindow = null
+const SpotlightBrowserWindow = require('./type/spotlightBrowserWindow')
+const HttpBrowserWindow = require('./type/httpBrowserWindow')
 
 // All type of browserWindows handler
 module.exports = class BrowserWindows {
@@ -18,29 +13,37 @@ module.exports = class BrowserWindows {
    createDefaultWindows = async function () {
       // Load webbar
       this.webbarWindow = new WebbarBrowserWindow()
-      await this.webbarWindow.loadFile().then(async res => {
-         SpotlightBrowserWindow = require('./type/spotlightBrowserWindow')
-         HttpBrowserWindow = require('./type/httpBrowserWindow')
-
+      await this.webbarWindow.loadFile('public/webbar.html').then(res => {
          // Load spotlight
-         this.spotlightWindow = new SpotlightBrowserWindow(this.webbarWindow)
-         await this.spotlightWindow.loadFile().catch(e => {
-            throw e.message
-         })
-
-         // Restoring saved window
-         await HttpBrowserWindow.restoreAllWindowsFromStorage(this.webbarWindow).catch(e => {
-            throw e.message
-         })
+         this.loadSpotlight()
       }).catch(e => {
-         throw e.message
+         console.error(e)
       })
    }
 
-   createHttpWindow = function (windowId, urlString) {
-      // Parent, webbarWindow, or spotlightWindow was null or something return
+   loadSpotlight = async function() {
+      // Load spotlight
+      if (!this.spotlightWindow) {
+         this.spotlightWindow = new SpotlightBrowserWindow(this.webbarWindow)
+         this.spotlightWindow.browserWindow.on('closed', this._onSpotlightBrowserWindowClosed)
+         await this.spotlightWindow.loadFile('public/index.html').catch(e => {
+            console.error(e)
+         })
+      } else {
+         this.spotlightWindow.browserWindow.focus()
+      }
+   }
+
+   loadURL = async function (urlString, windowId = '') {
+      // WebbarWindow, or spotlightWindow was null
       if (!this.webbarWindow || !this.spotlightWindow)
          throw "All default windows must be present."
+
+      // Check to see a httpWindow exists
+      if (!this.httpWindow || this.httpWindow.browserWindow.isDestroyed()) {
+         this.httpWindow = new HttpBrowserWindow(this.webbarWindow, windowId)
+         this.httpWindow.browserWindow.on('closed', this._onHttpBrowserWindowClosed)
+      }
 
       try {
          // Check and see if URL is valid, proceed
@@ -50,43 +53,53 @@ module.exports = class BrowserWindows {
          urlString = `https://www.google.com/search?q=${encodeURIComponent(urlString)}`
       }
 
-      // All httpBrowserWindows require webbar aside from parent
-      // @Important windowId must be supplied from client(angular-js) that will be used to tag the window
-      new HttpBrowserWindow(this.webbarWindow, windowId, urlString).create()
-   }
-
-   switchFocusTo = async function (windowId) {
-      // By doing promise we can check for several things:
-      // 1. Check if the window is already among the open windows
-      // 2. If 1's not it, we can check if the window is among the saved windows
-      // 3. If 2's not the case either we can create that window as long as window url is present,
-      //    and windowId was already present. We'll just use this windowId to create a new httpWindow
-      // Otherwise reject
-      return new Promise((resolve, reject) => {
-         for (let openedWindow of CustomBrowserWindow.openedWindows()) {
-            if (openedWindow.windowId == windowId) {
-               openedWindow.show()
-               openedWindow.focus()
-               resolve()
-               return
-            }
-         }
-
-         let storedWindow = HttpBrowserWindow.getSavedWindow(windowId)
-         if (storedWindow.url !== undefined) {
-            this.createHttpWindow(windowId, storedWindow.url)
-            resolve()
-            return
-         }
-         
-         reject("Invalid windowId or nothing to do here!")
+      await this.httpWindow.loadHttp(urlString).then(res => {
+         this.httpWindow.browserWindow.focus()
       }).catch(e => {
-         throw e.message
+         console.error(e)
       })
    }
 
-   focusedWindow = function () {
-      // Gets the currently focused window
-      return CustomBrowserWindow.focusedWindow()
+   laodWindow = async function (windowId) {
+      let storedWindow = HttpBrowserWindow.getStoredWindowById(windowId)
+      if (!storedWindow.url) return
+
+      if (this.httpWindow) {
+         if (this.httpWindow.browserWindow.windowId === windowId) {
+            this.httpWindow.browserWindow.focus()
+            return
+         }
+         
+         await new Promise(async resolve => {
+            this.httpWindow.browserWindow.destroy()
+            // Wait for nullity of the window
+            while (this.httpWindow !== null) {
+               // Sleep 500ms interval until vairable is null
+               await new Promise(resolve => setTimeout(resolve, 500));
+            }
+
+            this.loadURL(storedWindow.url, windowId)
+            resolve()
+         }).catch(e => {
+            console.error(e)
+         })
+         
+         return
+      }
+
+      this.loadURL(storedWindow.url, windowId)
    }
+
+   //<summar>
+   // Special listeners for instacnes
+   //</summary>
+   _onSpotlightBrowserWindowClosed = function () {
+      this.webbarWindow.browserWindow.off('move', this.spotlightWindow._onWebBarBrowserWindowMove)
+      this.spotlightWindow = null
+   }.bind(this)
+
+   _onHttpBrowserWindowClosed = function () {
+      this.webbarWindow.browserWindow.off('move', this.httpWindow._onWebBarBrowserWindowMove)
+      this.httpWindow = null
+   }.bind(this)
 }
