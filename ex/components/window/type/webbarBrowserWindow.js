@@ -8,7 +8,7 @@ module.exports = class WebbarBrowserWindow extends CustomBrowserWindow {
    constructor() {
       let name = 'webbar'
       let options = {
-         backgroundColor: '#00000000',
+         backgroundColor: '#FFF',
 
          frame: false,
          transparent: true,
@@ -16,8 +16,8 @@ module.exports = class WebbarBrowserWindow extends CustomBrowserWindow {
          focusable: true,
          resizable: false,
 
-         closable: false,
-         minimizable: false,
+         closable: true,
+         minimizable: true,
          maximizable: false,
 
          width: 1366,
@@ -34,18 +34,18 @@ module.exports = class WebbarBrowserWindow extends CustomBrowserWindow {
 
       super(name, options)
 
+      //Defaults
+      this.browserWindow.windowId = name
+      
       // Attach listeners
-      this.browserWindow.on('show', this._onShow)
-   }
-
-   restoreHttpStoredWindow = function () {
-      this.browserWindow.webContents.send('restore-http-windows', HttpBrowserWindow.getStoredWindows())
+      this.browserWindow.webContents.on('ipc-message', this._onRestoreHttpWindows)
    }
 
    //<summar>
    // All the listeners for this window
    //</summary>
-   _onShow = function () {
-      this.restoreHttpStoredWindow()
+   _onRestoreHttpWindows = function (event, channel, type) {
+      if (channel === 'restore-http-windows')
+         event.sender.send(channel, HttpBrowserWindow.getStoredWindows())
    }.bind(this)
 }

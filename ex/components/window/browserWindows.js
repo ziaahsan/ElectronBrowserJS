@@ -2,7 +2,8 @@
 // Type of custom BrowserWindows
 const WebbarBrowserWindow = require('./type/webbarBrowserWindow')
 const SpotlightBrowserWindow = require('./type/spotlightBrowserWindow')
-const HttpBrowserWindow = require('./type/httpBrowserWindow')
+const HttpBrowserWindow = require('./type/httpBrowserWindow');
+const { async } = require('crypto-random-string');
 
 // All type of browserWindows handler
 module.exports = class BrowserWindows {
@@ -53,16 +54,43 @@ module.exports = class BrowserWindows {
          urlString = `https://www.google.com/search?q=${encodeURIComponent(urlString)}`
       }
 
-      await this.httpWindow.loadHttp(urlString).then(res => {
-         this.httpWindow.browserWindow.focus()
-      }).catch(e => {
+      this.httpWindow.browserWindow.focus()
+      await this.httpWindow.loadHttp(urlString).catch(e => {
          console.error(e)
       })
    }
 
+   setupHttpWindow = function (url, windowId = '') {
+      return new Promise(async resolve => {
+         this.httpWindow.browserWindow.destroy()
+         // Wait for nullity of the window
+         while (this.httpWindow !== null) {
+            // Sleep 500ms interval until vairable is null
+            await new Promise(resolve => setTimeout(resolve, 500));
+         }
+
+         this.loadURL(url, windowId)
+         resolve()
+      })
+   }
+
+   loadBlank = async function () {
+      let url = 'https://google.ca'
+      if (this.httpWindow) {
+         await this.setupHttpWindow(url).catch(e => {
+            console.error(e)
+         })
+         return
+      }
+
+      this.loadURL(url)
+   }
+
    laodWindow = async function (windowId) {
       let storedWindow = HttpBrowserWindow.getStoredWindowById(windowId)
-      if (!storedWindow.url) return
+      if (!storedWindow.url) {
+         storedWindow.url = 'https://google.ca'
+      }
 
       if (this.httpWindow) {
          if (this.httpWindow.browserWindow.windowId === windowId) {
@@ -70,17 +98,7 @@ module.exports = class BrowserWindows {
             return
          }
          
-         await new Promise(async resolve => {
-            this.httpWindow.browserWindow.destroy()
-            // Wait for nullity of the window
-            while (this.httpWindow !== null) {
-               // Sleep 500ms interval until vairable is null
-               await new Promise(resolve => setTimeout(resolve, 500));
-            }
-
-            this.loadURL(storedWindow.url, windowId)
-            resolve()
-         }).catch(e => {
+         await this.setupHttpWindow(storedWindow.url, windowId).catch(e => {
             console.error(e)
          })
          
@@ -88,6 +106,34 @@ module.exports = class BrowserWindows {
       }
 
       this.loadURL(storedWindow.url, windowId)
+   }
+
+   loadPreviousPage = function(windowId) {
+      if (windowId === 'webbar') return
+      
+      if (windowId === 'spotlight' && this.spotlightWindow) {
+         if (this.spotlightWindow.browserWindow.webContents.canGoBack()) {
+            this.spotlightWindow.browserWindow.webContents.goBack()
+         }
+      } else if (this.httpWindow) {
+         if (this.httpWindow.browserWindow.webContents.canGoBack()) {
+            this.httpWindow.browserWindow.webContents.goBack()
+         }
+      }
+   }
+
+   loadNextPage = function(windowId) {
+      if (windowId === 'webbar') return
+
+      if (windowId === 'spotlight' && this.spotlightWindow) {
+         if (this.spotlightWindow.browserWindow.webContents.canGoForward()) {
+            this.spotlightWindow.browserWindow.webContents.goForward()
+         }
+      } else if (this.httpWindow) {
+         if (this.httpWindow.browserWindow.webContents.canGoForward()) {
+            this.httpWindow.browserWindow.webContents.goForward()
+         }
+      }
    }
 
    //<summar>

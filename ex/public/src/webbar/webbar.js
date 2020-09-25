@@ -21,7 +21,14 @@ angular
       function controller() {
          return ['$scope', '$location', function ($scope, $location) {
             // Setup default windows...
-            $scope.windows = {}
+            $scope.windows = {
+               'spotlight': {
+                  title: 'Untitled',
+                  isLoading: false,
+                  url: '',
+                  favicon: ''
+               }
+            }
             $scope.focusedWindow = null
 
             // Clean up with angularJS
@@ -38,6 +45,9 @@ angular
                window.addEventListener('message', $scope._onSpinner);
                window.addEventListener('message', $scope._onFavicon);
                window.addEventListener('message', $scope._onTitle);
+
+               // Request for stored windows
+               window.postMessage({type: 'restore-http-windows'})
             }
 
             $scope._onRestoreHttpWindows = function (event) {
@@ -99,6 +109,11 @@ angular
 
                $scope.$apply(() => {
                   $scope.windows[windowId].title = event.data.results.title
+                  
+                  // Setup focused window by which title was updated latest
+                  $scope.focusedWindow =  $scope.windows[windowId]
+                  $scope.focusedWindow.windowId = windowId 
+                  $scope.focusedWindow.isTrusted = event.isTrusted
                });
             }
 
@@ -108,6 +123,20 @@ angular
 
             $scope.openWindow = function (id) {
                window.postMessage({type: 'open-window', windowId: id})
+            }
+
+            $scope.openBlankWindow = function () {
+               window.postMessage({type: 'open-blank-window'})
+            }
+
+            $scope.openPreviousPage = function () {
+               if (!$scope.focusedWindow.windowId) return
+               window.postMessage({type: 'open-previous-page', windowId: $scope.focusedWindow.windowId})
+            }
+
+            $scope.openNextPage = function () {
+               if (!$scope.focusedWindow.windowId) return
+               window.postMessage({type: 'open-next-page', windowId: $scope.focusedWindow.windowId})
             }
 
             // Setup redirection

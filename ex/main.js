@@ -19,6 +19,9 @@ const fsPromises = require('fs').promises;
 ipcMain.on('open-spotlight', (event, url) => browserWindows.loadSpotlight())
 ipcMain.on('open-url', (event, url) => browserWindows.loadURL(url))
 ipcMain.on('open-window', (event, windowId) => browserWindows.laodWindow(windowId))
+ipcMain.on('open-blank-window', (event, url) => browserWindows.loadBlank())
+ipcMain.on('open-previous-page', (event, windowId) => browserWindows.loadPreviousPage(windowId))
+ipcMain.on('open-next-page', (event, windowId) => browserWindows.loadNextPage(windowId))
 
 // When app's initialized
 app.whenReady().then(async () => {

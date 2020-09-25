@@ -3,10 +3,10 @@
       <span class="icon fingerprint" ng-click="openSpotlight()">
          <i class="las la-fingerprint"></i>
       </span>
-      <span class="icon" ng-click="canFocusWindowGoBack()">
+      <span class="icon" ng-click="openPreviousPage()">
          <i class="las la-long-arrow-alt-left"></i>
       </span>
-      <span class="icon" ng-click="canFocusWindowGoForward()">
+      <span class="icon" ng-click="openNextPage()">
          <i class="las la-long-arrow-alt-right"></i>
       </span>
    </div>
@@ -21,6 +21,11 @@
             <span class="icon" ng-if="window.favicon && window.favicon !== ''" ng-style="{'background-image': 'url(' + window.favicon + ')'}"></span>
          </span>
          <span ng-if="focusedWindow !== null && focusedWindow.windowId === windowId" class="indicator"></span>
+      </span>
+      <span class="icon" ng-click="openBlankWindow()">
+         <span class="favicon add">
+            <span class="icon" ng-style="{'background-image': 'url(icons/add.png)'}"></span>
+         </span>
       </span>
    </div>
    <div class="bar" ng-if="focusedWindow !== null">

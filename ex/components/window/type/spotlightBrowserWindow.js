@@ -33,6 +33,9 @@ module.exports = class SpotlightBrowserWindow extends CustomBrowserWindow {
 
       super(name, options)
 
+      //Defaults
+      this.browserWindow.windowId = name
+
       // Webbar window object
       this.webbarWindow = webbarWindow
       this.webbarWindow.browserWindow.on('move', this._onWebBarBrowserWindowMove)
@@ -58,6 +61,8 @@ module.exports = class SpotlightBrowserWindow extends CustomBrowserWindow {
    }.bind(this)
 
    _pageTilteUpdated = function (event, title, explicitSet) {
-
+      if (title === '') title = 'Untitled'
+      this.webbarWindow
+         .browserWindow.webContents.send('window-title', this.browserWindow.windowId, title)
    }.bind(this)
 }
