@@ -1,0 +1,32 @@
+<div class="ng-webbar">
+   <div class="navigation">
+      <span class="icon fingerprint">
+         <i class="las la-fingerprint"></i>
+      </span>
+      <span class="icon">
+         <i class="las la-long-arrow-alt-up"></i>
+      </span>
+      <span class="icon">
+         <i class="las la-long-arrow-alt-down"></i>
+      </span>
+   </div>
+   <div class="menu">
+      <ul>
+         <li ng-click="redirect('/')"><i class="las la-home"></i> Home</li>
+         <li><i class="las la-sync"></i> Refresh <span class="command">ctrl+R</span></li>
+         <li><i class="las la-search"></i> Find <span class="command">ctrl+F</span></li>
+         <li><i class="las la-print"></i> Print <span class="command">ctrl+P</span></li>
+         <li><i class="las la-code"></i> Source code  <span class="command">ctrl+U</span></li>
+         <li class="close">Close</li>
+      </ul>
+   </div>
+   <div class="bar" ng-if="focusedWindow !== null">
+      <span class="url">
+         <span class="protocol-trusted"><i class="las la-lock"></i></span>
+         <span class="title">App Settings</span>
+      </span>
+      <span class="settings">
+         <i class="las la-arrow-right" ng-click="redirect('/')"></i>
+      </span>
+   </div>
+</div>

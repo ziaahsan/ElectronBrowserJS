@@ -103,7 +103,7 @@ angular
                if (!event.data.results) return;
                if (!event.data.results.windowId) return;
 
-               let windowId = event.data.results.windowId;
+               let windowId = event.data.results.windowId
                if (!$scope.windows[windowId])
                   $scope.windows[windowId] = {}
 
@@ -112,7 +112,7 @@ angular
                   
                   // Setup focused window by which title was updated latest
                   $scope.focusedWindow =  $scope.windows[windowId]
-                  $scope.focusedWindow.windowId = windowId 
+                  $scope.focusedWindow.windowId = windowId
                   $scope.focusedWindow.isTrusted = event.isTrusted
                });
             }

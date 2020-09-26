@@ -45,6 +45,7 @@ module.exports = class BrowserWindows {
       }
 
       let httpWindow = new HttpBrowserWindow(this.webbarWindow, windowId)
+      httpWindow.browserWindow.webContents.on('new-window', this._newHttpWindow)
 
       try {
          // Check and see if URL is valid, proceed
@@ -134,4 +135,10 @@ module.exports = class BrowserWindows {
       this.webbarWindow.browserWindow.off('resize', this.spotlightWindow._onWebBarBrowserWindowResize)
       this.spotlightWindow = null
    }.bind(this)
+
+   _newHttpWindow = function (event, url, frameName, disposition, options, additionalFeatures, referrer, postBody) {
+      event.preventDefault()
+      this.loadURL(url)
+   }.bind(this)
+
 }

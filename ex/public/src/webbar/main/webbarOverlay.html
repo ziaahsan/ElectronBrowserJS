@@ -32,13 +32,10 @@
       </span>
    </div>
    <div class="bar" ng-if="focusedWindow !== null">
-      <span class="url">
-         <span ng-if="focusedWindow.isTrusted" class="protocol-trusted"><i class="las la-lock"></i></span>
-         <span ng-if="!focusedWindow.isTrusted" class="protocol-otherwise"><i class="las la-unlock"></i></span>
-         <span class="title">{{focusedWindow.title}}</span>
-      </span>
       <span class="settings">
-         <i class="las la-ellipsis-v"></i>
+         <span class="icon">
+            <i class="las la-ellipsis-v" ng-click="redirect('/settings')"></i>
+         </span>
       </span>
    </div>
 </div>

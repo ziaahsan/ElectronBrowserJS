@@ -23,7 +23,7 @@ module.exports = class WebbarBrowserWindow extends CustomBrowserWindow {
          width: 1366,
          height: 768,
 
-         webbarHeight: 42,
+         webbarHeight: 66,
 
          center: true,
          parentBrowserWindow: null,

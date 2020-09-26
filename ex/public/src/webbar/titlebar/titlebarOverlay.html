@@ -1,0 +1,12 @@
+<div class="ng-titlebar">
+   <span class="title">
+      <span ng-if="focusedWindow.isTrusted" class="protocol-trusted"><i class="las la-lock"></i></span>
+      <span ng-if="!focusedWindow.isTrusted" class="protocol-otherwise"><i class="las la-unlock"></i></span>
+      <span>{{focusedWindow.title}}</span>
+      <span class="icons">
+         <i class="las la-minus"></i>
+         <i class="las la-square"></i>
+         <i class="close las la-times"></i>
+      </span>
+   </span>
+</div>
