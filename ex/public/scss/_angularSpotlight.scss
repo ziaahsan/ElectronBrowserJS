@@ -54,7 +54,7 @@ $spotlight-responsive-width: 680px !default;
    -webkit-app-region: drag;
    .navigation {
       position: relative;
-      width: 8%;
+      width: 112px;
       display: flex;
       flex-wrap: nowrap;
       -webkit-app-region: no-drag;
@@ -80,11 +80,11 @@ $spotlight-responsive-width: 680px !default;
    }
    .bar {
       position: relative;
-      width: 25%;
+      max-width: 20%;
       display: flex;
       .url {
          position: relative;
-         width: 87%;
+         width: 200px;
          text-align: center;
          display: block;
          height: 18px;
@@ -98,6 +98,7 @@ $spotlight-responsive-width: 680px !default;
          text-overflow: ellipsis;
          overflow: hidden;
          word-break: break-all;
+         -webkit-app-region: no-drag;
          .protocol-trusted {
             font-weight: 600;
             color: rgba(#6fe81f, 1);
@@ -109,7 +110,7 @@ $spotlight-responsive-width: 680px !default;
       }
       .settings {
          position: relative;
-         width: 7%;
+         width: 52px;
          text-align: center;
          display: block;
          height: 18px;
@@ -124,7 +125,7 @@ $spotlight-responsive-width: 680px !default;
    }
    .tabs {
       position: relative;
-      width: 67%;
+      width: 100%;
       margin: 0 8px;
       border-left: 1px solid $border-color;
       border-right: 1px solid $border-color;

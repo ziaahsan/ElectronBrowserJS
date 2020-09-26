@@ -16,7 +16,7 @@ angular
          replace: true,
          controller: controller(),
          link: link,
-         templateUrl: 'src/spotlight/spotlightOverlay.html'
+         templateUrl: 'src/app/spotlight/spotlightOverlay.html'
       };
 
       //<summary>

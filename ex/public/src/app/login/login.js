@@ -17,7 +17,7 @@ angular
          replace: true,
          controller: controller(),
          link: link,
-         templateUrl: 'src/login/loginOverlay.html'
+         templateUrl: 'src/app/login/loginOverlay.html'
       };
 
       //<summary>

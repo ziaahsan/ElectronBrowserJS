@@ -8,10 +8,10 @@
       .config((AngularSpotlightProvider, $routeProvider) => {
          // Routing
          $routeProvider
-            .when("/", { templateUrl: "src/spotlight/view.html", pageTitle: 'Explore the web' })
-            .when("/login", { templateUrl: "src/login/view.html", pageTitle: 'Login' })
+            .when("/", { templateUrl: "src/app/spotlight/view.html", pageTitle: 'Explore the web' })
+            .when("/login", { templateUrl: "src/app/login/view.html", pageTitle: 'Login' })
             .when("/appstore", {
-               templateUrl: "src/appstore/store/view.html",
+               templateUrl: "src/app/appstore/store/view.html",
                pageTitle: 'Appstore',
                resolve: {
                   'auth': function (AuthService) {
@@ -19,7 +19,7 @@
                   }
                }
             }).when("/appstore/:param", {
-               templateUrl: "src/appstore/store/view.html",
+               templateUrl: "src/app/appstore/store/view.html",
                pageTitle: 'Add a web app',
                resolve: {
                   'auth': function (AuthService) {
@@ -28,7 +28,7 @@
                }
             })
             .when("/appstore/twofactorauth", {
-               templateUrl: "src/appstore/twofactorauth/view.html",
+               templateUrl: "src/app/appstore/twofactorauth/view.html",
                pageTitle: '2FA',
                resolve: {
                   'auth': function (AuthService) {
@@ -37,7 +37,7 @@
                }
             })
             .when("/appstore/twofactorauth/:param", {
-               templateUrl: "src/appstore/twofactorauth/view.html",
+               templateUrl: "src/app/appstore/twofactorauth/view.html",
                pageTitle: '2FA',
                resolve: {
                   'auth': function (AuthService) {

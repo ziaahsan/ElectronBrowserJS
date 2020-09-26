@@ -5,6 +5,6 @@
       .config(($routeProvider) => {
          // Routing
          $routeProvider
-            .when("/", { templateUrl: "src/webbar/view.html" });
+            .when("/", { templateUrl: "src/webbar/main/view.html" });
       });
 })();

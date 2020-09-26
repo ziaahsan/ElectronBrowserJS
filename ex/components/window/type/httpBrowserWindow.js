@@ -10,12 +10,14 @@ const CustomBrowserWindow = require('../custom/browserWindow')
 // Simply class for any http browser window
 module.exports = class HttpBrowserWindow extends CustomBrowserWindow {
    constructor(webbarWindow, windowId) {
+      let size = webbarWindow.browserWindow.getContentSize()
+
       let name = 'http'
       let options = {
          backgroundColor: '#FFF',
 
          frame: false,
-         transparent: false,
+         transparent: true,
 
          focusable: true,
          resizable: false,
@@ -38,16 +40,18 @@ module.exports = class HttpBrowserWindow extends CustomBrowserWindow {
       }
 
       super(name, options)
-
       // Defaults
       this.browserWindow.windowId = windowId === '' ? crypto({ length: 8, type: 'alphanumeric' }) : windowId
+      this.browserWindow.setContentSize(size[0], size[1] - webbarWindow.options.webbarHeight)
 
       // Webbar window object
       this.webbarWindow = webbarWindow
       this.webbarWindow.browserWindow.on('move', this._onWebBarBrowserWindowMove)
+      this.webbarWindow.browserWindow.on('resize', this._onWebBarBrowserWindowResize)
       
       // BrowserWindow listeners
-      this.browserWindow.on('close', this._onBrowserWindowClose)
+      this.browserWindow.on('closed', this._onHttpBrowserWindowClosed)
+      this.browserWindow.on('focus', this._onBrowserWindowFocus)
 
       // Webcontents listeners
       this.browserWindow.webContents.on('did-start-loading', this._didSpinnerStartLoading)
@@ -76,12 +80,25 @@ module.exports = class HttpBrowserWindow extends CustomBrowserWindow {
    // All the listeners for this window
    //</summary>
    _onWebBarBrowserWindowMove = function () {
-      // Maybe this can delay? but for now works as expected.
       let webbarPosition = this.webbarWindow.browserWindow.getPosition()
       this.browserWindow.setPosition(webbarPosition[0], webbarPosition[1] + this.webbarWindow.options.webbarHeight)
    }.bind(this)
 
-   _onBrowserWindowClose = function () {
+   _onWebBarBrowserWindowResize = function () {
+      let size = this.webbarWindow.browserWindow.getContentSize()
+      this.browserWindow.setContentSize(size[0], size[1] - this.webbarWindow.options.webbarHeight)
+   }.bind(this)
+
+   _onHttpBrowserWindowClosed = function () {
+      this.webbarWindow.browserWindow.off('move', this._onWebBarBrowserWindowMove)
+      this.webbarWindow.browserWindow.off('resize', this._onWebBarBrowserWindowResize)
+   }.bind(this)
+
+   _onBrowserWindowFocus = function () {
+      let stored = storage.get(this.browserWindow.windowId)
+      if (!stored || !stored.title === '') stored.title = 'Untitled'
+      this.webbarWindow
+         .browserWindow.webContents.send('window-title', this.browserWindow.windowId, stored.title)
 
    }.bind(this)
 

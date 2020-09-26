@@ -11,14 +11,14 @@ module.exports = class WebbarBrowserWindow extends CustomBrowserWindow {
          backgroundColor: '#FFF',
 
          frame: false,
-         transparent: true,
+         transparent: false,
 
          focusable: true,
-         resizable: false,
+         resizable: true,
 
          closable: true,
          minimizable: true,
-         maximizable: false,
+         maximizable: true,
 
          width: 1366,
          height: 768,
@@ -29,7 +29,7 @@ module.exports = class WebbarBrowserWindow extends CustomBrowserWindow {
          parentBrowserWindow: null,
          position: null,
 
-         shadow: false
+         shadow: true
       }
 
       super(name, options)

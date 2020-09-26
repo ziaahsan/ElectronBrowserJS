@@ -8,7 +8,7 @@ const { async } = require('crypto-random-string');
 // All type of browserWindows handler
 module.exports = class BrowserWindows {
    constructor() {
-      // Nothing...
+      this.focusedBrowserWindow = null
    }
 
    createDefaultWindows = async function () {
@@ -33,18 +33,18 @@ module.exports = class BrowserWindows {
       } else {
          this.spotlightWindow.browserWindow.focus()
       }
+
+      this.focusedBrowserWindow = this.spotlightWindow.browserWindow
    }
 
    loadURL = async function (urlString, windowId = '') {
       // WebbarWindow, or spotlightWindow was null
-      if (!this.webbarWindow || !this.spotlightWindow)
-         throw "All default windows must be present."
-
-      // Check to see a httpWindow exists
-      if (!this.httpWindow || this.httpWindow.browserWindow.isDestroyed()) {
-         this.httpWindow = new HttpBrowserWindow(this.webbarWindow, windowId)
-         this.httpWindow.browserWindow.on('closed', this._onHttpBrowserWindowClosed)
+      if (!this.webbarWindow || !this.spotlightWindow) {
+         console.error("All default windows must be present.")
+         return
       }
+
+      let httpWindow = new HttpBrowserWindow(this.webbarWindow, windowId)
 
       try {
          // Check and see if URL is valid, proceed
@@ -54,85 +54,57 @@ module.exports = class BrowserWindows {
          urlString = `https://www.google.com/search?q=${encodeURIComponent(urlString)}`
       }
 
-      this.httpWindow.browserWindow.focus()
-      await this.httpWindow.loadHttp(urlString).catch(e => {
+      httpWindow.browserWindow.focus()
+      this.focusedBrowserWindow = httpWindow.browserWindow
+
+      await httpWindow.loadHttp(urlString).catch(e => {
          console.error(e)
       })
    }
 
-   setupHttpWindow = function (url, windowId = '') {
-      return new Promise(async resolve => {
-         this.httpWindow.browserWindow.destroy()
-         // Wait for nullity of the window
-         while (this.httpWindow !== null) {
-            // Sleep 500ms interval until vairable is null
-            await new Promise(resolve => setTimeout(resolve, 500));
-         }
-
-         this.loadURL(url, windowId)
-         resolve()
-      })
-   }
-
-   loadBlank = async function () {
-      let url = 'https://google.ca'
-      if (this.httpWindow) {
-         await this.setupHttpWindow(url).catch(e => {
-            console.error(e)
-         })
-         return
-      }
-
-      this.loadURL(url)
+   loadBlank = function () {
+      this.loadURL('https://google.ca')
    }
 
    laodWindow = async function (windowId) {
       let storedWindow = HttpBrowserWindow.getStoredWindowById(windowId)
-      if (!storedWindow.url) {
-         storedWindow.url = 'https://google.ca'
-      }
 
-      if (this.httpWindow) {
-         if (this.httpWindow.browserWindow.windowId === windowId) {
-            this.httpWindow.browserWindow.focus()
-            return
-         }
-         
-         await this.setupHttpWindow(storedWindow.url, windowId).catch(e => {
-            console.error(e)
-         })
-         
+      if (!storedWindow || !storedWindow.url) {
+         storedWindow.url = 'https://google.ca'
+         this.loadURL(storedWindow.url, windowId)
          return
       }
 
-      this.loadURL(storedWindow.url, windowId)
+      await new Promise (resolve => {
+         for (let childWindow of this.webbarWindow.browserWindow.getChildWindows()) {
+            if (childWindow.windowId === windowId) {
+               childWindow.focus()
+               this.focusedBrowserWindow = childWindow
+               resolve(true)
+               return
+            }
+         }
+
+         resolve(false)
+      }).then(result => {
+         if (result) return
+         this.loadURL(storedWindow.url, windowId)
+      }).catch(e => {
+         console.error(e)
+      })
    }
 
-   loadPreviousPage = function(windowId) {
-      if (windowId === 'webbar') return
-      
-      if (windowId === 'spotlight' && this.spotlightWindow) {
-         if (this.spotlightWindow.browserWindow.webContents.canGoBack()) {
-            this.spotlightWindow.browserWindow.webContents.goBack()
-         }
-      } else if (this.httpWindow) {
-         if (this.httpWindow.browserWindow.webContents.canGoBack()) {
-            this.httpWindow.browserWindow.webContents.goBack()
-         }
+   loadPreviousPage = async function(windowId) {
+      if (this.focusedBrowserWindow.windowId !== windowId) return
+      if (this.focusedBrowserWindow.webContents.canGoBack()) {
+         this.focusedBrowserWindow.webContents.goBack()
       }
    }
 
    loadNextPage = function(windowId) {
-      if (windowId === 'webbar') return
-
-      if (windowId === 'spotlight' && this.spotlightWindow) {
-         if (this.spotlightWindow.browserWindow.webContents.canGoForward()) {
-            this.spotlightWindow.browserWindow.webContents.goForward()
-         }
-      } else if (this.httpWindow) {
-         if (this.httpWindow.browserWindow.webContents.canGoForward()) {
-            this.httpWindow.browserWindow.webContents.goForward()
-         }
+      if (this.focusedBrowserWindow.windowId !== windowId) return
+      if (this.focusedBrowserWindow.webContents.canGoForward()) {
+         this.focusedBrowserWindow.webContents.goForward()
       }
    }
 
@@ -141,11 +113,7 @@ module.exports = class BrowserWindows {
    //</summary>
    _onSpotlightBrowserWindowClosed = function () {
       this.webbarWindow.browserWindow.off('move', this.spotlightWindow._onWebBarBrowserWindowMove)
+      this.webbarWindow.browserWindow.off('resize', this.spotlightWindow._onWebBarBrowserWindowResize)
       this.spotlightWindow = null
-   }.bind(this)
-
-   _onHttpBrowserWindowClosed = function () {
-      this.webbarWindow.browserWindow.off('move', this.httpWindow._onWebBarBrowserWindowMove)
-      this.httpWindow = null
    }.bind(this)
 }

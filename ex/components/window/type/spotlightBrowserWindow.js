@@ -4,6 +4,8 @@ const CustomBrowserWindow = require('../custom/browserWindow')
 // Simply class for spotlight
 module.exports = class SpotlightBrowserWindow extends CustomBrowserWindow {
    constructor(webbarWindow) {
+      let size = webbarWindow.browserWindow.getContentSize()
+      
       let name = 'spotlight'
       let options = {
          backgroundColor: '#90000000',
@@ -35,13 +37,12 @@ module.exports = class SpotlightBrowserWindow extends CustomBrowserWindow {
 
       //Defaults
       this.browserWindow.windowId = name
+      this.browserWindow.setContentSize(size[0], size[1] - webbarWindow.options.webbarHeight)
 
       // Webbar window object
       this.webbarWindow = webbarWindow
       this.webbarWindow.browserWindow.on('move', this._onWebBarBrowserWindowMove)
-
-      // BrowserWindo listeners
-      this.browserWindow.on('close', this._onBrowserWindowClose)
+      this.webbarWindow.browserWindow.on('resize', this._onWebBarBrowserWindowResize)
 
       // WebContents listeners
       this.browserWindow.webContents.on('page-title-updated', this._pageTilteUpdated)
@@ -56,8 +57,9 @@ module.exports = class SpotlightBrowserWindow extends CustomBrowserWindow {
       this.browserWindow.setPosition(webbarPosition[0], webbarPosition[1] + this.webbarWindow.options.webbarHeight)
    }.bind(this)
 
-   _onBrowserWindowClose = function () {
-
+   _onWebBarBrowserWindowResize = function () {
+      let size = this.webbarWindow.browserWindow.getContentSize()
+      this.browserWindow.setContentSize(size[0], size[1] - this.webbarWindow.options.webbarHeight)
    }.bind(this)
 
    _pageTilteUpdated = function (event, title, explicitSet) {
