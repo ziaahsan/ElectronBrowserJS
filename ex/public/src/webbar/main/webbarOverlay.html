@@ -20,6 +20,9 @@
             <span class="icon" ng-if="!window.favicon || window.favicon === ''" ng-style="{'background-image': 'url(icons/web.png)'}"></span>
             <span class="icon" ng-if="window.favicon && window.favicon !== ''" ng-style="{'background-image': 'url(' + window.favicon + ')'}"></span>
          </span>
+         <span class="close" ng-click="closeWindow(windowId); $event.stopPropagation()">
+            <i class="las la-minus"></i>
+         </span>
          <span ng-if="focusedWindow !== null && focusedWindow.windowId === windowId" class="indicator"></span>
       </span>
       <span class="icon" ng-click="openBlankWindow()">

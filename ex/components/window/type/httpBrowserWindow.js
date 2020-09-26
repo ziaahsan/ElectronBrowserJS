@@ -76,6 +76,10 @@ module.exports = class HttpBrowserWindow extends CustomBrowserWindow {
       return storage.get(id)
    }
 
+   static removeStoredWindowById = function (id) {
+      storage.delete(id)
+   }
+
    //<summar>
    // All the listeners for this window
    //</summary>
@@ -99,7 +103,6 @@ module.exports = class HttpBrowserWindow extends CustomBrowserWindow {
       if (!stored || !stored.title === '') stored.title = 'Untitled'
       this.webbarWindow
          .browserWindow.webContents.send('window-title', this.browserWindow.windowId, stored.title)
-
    }.bind(this)
 
    _didSpinnerStartLoading = function () {

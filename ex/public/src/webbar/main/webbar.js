@@ -125,6 +125,11 @@ angular
                window.postMessage({type: 'open-window', windowId: id})
             }
 
+            $scope.closeWindow = function (id) {
+               window.postMessage({type: 'close-window', windowId: id})
+               delete $scope.windows[id]
+            }
+
             $scope.openBlankWindow = function () {
                window.postMessage({type: 'open-blank-window'})
             }

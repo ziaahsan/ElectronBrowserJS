@@ -68,10 +68,8 @@ module.exports = class BrowserWindows {
 
    laodWindow = async function (windowId) {
       let storedWindow = HttpBrowserWindow.getStoredWindowById(windowId)
-
       if (!storedWindow || !storedWindow.url) {
-         storedWindow.url = 'https://google.ca'
-         this.loadURL(storedWindow.url, windowId)
+         this.loadURL('https://google.ca', windowId)
          return
       }
 
@@ -89,6 +87,26 @@ module.exports = class BrowserWindows {
       }).then(result => {
          if (result) return
          this.loadURL(storedWindow.url, windowId)
+      }).catch(e => {
+         console.error(e)
+      })
+   }
+
+   unloadWindow = async function(windowId) {
+      await new Promise (resolve => {
+         for (let childWindow of this.webbarWindow.browserWindow.getChildWindows()) {
+            if (childWindow.windowId === windowId) {
+               childWindow.destroy()
+               HttpBrowserWindow.removeStoredWindowById(windowId)
+
+               resolve(true)
+               return
+            }
+         }
+
+         HttpBrowserWindow.removeStoredWindowById(windowId)
+
+         resolve(true)
       }).catch(e => {
          console.error(e)
       })

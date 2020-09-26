@@ -5,10 +5,10 @@ const CustomBrowserWindow = require('../custom/browserWindow')
 module.exports = class SpotlightBrowserWindow extends CustomBrowserWindow {
    constructor(webbarWindow) {
       let size = webbarWindow.browserWindow.getContentSize()
-      
+
       let name = 'spotlight'
       let options = {
-         backgroundColor: '#90000000',
+         backgroundColor: '#99000000',
 
          frame: false,
          transparent: true,
@@ -44,6 +44,9 @@ module.exports = class SpotlightBrowserWindow extends CustomBrowserWindow {
       this.webbarWindow.browserWindow.on('move', this._onWebBarBrowserWindowMove)
       this.webbarWindow.browserWindow.on('resize', this._onWebBarBrowserWindowResize)
 
+      // BrowserWindow listeners
+      this.browserWindow.on('focus', this._onBrowserWindowFocus)
+
       // WebContents listeners
       this.browserWindow.webContents.on('page-title-updated', this._pageTilteUpdated)
    }
@@ -55,6 +58,11 @@ module.exports = class SpotlightBrowserWindow extends CustomBrowserWindow {
       // Maybe this can delay? but for now works as expected.
       let webbarPosition = this.webbarWindow.browserWindow.getPosition()
       this.browserWindow.setPosition(webbarPosition[0], webbarPosition[1] + this.webbarWindow.options.webbarHeight)
+   }.bind(this)
+
+   _onBrowserWindowFocus = function () {
+      this.webbarWindow
+         .browserWindow.webContents.send('window-title', this.browserWindow.windowId, this.browserWindow.webContents.getTitle())
    }.bind(this)
 
    _onWebBarBrowserWindowResize = function () {

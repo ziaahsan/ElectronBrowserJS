@@ -12,7 +12,8 @@ process.once('loaded', () => {
 
       // Event emitters to ipcMain
       if (event.data.type === 'open-window' ||
-         event.data.type === 'open-previous-page' || event.data.type === 'open-next-page') {
+         event.data.type === 'open-previous-page' || event.data.type === 'open-next-page' ||
+         event.data.type === 'close-window') {
          ipcRenderer.send(event.data.type, event.data.windowId)
       } else if (event.data.type === 'open-spotlight' ||
          event.data.type === 'open-blank-window' || event.data.type === 'restore-http-windows') {

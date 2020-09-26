@@ -22,6 +22,7 @@ ipcMain.on('open-window', (event, windowId) => browserWindows.laodWindow(windowI
 ipcMain.on('open-blank-window', (event, url) => browserWindows.loadBlank())
 ipcMain.on('open-previous-page', (event, windowId) => browserWindows.loadPreviousPage(windowId))
 ipcMain.on('open-next-page', (event, windowId) => browserWindows.loadNextPage(windowId))
+ipcMain.on('close-window', (event, windowId) => browserWindows.unloadWindow(windowId))
 
 // When app's initialized
 app.whenReady().then(async () => {

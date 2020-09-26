@@ -110,17 +110,16 @@ $spotlight-responsive-width: 680px !default;
       }
       .settings {
          position: relative;
-         width: 52px;
          text-align: center;
          display: block;
          height: 18px;
          line-height: 18px;
          padding: 4px;
          top: 17%;
-         border-radius: 2px;
          font-weight: 500;
          font-size: 18px;
          -webkit-app-region: no-drag;
+         margin: 0 12px;
       }
    }
    .tabs {
@@ -139,6 +138,23 @@ $spotlight-responsive-width: 680px !default;
          text-align: center;
          top: 17%;
          -webkit-app-region: no-drag;
+         .close {
+            position: absolute;
+            width: 13px;
+            height: 13px;
+            border-radius: 50%;
+            background: #e44c3c;
+            color: rgba(255,255,255,0.97);
+            top: 0px;
+            right: -1px;
+            text-align: center;
+            font-size: 13px;
+            display: none;
+            i {
+               position: relative;
+               top: -3px;
+            }
+         }
          .indicator {
             position: absolute;
             width: 4px;
@@ -179,6 +195,9 @@ $spotlight-responsive-width: 680px !default;
       }
       .icon:hover {
          cursor: pointer;
+      }
+      .icon:hover .close {
+         display: block
       }
    }
 }
