@@ -8,7 +8,8 @@ module.exports = class WebbarBrowserWindow extends CustomBrowserWindow {
    constructor() {
       let name = 'webbar'
       let options = {
-         backgroundColor: '#FFF',
+         backgroundColor: '#282828',
+         // backgroundColor: '#e1e1e1',
 
          frame: false,
          transparent: false,
@@ -23,11 +24,14 @@ module.exports = class WebbarBrowserWindow extends CustomBrowserWindow {
          width: 1366,
          height: 768,
 
-         webbarHeight: 66,
+         webbarHeight: 77,
+         padding: 6,
 
          center: true,
          parentBrowserWindow: null,
          position: null,
+
+         thickFrame: 'WS_THICKFRAME',
 
          shadow: true
       }
@@ -36,8 +40,9 @@ module.exports = class WebbarBrowserWindow extends CustomBrowserWindow {
 
       //Defaults
       this.browserWindow.windowId = name
-      
+
       // Attach listeners
+      this.browserWindow.on('maximize', this._onMaximize)
       this.browserWindow.webContents.on('ipc-message', this._onRestoreHttpWindows)
    }
 
@@ -45,7 +50,23 @@ module.exports = class WebbarBrowserWindow extends CustomBrowserWindow {
    // All the listeners for this window
    //</summary>
    _onRestoreHttpWindows = function (event, channel, type) {
-      if (channel === 'restore-http-windows')
-         event.sender.send(channel, HttpBrowserWindow.getStoredWindows())
+      switch (channel) {
+         case 'restore-http-windows':
+            event.sender.send(channel, HttpBrowserWindow.getStoredWindows())
+            break
+         case 'close-webbar-window':
+            this.browserWindow.close()
+            break
+         case 'maximize-webbar-window':
+            this.browserWindow.maximize()
+            break
+         case 'minimize-webbar-window':
+            this.browserWindow.minimize()
+            break
+      }
+   }.bind(this)
+
+   _onMaximize = function () {
+
    }.bind(this)
 }

@@ -31,6 +31,18 @@ angular
 
             }
 
+            $scope.closeWebbarWindow = function () {
+               window.postMessage({type: 'close-webbar-window'})
+            }
+
+            $scope.maximizeWebbarWindow = function () {
+               window.postMessage({type: 'maximize-webbar-window'})
+            }
+
+            $scope.minimizeWebbarWindow = function () {
+               window.postMessage({type: 'minimize-webbar-window'})
+            }
+
             // Setup redirection
             $scope.redirect = function (path) {
                $location.path(path);

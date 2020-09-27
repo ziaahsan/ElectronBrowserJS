@@ -44,26 +44,39 @@ $spotlight-responsive-width: 680px !default;
    background-color: rgba($secondary, 1);
    z-index: 9;
    width: 100%;
-   height: 18px;
+   height: 22px;
    font-size: 12px;
    letter-spacing: 0.3px;
    font-family: $font-family;
    overflow: hidden;
    margin: 0 auto;
-   padding: 3px 0;
-   border-bottom: 1px solid darken($border-color, 6);
+   padding: 6px 0;
+   border-bottom: 1px solid $border-color;
    -webkit-app-region: drag;
    .title {
       position: relative;
       display: block;
       text-align: center;
+      top: 2px;
+      .favicon {
+         float: left;
+         padding: 0px 8px;
+         clear: both;
+      }
+      .name {
+         text-shadow: 0px 0px 6px darken($secondary, 10);
+         font-weight: 600;
+         font-size: 12px;
+      }
       .icons {
          position: relative;
          float: right;
-         clear: both;
-         font-size: 15px;
-         padding: 0 2px;
+         clear: right;
+         font-size: 16px;
+         padding: 0 8px;
          -webkit-app-region: no-drag;
+         user-select: none;
+         top: -2px;
          i {
             margin: 0 2px;
             padding: 2px;
@@ -75,15 +88,20 @@ $spotlight-responsive-width: 680px !default;
          }
          i.close:hover {
             background: $primary-color-error;
+            color: #FFF;
          }
       }
       .protocol-trusted {
-         font-weight: 600;
-         color: rgba(#6fe81f, 1);
+         background: #43920f;
+         color: rgba(#FFF, 0.7);
+         border-radius: 2px;
+         padding: 0 2px;
       }
       .protocol-otherwise {
-         font-weight: 600;
-         color: rgba($primary-color-error, 1);
+         color: rgba(#FFF, 0.7);
+         background: #c12b1b;
+         border-radius: 2px;
+         padding: 0 2px;
       }
    }
 }
@@ -100,13 +118,11 @@ $spotlight-responsive-width: 680px !default;
    overflow: hidden;
    margin: 0 auto;
    display: flex;
-   -webkit-app-region: drag;
    .navigation {
       position: relative;
       width: 112px;
       display: flex;
       flex-wrap: nowrap;
-      -webkit-app-region: no-drag;
       .icon {
          font-size: 18px;
          padding: 0 6px;
@@ -122,9 +138,8 @@ $spotlight-responsive-width: 680px !default;
       .fingerprint {
          font-size: 32px;
          color: $primary-color-error;
-         background-color: $secondary;
          border-right: 1px solid $border-color;
-         margin-right: 5px;
+         margin-right: 7px;
       }
    }
    .bar {
@@ -141,7 +156,6 @@ $spotlight-responsive-width: 680px !default;
          top: 17%;
          font-weight: 500;
          font-size: 18px;
-         -webkit-app-region: no-drag;
          margin: 0 8px 0 0;
          .icon {
             padding: 0 2px;
@@ -155,6 +169,7 @@ $spotlight-responsive-width: 680px !default;
       border-left: 1px solid $border-color;
       border-right: 1px solid $border-color;
       padding: 0 8px;
+      user-select: none;
       .icon {
          font-size: 18px;
          padding: 4px;
@@ -163,7 +178,6 @@ $spotlight-responsive-width: 680px !default;
          width: 22px;
          text-align: center;
          top: 17%;
-         -webkit-app-region: no-drag;
          .close {
             position: absolute;
             width: 13px;
@@ -201,7 +215,7 @@ $spotlight-responsive-width: 680px !default;
             top: 14%;
             margin: 0 auto;
             border-radius: 4px;
-            background-color: $primary-color;
+            background-color: #FFF;
             .icon {
                width: 10px;
                height: 10px;

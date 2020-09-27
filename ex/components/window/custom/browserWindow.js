@@ -17,7 +17,7 @@ module.exports = class CustomBrowserWindow {
       this.browserWindow = new BrowserWindow({
          title: this.name,
          show: false,
-
+         
          backgroundColor: this.options.backgroundColor,
 
          frame: this.options.frame,
@@ -38,6 +38,9 @@ module.exports = class CustomBrowserWindow {
          center: this.options.center,
          parent: this.options.parentBrowserWindow,
 
+         titleBarStyle: 'hidden',
+         thickFrame: this.options.thickFrame,
+         
          hasShadow: this.options.shadow,
 
          webPreferences: {

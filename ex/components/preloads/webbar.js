@@ -11,13 +11,21 @@ process.once('loaded', () => {
       if (event.data.type && event.data.name) return
 
       // Event emitters to ipcMain
-      if (event.data.type === 'open-window' ||
-         event.data.type === 'open-previous-page' || event.data.type === 'open-next-page' ||
-         event.data.type === 'close-window') {
-         ipcRenderer.send(event.data.type, event.data.windowId)
-      } else if (event.data.type === 'open-spotlight' ||
-         event.data.type === 'open-blank-window' || event.data.type === 'restore-http-windows') {
-         ipcRenderer.send(event.data.type)
+      switch (event.data.type) {
+         case 'open-window':
+         case 'open-previous-page':
+         case 'open-next-page':
+         case 'close-window':
+            ipcRenderer.send(event.data.type, event.data.windowId)
+            break;
+         case 'open-spotlight':
+         case 'open-blank-window':
+         case 'restore-http-windows':
+         case 'close-webbar-window':
+         case 'maximize-webbar-window':
+         case 'minimize-webbar-window':
+            ipcRenderer.send(event.data.type)
+            break;
       }
    }, false)
 

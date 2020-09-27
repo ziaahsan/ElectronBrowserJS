@@ -1,7 +1,7 @@
 <div class="ng-webbar">
    <div class="navigation">
       <span class="icon fingerprint" ng-click="openSpotlight()">
-         <i class="las la-fingerprint"></i>
+         <img src="icons/finger-print.png" width="24" />
       </span>
       <span class="icon" ng-click="openPreviousPage()">
          <i class="las la-long-arrow-alt-left"></i>
@@ -11,14 +11,16 @@
       </span>
    </div>
    <div class="tabs">
-      <span class="icon" ng-repeat="(windowId, window) in windows track by windowId"
-         ng-click="openWindow(windowId)" ng-if="windowId !== 'spotlight'">
+      <span class="icon" ng-repeat="(windowId, window) in windows track by windowId" ng-click="openWindow(windowId)"
+         ng-if="windowId !== 'spotlight'">
          <span ng-if="window.isLoading" class="favicon">
             <span class="icon" ng-style="{'background-image': 'url(icons/spinner.gif)'}"></span>
          </span>
          <span ng-if="!window.isLoading" class="favicon">
-            <span class="icon" ng-if="!window.favicon || window.favicon === ''" ng-style="{'background-image': 'url(icons/web.png)'}"></span>
-            <span class="icon" ng-if="window.favicon && window.favicon !== ''" ng-style="{'background-image': 'url(' + window.favicon + ')'}"></span>
+            <span class="icon" ng-if="!window.favicon || window.favicon === ''"
+               ng-style="{'background-image': 'url(icons/web.png)'}"></span>
+            <span class="icon" ng-if="window.favicon && window.favicon !== ''"
+               ng-style="{'background-image': 'url(' + window.favicon + ')'}" title="{{window.title}}"></span>
          </span>
          <span class="close" ng-click="closeWindow(windowId); $event.stopPropagation()">
             <i class="las la-minus"></i>

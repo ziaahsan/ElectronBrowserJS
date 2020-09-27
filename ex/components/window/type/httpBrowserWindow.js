@@ -27,14 +27,16 @@ module.exports = class HttpBrowserWindow extends CustomBrowserWindow {
          maximizable: false,
 
          width: webbarWindow.options.width,
-         height: webbarWindow.options.height - webbarWindow.options.webbarHeight,
+         height: webbarWindow.options.height - webbarWindow.options.webbarHeight - webbarWindow.options.padding,
 
          center: false,
          parentBrowserWindow: webbarWindow.browserWindow,
          position: {
-            x: webbarWindow.browserWindow.getPosition()[0],
+            x: webbarWindow.browserWindow.getPosition()[0] + webbarWindow.options.padding,
             y: webbarWindow.browserWindow.getPosition()[1] + webbarWindow.options.webbarHeight
          },
+
+         thickFrame: false,
 
          shadow: false
       }
@@ -42,7 +44,7 @@ module.exports = class HttpBrowserWindow extends CustomBrowserWindow {
       super(name, options)
       // Defaults
       this.browserWindow.windowId = windowId === '' ? crypto({ length: 8, type: 'alphanumeric' }) : windowId
-      this.browserWindow.setContentSize(size[0], size[1] - webbarWindow.options.webbarHeight)
+      this.browserWindow.setContentSize(size[0] - (webbarWindow.options.padding * 2), size[1] - webbarWindow.options.webbarHeight - webbarWindow.options.padding)
 
       // Webbar window object
       this.webbarWindow = webbarWindow
@@ -85,12 +87,12 @@ module.exports = class HttpBrowserWindow extends CustomBrowserWindow {
    //</summary>
    _onWebBarBrowserWindowMove = function () {
       let webbarPosition = this.webbarWindow.browserWindow.getPosition()
-      this.browserWindow.setPosition(webbarPosition[0], webbarPosition[1] + this.webbarWindow.options.webbarHeight)
+      this.browserWindow.setPosition(webbarPosition[0] + this.webbarWindow.options.padding, webbarPosition[1] + this.webbarWindow.options.webbarHeight)
    }.bind(this)
 
    _onWebBarBrowserWindowResize = function () {
       let size = this.webbarWindow.browserWindow.getContentSize()
-      this.browserWindow.setContentSize(size[0], size[1] - this.webbarWindow.options.webbarHeight)
+      this.browserWindow.setContentSize(size[0] - (this.webbarWindow.options.padding * 2), size[1] - this.webbarWindow.options.webbarHeight - this.webbarWindow.options.padding)
    }.bind(this)
 
    _onHttpBrowserWindowClosed = function () {

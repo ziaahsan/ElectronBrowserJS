@@ -1,12 +1,14 @@
 <div class="ng-titlebar">
    <span class="title">
-      <span ng-if="focusedWindow.isTrusted" class="protocol-trusted"><i class="las la-lock"></i></span>
-      <span ng-if="!focusedWindow.isTrusted" class="protocol-otherwise"><i class="las la-unlock"></i></span>
-      <span>{{focusedWindow.title}}</span>
+      <span class="favicon">
+         <span ng-if="focusedWindow.isTrusted" class="protocol-trusted"><i class="las la-shield-alt"></i></span>
+         <span ng-if="!focusedWindow.isTrusted" class="protocol-otherwise"><i class="las la-unlock"></i></span>
+      </span>
+      <span class="name">{{focusedWindow.title}} <i class="las la-minus"></i> Ex</span>
       <span class="icons">
-         <i class="las la-minus"></i>
-         <i class="las la-square"></i>
-         <i class="close las la-times"></i>
+         <i ng-click="minimizeWebbarWindow()" class="las la-minus"></i>
+         <i ng-click="maximizeWebbarWindow()" class="las la-stop"></i>
+         <i ng-click="closeWebbarWindow()" class="close las la-times"></i>
       </span>
    </span>
 </div>
