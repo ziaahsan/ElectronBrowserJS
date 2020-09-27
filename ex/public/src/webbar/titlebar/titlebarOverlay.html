@@ -4,7 +4,10 @@
          <span ng-if="focusedWindow.isTrusted" class="protocol-trusted"><i class="las la-shield-alt"></i></span>
          <span ng-if="!focusedWindow.isTrusted" class="protocol-otherwise"><i class="las la-unlock"></i></span>
       </span>
-      <span class="name">{{focusedWindow.title}} <i class="las la-minus"></i> Ex</span>
+      <span>
+         <span class="name">Ex <i class="las la-minus"></i> </span>
+         <span class="name">{{focusedWindow.title}}</span>
+      </span>
       <span class="icons">
          <i ng-click="minimizeWebbarWindow()" class="las la-minus"></i>
          <i ng-click="maximizeWebbarWindow()" class="las la-stop"></i>

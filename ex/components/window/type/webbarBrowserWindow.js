@@ -31,7 +31,7 @@ module.exports = class WebbarBrowserWindow extends CustomBrowserWindow {
          parentBrowserWindow: null,
          position: null,
 
-         thickFrame: 'WS_THICKFRAME',
+         thickFrame: false,
 
          shadow: true
       }

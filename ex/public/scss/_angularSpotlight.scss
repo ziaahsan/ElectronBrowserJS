@@ -51,12 +51,12 @@ $spotlight-responsive-width: 680px !default;
    overflow: hidden;
    margin: 0 auto;
    padding: 6px 0;
-   border-bottom: 1px solid $border-color;
+   border-bottom: 1px solid darken($border-color, 4);
    -webkit-app-region: drag;
    .title {
       position: relative;
       display: block;
-      text-align: center;
+      text-align: left;
       top: 2px;
       .favicon {
          float: left;
@@ -65,8 +65,13 @@ $spotlight-responsive-width: 680px !default;
       }
       .name {
          text-shadow: 0px 0px 6px darken($secondary, 10);
-         font-weight: 600;
          font-size: 12px;
+         max-width: 500px;
+         position: relative;
+         text-overflow: ellipsis;
+         overflow: hidden;
+         white-space: nowrap;
+         display: inline-block;
       }
       .icons {
          position: relative;
@@ -120,7 +125,7 @@ $spotlight-responsive-width: 680px !default;
    display: flex;
    .navigation {
       position: relative;
-      width: 112px;
+      width: 44px;
       display: flex;
       flex-wrap: nowrap;
       .icon {
@@ -136,10 +141,9 @@ $spotlight-responsive-width: 680px !default;
          cursor: pointer;
       }
       .fingerprint {
-         font-size: 32px;
-         color: $primary-color-error;
-         border-right: 1px solid $border-color;
-         margin-right: 7px;
+         position: relative;
+         left: 8px;
+         top: 5px;
       }
    }
    .bar {
@@ -153,7 +157,7 @@ $spotlight-responsive-width: 680px !default;
          height: 18px;
          line-height: 18px;
          padding: 4px;
-         top: 17%;
+         top: 7px;
          font-weight: 500;
          font-size: 18px;
          margin: 0 8px 0 0;
@@ -176,8 +180,40 @@ $spotlight-responsive-width: 680px !default;
          position: relative;
          display: inline-block;
          width: 22px;
-         text-align: center;
-         top: 17%;
+         text-align: left;
+         top: 7px;
+         .title {
+            font-size: 12px;
+            color: $secondary;
+            position: absolute;
+            left: 26px;
+            top: 3px;
+            font-weight: 600;
+            max-width: 80px;
+            display: inline-block;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+         }
+         .go-back {
+            position: absolute;
+            width: 13px;
+            height: 13px;
+            border-radius: 50%;
+            background: #2196F3;
+            color: rgba(255,255,255,0.97);
+            top: -2px;
+            left: 0px;
+            text-align: center;
+            font-size: 12px;
+            display: inline-block;
+            padding: 1px;
+            z-index: 9;
+            i {
+               position: relative;
+               top: -3px;
+            }
+         }
          .close {
             position: absolute;
             width: 13px;
@@ -190,10 +226,14 @@ $spotlight-responsive-width: 680px !default;
             text-align: center;
             font-size: 13px;
             display: none;
+            z-index: 9;
             i {
                position: relative;
                top: -3px;
             }
+         }
+         .close-active {
+            display: inline-block
          }
          .indicator {
             position: absolute;
@@ -201,7 +241,7 @@ $spotlight-responsive-width: 680px !default;
             height: 4px;
             border-radius: 2px;
             background: $primary-color-error;
-            display: block;
+            display: inline-block;
             top: 28px;
             right: 13px;
             text-align: center;
@@ -211,8 +251,8 @@ $spotlight-responsive-width: 680px !default;
             width: 22px;
             height: 22px;
             position: relative;
-            display: block;
-            top: 14%;
+            display: inline-block;
+            top: 0;
             margin: 0 auto;
             border-radius: 4px;
             background-color: #FFF;
@@ -221,17 +261,23 @@ $spotlight-responsive-width: 680px !default;
                height: 10px;
                background-size: cover;
                position: relative;
-               display: block;
-               top: 7%;
-               left: 9%;
+               display: inline-block;
+               top: 2px;
+               left: 2px;
                background-color: inherit;
                border-radius: 4px;
                margin: 0;
             }
          }
+         .favicon-active {
+            width: 111px;
+         }
          .add {
             background-color: #2196F3;
          }
+      }
+      .icon-active {
+         width: 111px;
       }
       .icon:hover {
          cursor: pointer;

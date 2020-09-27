@@ -3,26 +3,37 @@
       <span class="icon fingerprint" ng-click="openSpotlight()">
          <img src="icons/finger-print.png" width="24" />
       </span>
-      <span class="icon" ng-click="openPreviousPage()">
+      <!-- <span class="icon" ng-click="openPreviousPage()">
          <i class="las la-long-arrow-alt-left"></i>
       </span>
       <span class="icon" ng-click="openNextPage()">
          <i class="las la-long-arrow-alt-right"></i>
-      </span>
+      </span> -->
    </div>
    <div class="tabs">
       <span class="icon" ng-repeat="(windowId, window) in windows track by windowId" ng-click="openWindow(windowId)"
-         ng-if="windowId !== 'spotlight'">
-         <span ng-if="window.isLoading" class="favicon">
+         ng-if="windowId !== 'spotlight'"
+         ng-class="{'icon-active' : focusedWindow !== null && focusedWindow.windowId === windowId}">
+         <span class="go-back" ng-click="closeWindow(windowId); $event.stopPropagation()"
+            ng-if="focusedWindow !== null && focusedWindow.windowId === windowId">
+            <i class="las la-arrow-left"></i>
+         </span>
+         <span ng-if="window.isLoading" class="favicon"
+            ng-class="{'favicon-active' : focusedWindow !== null && focusedWindow.windowId === windowId}">
             <span class="icon" ng-style="{'background-image': 'url(icons/spinner.gif)'}"></span>
          </span>
-         <span ng-if="!window.isLoading" class="favicon">
+         <span ng-if="!window.isLoading" class="favicon"
+            ng-class="{'favicon-active' : focusedWindow !== null && focusedWindow.windowId === windowId}"
+            title="{{window.title}}">
             <span class="icon" ng-if="!window.favicon || window.favicon === ''"
                ng-style="{'background-image': 'url(icons/web.png)'}"></span>
             <span class="icon" ng-if="window.favicon && window.favicon !== ''"
-               ng-style="{'background-image': 'url(' + window.favicon + ')'}" title="{{window.title}}"></span>
+               ng-style="{'background-image': 'url(' + window.favicon + ')'}"></span>
+            <span ng-if="focusedWindow !== null && focusedWindow.windowId === windowId"
+               class="title">{{focusedWindow.title}}</span>
          </span>
-         <span class="close" ng-click="closeWindow(windowId); $event.stopPropagation()">
+         <span class="close" ng-click="closeWindow(windowId); $event.stopPropagation()"
+            ng-class="{'close-active' : focusedWindow !== null && focusedWindow.windowId === windowId}">
             <i class="las la-minus"></i>
          </span>
          <span ng-if="focusedWindow !== null && focusedWindow.windowId === windowId" class="indicator"></span>
