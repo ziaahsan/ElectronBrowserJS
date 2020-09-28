@@ -98,6 +98,8 @@ module.exports = class HttpBrowserWindow extends CustomBrowserWindow {
    _onHttpBrowserWindowClosed = function () {
       this.webbarWindow.browserWindow.off('move', this._onWebBarBrowserWindowMove)
       this.webbarWindow.browserWindow.off('resize', this._onWebBarBrowserWindowResize)
+
+      this.browserWindow.removeAllListeners()
    }.bind(this)
 
    _onBrowserWindowFocus = function () {

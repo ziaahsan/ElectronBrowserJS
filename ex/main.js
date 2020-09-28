@@ -2,7 +2,7 @@
 // Setup path
 const path = require('path')
 // Modules to control application life and create native browser window
-const { app, ipcMain, session } = require('electron')
+const { remote, app, ipcMain, session } = require('electron')
 // ContextMenu
 const contextMenu = require('electron-context-menu')
 contextMenu()
