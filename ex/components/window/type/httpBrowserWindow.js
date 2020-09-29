@@ -104,9 +104,11 @@ module.exports = class HttpBrowserWindow extends CustomBrowserWindow {
 
    _onBrowserWindowFocus = function () {
       let stored = storage.get(this.browserWindow.windowId)
-      if (!stored || !stored.title === '') stored.title = 'Untitled'
+      if (!stored || !stored.title === '') stored.title = 'Untitled'      
+      
+      this.webbarWindow.focusedBrowserWindow = this.browserWindow
       this.webbarWindow
-         .browserWindow.webContents.send('window-title', this.browserWindow.windowId, stored.title)
+         .browserWindow.webContents.send('window-focus', this.browserWindow.windowId, stored.title)
    }.bind(this)
 
    _didSpinnerStartLoading = function () {
@@ -147,6 +149,9 @@ module.exports = class HttpBrowserWindow extends CustomBrowserWindow {
    }.bind(this)
 
    _didFinishLoad = function () {
+      this.webbarWindow
+         .browserWindow.webContents.send('window-can-go-back', this.browserWindow.windowId, this.browserWindow.webContents.canGoBack())
+
       let stored = storage.get(this.browserWindow.windowId)
       stored.url = this.browserWindow.webContents.getURL()
       storage.set(this.browserWindow.windowId, stored)

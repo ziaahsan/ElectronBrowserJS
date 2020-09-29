@@ -19,16 +19,31 @@ angular
       //</summary>
       function controller() {
          return ['$scope', '$location', function ($scope, $location) {
-            $scope.focusedWindow = null
+            $scope.focusedWindow = {}
 
             // Clean up with angularJS
             $scope.$on('$destroy', function () {
-
+               window.removeEventListener('message', $scope._onFocus);
             });
 
             // Route initializer
             $scope.init = function () {
+               window.addEventListener('message', $scope._onFocus);
+               window.postMessage({type: 'get-focused-window'})
+            }
 
+            $scope._onFocus = function (event) {
+               if (event.source != window ||
+                  !event.data.name || event.data.name != 'ng-webbar') return;
+               if (event.data.type !== 'focus') return;
+               if (!event.data.results) return;
+               if (!event.data.results.windowId) return;
+
+               $scope.$apply(() => {
+                  $scope.focusedWindow.title = event.data.results.title
+                  $scope.focusedWindow.windowId = event.data.results.windowId
+                  $scope.focusedWindow.isTrusted = event.isTrusted
+               });
             }
 
             $scope.closeWebbarWindow = function () {
@@ -56,6 +71,7 @@ angular
       function link(scope, element) {
          // Root element from view.html
          $ngTitlebarOverlay = $(element);
+         scope.init();
       }
    }]);
 

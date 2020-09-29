@@ -29,7 +29,6 @@ angular
                   favicon: ''
                }
             }
-            $scope.focusedWindow = null
 
             // Clean up with angularJS
             $scope.$on('$destroy', function () {
@@ -37,6 +36,8 @@ angular
                window.removeEventListener('message', $scope._onSpinner);
                window.removeEventListener('message', $scope._onFavicon);
                window.removeEventListener('message', $scope._onTitle);
+               window.removeEventListener('message', $scope._onCanGoBack);
+               window.removeEventListener('message', $scope._onShowSearch);
             });
 
             // Route with params initializer
@@ -45,6 +46,8 @@ angular
                window.addEventListener('message', $scope._onSpinner);
                window.addEventListener('message', $scope._onFavicon);
                window.addEventListener('message', $scope._onTitle);
+               window.addEventListener('message', $scope._onCanGoBack);
+               window.addEventListener('message', $scope._onShowSearch);
 
                // Request for stored windows
                window.postMessage({type: 'restore-http-windows'})
@@ -109,12 +112,36 @@ angular
 
                $scope.$apply(() => {
                   $scope.windows[windowId].title = event.data.results.title
-                  
-                  // Setup focused window by which title was updated latest
-                  $scope.focusedWindow =  $scope.windows[windowId]
-                  $scope.focusedWindow.windowId = windowId
-                  $scope.focusedWindow.isTrusted = event.isTrusted
                });
+            }
+
+            $scope._onCanGoBack = function (event) {
+               if (event.source != window ||
+                  !event.data.name || event.data.name != 'ng-webbar') return;
+               if (event.data.type !== 'can-go-back') return;
+               if (!event.data.results) return;
+               if (!event.data.results.windowId) return;
+
+               let windowId = event.data.results.windowId;
+               if (!$scope.windows[windowId])
+                  $scope.windows[windowId] = {}
+
+               $scope.$apply(() => {
+                  $scope.windows[windowId].canGoBack = event.data.results.canGoBack
+               });
+            }
+
+            $scope._onShowSearch = function (event) {
+               if (event.source != window ||
+                  !event.data.name || event.data.name != 'ng-webbar') return;
+               if (event.data.type !== 'search') return;
+               $scope.$apply(() => {
+                  $location.path('/search');
+               })
+            }
+
+            $scope.openSettingsMenu = function () {
+               window.postMessage({type: 'open-settings-menu'})
             }
 
             $scope.openSpotlight = function () {

@@ -68,8 +68,9 @@ module.exports = class SpotlightBrowserWindow extends CustomBrowserWindow {
    }.bind(this)
    
    _onBrowserWindowFocus = function () {
+      this.webbarWindow.focusedBrowserWindow = this.browserWindow
       this.webbarWindow
-         .browserWindow.webContents.send('window-title', this.browserWindow.windowId, this.browserWindow.webContents.getTitle())
+         .browserWindow.webContents.send('window-focus', this.browserWindow.windowId, this.browserWindow.webContents.getTitle())
    }.bind(this)
 
    _pageTilteUpdated = function (event, title, explicitSet) {

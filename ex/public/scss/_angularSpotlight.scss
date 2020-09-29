@@ -93,17 +93,17 @@ $spotlight-responsive-width: 680px !default;
          }
          i.close:hover {
             background: $primary-color-error;
-            color: #FFF;
+            color: #ffffff;
          }
       }
       .protocol-trusted {
          background: #43920f;
-         color: rgba(#FFF, 0.7);
+         color: rgba(#ffffff, 0.7);
          border-radius: 2px;
          padding: 0 2px;
       }
       .protocol-otherwise {
-         color: rgba(#FFF, 0.7);
+         color: rgba(#ffffff, 0.7);
          background: #c12b1b;
          border-radius: 2px;
          padding: 0 2px;
@@ -146,7 +146,7 @@ $spotlight-responsive-width: 680px !default;
          top: 5px;
       }
    }
-   .bar {
+   .right-icon {
       position: relative;
       max-width: 25%;
       display: flex;
@@ -182,7 +182,7 @@ $spotlight-responsive-width: 680px !default;
          display: inline-block;
          width: 22px;
          text-align: left;
-         top: 7px;
+         top: 0;
          .title {
             font-size: 12px;
             color: #282828;
@@ -202,10 +202,10 @@ $spotlight-responsive-width: 680px !default;
             position: relative;
             width: 17px;
             height: 20px;
-            background: #2196F3;
-            color: #FFF;
+            background: $primary-highlight;
+            color: #ffffff;
             top: -5px;
-            left: 0;
+            left: -1px;
             text-align: center;
             font-size: 12px;
             display: inline-block;
@@ -217,8 +217,9 @@ $spotlight-responsive-width: 680px !default;
                top: 2px;
             }
          }
-         .go-forward {
-            left: 16px;
+         .go-back-disabled {
+            background: $secondary;
+            color: $primary-color;
          }
          .close {
             position: absolute;
@@ -227,8 +228,8 @@ $spotlight-responsive-width: 680px !default;
             border-radius: 50%;
             background: $primary-color-error;
             color: rgba(255,255,255,0.97);
-            top: -2px;
-            right: -1px;
+            top: 6px;
+            right: 0;
             text-align: center;
             font-size: 13px;
             display: none;
@@ -239,7 +240,7 @@ $spotlight-responsive-width: 680px !default;
             }
          }
          .close-active {
-            display: inline-block
+            display: inline-block;
          }
          .indicator {
             position: absolute;
@@ -248,8 +249,8 @@ $spotlight-responsive-width: 680px !default;
             border-radius: 2px;
             background: $primary-color-error;
             display: inline-block;
-            top: 29px;
-            left: 13px;
+            top: 28px;
+            left: 11px;
             text-align: center;
             margin: 0 auto;
          }
@@ -258,7 +259,7 @@ $spotlight-responsive-width: 680px !default;
             height: 22px;
             position: relative;
             display: inline-block;
-            top: 0;
+            top: 7px;
             margin: 0 auto;
             border-radius: 4px;
             background-color: #f7fafc;
@@ -284,8 +285,8 @@ $spotlight-responsive-width: 680px !default;
          .favicon-active {
             width: 134px;
          }
-         .add {
-            background-color: #2196F3;
+         .favicon-add {
+            background-color: $primary-highlight;
          }
       }
       .icon-active {
@@ -296,6 +297,62 @@ $spotlight-responsive-width: 680px !default;
       }
       .icon:hover .close {
          display: block
+      }
+   }
+   .search {
+      position: relative;
+      width: 100%;
+      margin: 0 8px;
+      border-left: 1px solid $border-color;
+      border-right: 1px solid $border-color;
+      padding: 0 8px;
+      .label {
+         position: absolute;
+         top: 12px;
+         left: 17px;
+         background: $primary-highlight;
+         color: #ffffff;
+         padding: 1px 4px;
+         border-radius: 2px;
+         font-size: 11px;
+         z-index: 9;
+      }
+      .label-results {
+         position: absolute;
+         top: 12px;
+         right: 17px;
+         background: $primary;
+         padding: 2px 4px;
+         border-radius: 2px;
+         font-size: 11px;
+         z-index: 9;
+         box-shadow: 1px 1px 1px darken($secondary, 3);
+         user-select: none;
+         span {
+            padding: 0 3px;
+            border-radius: 2px;
+         }
+         span:hover {
+            background: $primary-highlight;
+            color: #ffffff;
+            cursor: pointer;
+         }
+      }
+      input[type="text"] {
+         position: relative;
+         top: 4px;
+         padding: 10px 132px 10px 60px;
+         border: 1px solid transparent;
+         height: 12px;
+         text-align: left;
+         color: $primary-color;
+         background-color: $secondary;
+         width: calc(100% - 194px);
+         font-size: 16px;
+         font-weight: 500;
+      }
+      input[type="text"]:focus {
+         outline: 2px solid $primary;
       }
    }
    .menu {

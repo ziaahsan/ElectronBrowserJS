@@ -8,7 +8,7 @@ const { async } = require('crypto-random-string');
 // All type of browserWindows handler
 module.exports = class BrowserWindows {
    constructor() {
-      this.focusedBrowserWindow = null
+      // Nothing...
    }
 
    createDefaultWindows = async function () {
@@ -33,8 +33,6 @@ module.exports = class BrowserWindows {
       } else {
          this.spotlightWindow.browserWindow.focus()
       }
-
-      this.focusedBrowserWindow = this.spotlightWindow.browserWindow
    }
 
    loadURL = async function (urlString, windowId = '') {
@@ -45,7 +43,7 @@ module.exports = class BrowserWindows {
       }
 
       let httpWindow = new HttpBrowserWindow(this.webbarWindow, windowId)
-      httpWindow.browserWindow.webContents.on('new-window', this._newHttpWindow)
+      httpWindow.browserWindow.webContents.on('new-window', this._onNewHttpWindow)
 
       try {
          // Check and see if URL is valid, proceed
@@ -56,8 +54,6 @@ module.exports = class BrowserWindows {
       }
 
       httpWindow.browserWindow.focus()
-      this.focusedBrowserWindow = httpWindow.browserWindow
-
       await httpWindow.loadHttp(urlString).catch(e => {
          console.error(e)
       })
@@ -78,7 +74,6 @@ module.exports = class BrowserWindows {
          for (let childWindow of this.webbarWindow.browserWindow.getChildWindows()) {
             if (childWindow.windowId === windowId) {
                childWindow.focus()
-               this.focusedBrowserWindow = childWindow
                resolve(true)
                return
             }
@@ -114,17 +109,29 @@ module.exports = class BrowserWindows {
    }
 
    loadPreviousPage = async function(windowId) {
-      if (this.focusedBrowserWindow.windowId !== windowId) return
-      if (this.focusedBrowserWindow.webContents.canGoBack()) {
-         this.focusedBrowserWindow.webContents.goBack()
-      }
+      if (!this.webbarWindow || !this.webbarWindow.focusedBrowserWindow) return
+      if (this.webbarWindow.focusedBrowserWindow.windowId !== windowId) return
+   
+
+      let focusedChild = this.webbarWindow.focusedBrowserWindow
+      if (focusedChild.webContents.canGoBack())
+         focusedChild.webContents.goBack()
    }
 
    loadNextPage = function(windowId) {
-      if (this.focusedBrowserWindow.windowId !== windowId) return
-      if (this.focusedBrowserWindow.webContents.canGoForward()) {
-         this.focusedBrowserWindow.webContents.goForward()
-      }
+      if (!this.webbarWindow || !this.webbarWindow.focusedBrowserWindow) return
+      if (this.webbarWindow.focusedBrowserWindow.windowId !== windowId) return
+
+      let focusedChild = this.webbarWindow.focusedBrowserWindow
+      if (focusedChild.webContents.canGoForward())
+         focusedChild.webContents.goForward()
+   }
+
+   findInPage = function(searchTerm) {
+      if (!this.webbarWindow || !this.webbarWindow.focusedBrowserWindow) return
+      if (searchTerm === '') return
+
+      this.webbarWindow.focusedBrowserWindow.webContents.findInPage(searchTerm)
    }
 
    //<summar>
@@ -136,7 +143,7 @@ module.exports = class BrowserWindows {
       this.spotlightWindow = null
    }.bind(this)
 
-   _newHttpWindow = function (event, url, frameName, disposition, options, additionalFeatures, referrer, postBody) {
+   _onNewHttpWindow = function (event, url, frameName, disposition, options, additionalFeatures, referrer, postBody) {
       event.preventDefault()
       this.loadURL(url)
    }.bind(this)
