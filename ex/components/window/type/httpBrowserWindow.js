@@ -1,5 +1,5 @@
 "use strict";
-//
+// Random string
 const crypto = require('crypto-random-string')
 // Eelectron storage
 const ElectronStore = require('electron-store');
@@ -42,6 +42,7 @@ module.exports = class HttpBrowserWindow extends CustomBrowserWindow {
       }
 
       super(name, options)
+
       // Defaults
       this.browserWindow.windowId = windowId === '' ? crypto({ length: 8, type: 'alphanumeric' }) : windowId
       this.browserWindow.setContentSize(size[0] - (webbarWindow.options.padding * 2), size[1] - webbarWindow.options.webbarHeight - webbarWindow.options.padding)
@@ -50,7 +51,7 @@ module.exports = class HttpBrowserWindow extends CustomBrowserWindow {
       this.webbarWindow = webbarWindow
       this.webbarWindow.browserWindow.on('move', this._onWebBarBrowserWindowMove)
       this.webbarWindow.browserWindow.on('resize', this._onWebBarBrowserWindowResize)
-      
+
       // BrowserWindow listeners
       this.browserWindow.on('closed', this._onHttpBrowserWindowClosed)
       this.browserWindow.on('focus', this._onBrowserWindowFocus)
@@ -62,6 +63,7 @@ module.exports = class HttpBrowserWindow extends CustomBrowserWindow {
       this.browserWindow.webContents.on('page-title-updated', this._pageTilteUpdated)
       this.browserWindow.webContents.on('did-navigate-in-page', this._didNavigateInPage)
       this.browserWindow.webContents.on('did-finish-load', this._didFinishLoad)
+      this.browserWindow.webContents.on('found-in-page', this._onFoundInPage)
 
       // Initialize the window data to be stored
       storage.set(this.browserWindow.windowId, {})
@@ -104,11 +106,12 @@ module.exports = class HttpBrowserWindow extends CustomBrowserWindow {
 
    _onBrowserWindowFocus = function () {
       let stored = storage.get(this.browserWindow.windowId)
-      if (!stored || !stored.title === '') stored.title = 'Untitled'      
-      
+      if (!stored || !stored.title === '') stored.title = 'Untitled'
+
       this.webbarWindow.focusedBrowserWindow = this.browserWindow
       this.webbarWindow
-         .browserWindow.webContents.send('window-focus', this.browserWindow.windowId, stored.title)
+         .browserWindow.webContents.send('window-focus', this.browserWindow.windowId,
+            this.browserWindow.webContents.getTitle(), this.webbarWindow.makeFocusedWindowURL())
    }.bind(this)
 
    _didSpinnerStartLoading = function () {
@@ -155,5 +158,10 @@ module.exports = class HttpBrowserWindow extends CustomBrowserWindow {
       let stored = storage.get(this.browserWindow.windowId)
       stored.url = this.browserWindow.webContents.getURL()
       storage.set(this.browserWindow.windowId, stored)
+   }.bind(this)
+
+   _onFoundInPage = function (event, result) {
+      this.webbarWindow
+         .browserWindow.webContents.send('show-search-results', result)
    }.bind(this)
 }

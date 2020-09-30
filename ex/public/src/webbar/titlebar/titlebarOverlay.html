@@ -5,8 +5,9 @@
          <span ng-if="!focusedWindow.isTrusted" class="protocol-otherwise"><i class="las la-unlock"></i></span>
       </span>
       <span>
-         <span class="name">Ex <i class="las la-minus"></i> </span>
+         <span class="name">{{focusedWindow.url}} &middot; </span>
          <span class="name">{{focusedWindow.title}}</span>
+         <span class="name"> <i class="las la-minus"></i> Ex</span>
       </span>
       <span class="icons">
          <i ng-click="minimizeWebbarWindow()" class="las la-minus"></i>

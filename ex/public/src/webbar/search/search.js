@@ -6,7 +6,7 @@ angular
       const KEY = {
          ENTER: 13
       };
-      
+
       // Root view element to append items to
       var $ngSearchOverlay;
 
@@ -24,32 +24,56 @@ angular
       //</summary>
       function controller() {
          return ['$scope', '$location', function ($scope, $location) {
+            $scope.result = {
+               matches: 0
+            }
+
             // Clean up with angularJS
             $scope.$on('$destroy', function () {
                window.removeEventListener('keyup', $scope.keyup);
+               window.removeEventListener('message', $scope._onSearchResults);
+
+               // Send message to disable find in
+               window.postMessage({ type: 'stop-find-in-focused-page', searchTerm: 'keepSelection' });
             });
 
             // Setup keyUp event
             $scope.keyup = function (event) {
                if (event.keyCode === KEY.ENTER) {
-                  let searchTerm = $ngSearchOverlay.find('input').val();
                   $scope.focus();
-                  // Send message to main for creating new http
-                  window.postMessage({ type: 'find-in-focused-page', searchTerm: searchTerm })
+                  let searchTerm = $ngSearchOverlay.find('input').val();
+                  if (searchTerm === '') {
+                     // Send message to disable find in
+                     window.postMessage({ type: 'stop-find-in-focused-page', searchTerm: 'clearSelection' });
+                  } else {
+                     // Send message to main for creating new http
+                     window.postMessage({ type: 'find-in-focused-page', searchTerm: searchTerm });
+                  }
                }
             }
 
             // Route initializer
             $scope.init = function () {
                $scope.focus();
+
                window.addEventListener('keyup', $scope.keyup);
+               window.addEventListener('message', $scope._onSearchResults);
             }
 
             // Auto focus input
             $scope.focus = function () {
-               if ($ngSearchOverlay.is(':visible')) {
-                  $ngSearchOverlay.find('input').focus().select();
-               }
+               $ngSearchOverlay.find('input').focus();
+            }
+
+            $scope._onSearchResults = function (event) {
+               if (event.source != window ||
+                  !event.data.name || event.data.name != 'ng-webbar') return;
+               if (event.data.type !== 'search-results') return;
+               if (!event.data.found) return;
+
+               $scope.$apply(() => {
+                  $scope.result.matches = event.data.found.matches;
+               });
             }
 
             // Setup redirection

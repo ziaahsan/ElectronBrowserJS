@@ -249,7 +249,7 @@ $spotlight-responsive-width: 680px !default;
             border-radius: 2px;
             background: $primary-color-error;
             display: inline-block;
-            top: 28px;
+            top: 35px;
             left: 11px;
             text-align: center;
             margin: 0 auto;
@@ -331,11 +331,6 @@ $spotlight-responsive-width: 680px !default;
          span {
             padding: 0 3px;
             border-radius: 2px;
-         }
-         span:hover {
-            background: $primary-highlight;
-            color: #ffffff;
-            cursor: pointer;
          }
       }
       input[type="text"] {

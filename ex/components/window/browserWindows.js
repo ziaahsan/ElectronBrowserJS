@@ -3,7 +3,6 @@
 const WebbarBrowserWindow = require('./type/webbarBrowserWindow')
 const SpotlightBrowserWindow = require('./type/spotlightBrowserWindow')
 const HttpBrowserWindow = require('./type/httpBrowserWindow');
-const { async } = require('crypto-random-string');
 
 // All type of browserWindows handler
 module.exports = class BrowserWindows {
@@ -22,7 +21,7 @@ module.exports = class BrowserWindows {
       })
    }
 
-   loadSpotlight = async function() {
+   loadSpotlight = async function () {
       // Load spotlight
       if (!this.spotlightWindow) {
          this.spotlightWindow = new SpotlightBrowserWindow(this.webbarWindow)
@@ -70,7 +69,7 @@ module.exports = class BrowserWindows {
          return
       }
 
-      await new Promise (resolve => {
+      await new Promise(resolve => {
          for (let childWindow of this.webbarWindow.browserWindow.getChildWindows()) {
             if (childWindow.windowId === windowId) {
                childWindow.focus()
@@ -88,8 +87,8 @@ module.exports = class BrowserWindows {
       })
    }
 
-   unloadWindow = async function(windowId) {
-      await new Promise (resolve => {
+   unloadWindow = async function (windowId) {
+      await new Promise(resolve => {
          for (let childWindow of this.webbarWindow.browserWindow.getChildWindows()) {
             if (childWindow.windowId === windowId) {
                childWindow.destroy()
@@ -108,17 +107,17 @@ module.exports = class BrowserWindows {
       })
    }
 
-   loadPreviousPage = async function(windowId) {
+   loadPreviousPage = async function (windowId) {
       if (!this.webbarWindow || !this.webbarWindow.focusedBrowserWindow) return
       if (this.webbarWindow.focusedBrowserWindow.windowId !== windowId) return
-   
+
 
       let focusedChild = this.webbarWindow.focusedBrowserWindow
       if (focusedChild.webContents.canGoBack())
          focusedChild.webContents.goBack()
    }
 
-   loadNextPage = function(windowId) {
+   loadNextPage = function (windowId) {
       if (!this.webbarWindow || !this.webbarWindow.focusedBrowserWindow) return
       if (this.webbarWindow.focusedBrowserWindow.windowId !== windowId) return
 
@@ -127,11 +126,19 @@ module.exports = class BrowserWindows {
          focusedChild.webContents.goForward()
    }
 
-   findInPage = function(searchTerm) {
+   findInFocusedPage = function (searchTerm) {
       if (!this.webbarWindow || !this.webbarWindow.focusedBrowserWindow) return
       if (searchTerm === '') return
 
       this.webbarWindow.focusedBrowserWindow.webContents.findInPage(searchTerm)
+   }
+
+   stopFindInFocusedPage = function (action) {
+      if (!this.webbarWindow || !this.webbarWindow.focusedBrowserWindow) return
+      if (action === '')
+         action = 'clearSelection'
+
+      this.webbarWindow.focusedBrowserWindow.webContents.stopFindInPage(action)
    }
 
    //<summar>

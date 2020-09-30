@@ -42,7 +42,8 @@ angular
                $scope.$apply(() => {
                   $scope.focusedWindow.title = event.data.results.title
                   $scope.focusedWindow.windowId = event.data.results.windowId
-                  $scope.focusedWindow.isTrusted = event.isTrusted
+                  $scope.focusedWindow.url = event.data.results.url
+                  $scope.focusedWindow.isTrusted = event.isTrusted && event.data.results.url.startsWith('https:')
                });
             }
 

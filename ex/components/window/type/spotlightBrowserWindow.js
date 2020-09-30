@@ -6,7 +6,7 @@ module.exports = class SpotlightBrowserWindow extends CustomBrowserWindow {
    constructor(webbarWindow) {
       let size = webbarWindow.browserWindow.getContentSize()
 
-      let name = 'spotlight'
+      let name = process.env['SPOTLIGHT_WINDOW_NAME']
       let options = {
          backgroundColor: '#99000000',
 
@@ -31,7 +31,7 @@ module.exports = class SpotlightBrowserWindow extends CustomBrowserWindow {
          },
 
          thickFrame: false,
-         
+
          shadow: false
       }
 
@@ -66,11 +66,12 @@ module.exports = class SpotlightBrowserWindow extends CustomBrowserWindow {
       let size = this.webbarWindow.browserWindow.getContentSize()
       this.browserWindow.setContentSize(size[0] - (this.webbarWindow.options.padding * 2), size[1] - this.webbarWindow.options.webbarHeight - this.webbarWindow.options.padding)
    }.bind(this)
-   
+
    _onBrowserWindowFocus = function () {
       this.webbarWindow.focusedBrowserWindow = this.browserWindow
       this.webbarWindow
-         .browserWindow.webContents.send('window-focus', this.browserWindow.windowId, this.browserWindow.webContents.getTitle())
+         .browserWindow.webContents.send('window-focus', this.browserWindow.windowId,
+            this.browserWindow.webContents.getTitle(), this.webbarWindow.makeFocusedWindowURL())
    }.bind(this)
 
    _pageTilteUpdated = function (event, title, explicitSet) {

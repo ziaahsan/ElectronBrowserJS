@@ -31,6 +31,7 @@ process.once('loaded', () => {
             ipcRenderer.send(event.data.type, { x: 0, y: 0 })
             break;
          case 'find-in-focused-page':
+         case 'stop-find-in-focused-page':
             ipcRenderer.send(event.data.type, event.data.searchTerm)
             break
       }
@@ -60,8 +61,8 @@ process.once('loaded', () => {
       window.postMessage(response);
    });
 
-   ipcRenderer.on('window-focus', (event, httpWindowId, title) => {
-      let message = { windowId: httpWindowId, title: title };
+   ipcRenderer.on('window-focus', (event, httpWindowId, title, url) => {
+      let message = { windowId: httpWindowId, title: title, url: url };
       let response = { type: 'focus', name: 'ng-webbar', results: message };
       window.postMessage(response);
    });
@@ -74,6 +75,11 @@ process.once('loaded', () => {
 
    ipcRenderer.on('show-search', (event) => {
       let response = { type: 'search', name: 'ng-webbar' };
+      window.postMessage(response);
+   });
+
+   ipcRenderer.on('show-search-results', (event, result) => {
+      let response = { type: 'search-results', name: 'ng-webbar', found: result };
       window.postMessage(response);
    });
 })
