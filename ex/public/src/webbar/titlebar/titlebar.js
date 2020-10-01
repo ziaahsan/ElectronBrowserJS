@@ -29,6 +29,9 @@ angular
             // Route initializer
             $scope.init = function () {
                window.addEventListener('message', $scope._onFocus);
+
+               // Request for focused windows
+               window.postMessage({type: 'get-focused-window'})
             }
 
             $scope._onFocus = function (event) {

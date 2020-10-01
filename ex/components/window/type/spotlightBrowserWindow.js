@@ -2,13 +2,13 @@
 // Parent custom window
 const CustomBrowserWindow = require('../custom/browserWindow')
 // Simply class for spotlight
-module.exports = class SpotlightBrowserWindow extends CustomBrowserWindow {
+class SpotlightBrowserWindow extends CustomBrowserWindow {
    constructor(webbarWindow) {
       let size = webbarWindow.browserWindow.getContentSize()
 
       let name = process.env['SPOTLIGHT_WINDOW_NAME']
       let options = {
-         backgroundColor: '#99000000',
+         backgroundColor: '#00000000',
 
          frame: false,
          transparent: true,
@@ -80,3 +80,5 @@ module.exports = class SpotlightBrowserWindow extends CustomBrowserWindow {
          .browserWindow.webContents.send('window-title', this.browserWindow.windowId, title)
    }.bind(this)
 }
+
+module.exports = SpotlightBrowserWindow

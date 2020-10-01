@@ -169,8 +169,7 @@ $spotlight-responsive-width: 680px !default;
    .tabs {
       position: relative;
       width: 100%;
-      margin: 0 8px;
-      border-left: 1px solid $border-color;
+      margin: 0 0 0 8px;
       border-right: 1px solid $border-color;
       padding: 0 8px;
       display: inline-flex;
@@ -299,6 +298,9 @@ $spotlight-responsive-width: 680px !default;
          display: block
       }
    }
+   .tabs:first-child {
+      padding-left: 0;
+   }
    .search {
       position: relative;
       width: 100%;
@@ -306,6 +308,7 @@ $spotlight-responsive-width: 680px !default;
       border-left: 1px solid $border-color;
       border-right: 1px solid $border-color;
       padding: 0 8px;
+      border-radius: 4px;
       .label {
          position: absolute;
          top: 12px;
@@ -369,7 +372,7 @@ $spotlight-responsive-width: 680px !default;
             margin: 8px 1px;
             border-radius: 2px;
             -webkit-app-region: no-drag;
-            border: 1px solid rgba(55,55,55,0.97);
+            border: 1px solid $border-color;
             .command {
                font-size: 11px;
                font-weight: 600;
@@ -689,6 +692,7 @@ $spotlight-responsive-width: 680px !default;
       box-shadow: 0 12px 15px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19);
       border-radius: 6px;
       overflow: hidden;
+      top: 25vh;
 
       @media only screen and (min-width: $spotlight-responsive-width) {
          margin: 0 auto;
@@ -712,7 +716,8 @@ $spotlight-responsive-width: 680px !default;
       box-shadow: 0 12px 15px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19);
       border-radius: 6px;
       overflow: hidden;
-
+      top: 25vh;
+      
       @media only screen and (min-width: $spotlight-responsive-width) {
          margin: 0 auto;
          margin-bottom: 6px;
@@ -753,7 +758,7 @@ $spotlight-responsive-width: 680px !default;
             margin: 0;
             outline: none !important;
             height: 55px;
-            max-width: 100% !important;
+            max-width: 100%;
             border: none !important;
             color: $primary-color;
             font-weight: 100;
@@ -766,7 +771,7 @@ $spotlight-responsive-width: 680px !default;
 
             @media only screen and (min-width: $spotlight-responsive-width) {
                float: left;
-               max-width: 350px !important;
+               width: calc(95% - 15px);
                box-sizing: content-box;
                padding: 0;
                &.empty {

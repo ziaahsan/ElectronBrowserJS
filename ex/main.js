@@ -2,7 +2,7 @@
 // Setup path
 const path = require('path')
 // Modules to control application life and create native browser window
-const { app, ipcMain, session, globalShortcut  } = require('electron')
+const { app, ipcMain, session, globalShortcut } = require('electron')
 // Setup the browserWindows instance
 const BrowserWindows = require('./components/window/browserWindows');
 let browserWindows = new BrowserWindows()
@@ -29,6 +29,24 @@ ipcMain.on('find-in-focused-page', (event, searchTerm) => browserWindows.findInF
 ipcMain.on('stop-find-in-focused-page', (event, searchTerm) => browserWindows.stopFindInFocusedPage(searchTerm))
 
 // When app's initialized
+app.on('ready', () => {
+   app.userAgentFallback = app.userAgentFallback
+      // SingleBox: Fix WhatsApp requires Google Chrome 49+ bug
+      // App Name doesn't have white space in user agent. 'Google Chat' app > GoogleChat/8.1.1
+      .replace(` ${app.name.replace(/ /g, '')}/${app.getVersion()}`, '')
+      // Hide Electron from UA to improve compatibility
+      // https://github.com/atomery/webcatalog/issues/182
+      .replace(` Electron/${process.versions.electron}`, '');
+
+   // SingleBox: Fix Google prevents signing in because of security concerns
+   session.defaultSession.webRequest.onBeforeSendHeaders({
+      urls: ['https://*.google.com/*']
+   }, (details, callback) => {
+      details.requestHeaders['User-Agent'] = `${app.userAgentFallback} Edge/18.18875`
+      callback({ requestHeaders: details.requestHeaders })
+   })
+})
+
 app.whenReady().then(() => {
    // Electron ad-blocker
    ElectronBlocker.fromPrebuiltAdsAndTracking(fetch, {

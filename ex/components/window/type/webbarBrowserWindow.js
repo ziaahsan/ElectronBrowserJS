@@ -6,7 +6,7 @@ const CustomBrowserWindow = require('../custom/browserWindow')
 let HttpBrowserWindow = require('./httpBrowserWindow')
 
 // Simply class for webbar
-module.exports = class WebbarBrowserWindow extends CustomBrowserWindow {
+class WebbarBrowserWindow extends CustomBrowserWindow {
    constructor() {
       let name = process.env['WEBBAR_WINDOW_NAME']
       let options = {
@@ -56,11 +56,10 @@ module.exports = class WebbarBrowserWindow extends CustomBrowserWindow {
 
       // Menu
       this.menu = new Menu()
-      this.menu.append(new MenuItem({ label: 'New tab', accelerator: 'CmdOrCtrl+T' }))
-      this.menu.append(new MenuItem({ label: 'Restore tab', accelerator: 'CmdOrCtrl+Shift+T' }))
-      this.menu.append(new MenuItem({ label: 'Saved tabs', accelerator: 'CmdOrCtrl+Shift+B' }))
+      this.menu.append(new MenuItem({ label: 'New Session'}))
+      this.menu.append(new MenuItem({ label: 'Switch Session'}))
       this.menu.append(new MenuItem({ type: 'separator' }))
-      this.menu.append(new MenuItem({ label: 'Switch theme', icon: `${process.env['MENU_ICONS_PATH']}/sun.png` }))
+      this.menu.append(new MenuItem({ label: 'Switch Theme', icon: `${process.env['MENU_ICONS_PATH']}/sun.png` }))
       this.menu.append(new MenuItem({ type: 'separator' }))
       this.menu.append(new MenuItem({
          label: 'Print', accelerator: 'CmdOrCtrl+P',
@@ -139,8 +138,10 @@ module.exports = class WebbarBrowserWindow extends CustomBrowserWindow {
       let size = this.browserWindow.getContentSize()
       this.menu.popup({
          window: this.browserWindow,
-         x: size[0] - 210,
+         x: size[0] - 180,
          y: this.options.webbarHeight
       })
    }.bind(this)
 }
+
+module.exports = WebbarBrowserWindow

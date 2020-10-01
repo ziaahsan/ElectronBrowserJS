@@ -7,7 +7,7 @@ const path = require('path')
 const { BrowserWindow } = require('electron')
 
 // Custom browser window using electron
-module.exports = class CustomBrowserWindow {
+class CustomBrowserWindow {
    constructor(name, options) {
       // Defaults
       this.name = name
@@ -32,6 +32,8 @@ module.exports = class CustomBrowserWindow {
          minimizable: this.options.minimizable,
          maximizable: this.maximizable,
 
+         minWidth: 880,
+         minHeight: 790,
          width: this.options.width,
          height: this.options.height,
 
@@ -84,3 +86,5 @@ module.exports = class CustomBrowserWindow {
       this.browserWindow.focus()
    }.bind(this) //<-Add the scope of the class to function
 }
+
+module.exports = CustomBrowserWindow

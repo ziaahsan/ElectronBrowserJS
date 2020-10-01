@@ -6,11 +6,9 @@ const ElectronStore = require('electron-store');
 const storage = new ElectronStore({ accessPropertiesByDotNotation: false, name: 'HttpBrowserWindows' });
 // Parent custom window
 const CustomBrowserWindow = require('../custom/browserWindow')
-// Shortcuts
-const localShortcut = require('electron-localshortcut');
 
 // Simply class for any http browser window
-module.exports = class HttpBrowserWindow extends CustomBrowserWindow {
+class HttpBrowserWindow extends CustomBrowserWindow {
    constructor(webbarWindow, windowId) {
       let size = webbarWindow.browserWindow.getContentSize()
 
@@ -177,3 +175,5 @@ module.exports = class HttpBrowserWindow extends CustomBrowserWindow {
          .browserWindow.webContents.send('show-find-in-page-results', result)
    }.bind(this)
 }
+
+module.exports = HttpBrowserWindow

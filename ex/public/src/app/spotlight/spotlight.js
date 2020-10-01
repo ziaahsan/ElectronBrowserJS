@@ -47,9 +47,7 @@ angular
 
             // Auto focus input
             $scope.focus = function () {
-               if ($ngSpotlightOverlay.is(':visible')) {
-                  $ngSpotlightOverlay.find('input').focus().select();
-               }
+               $ngSpotlightOverlay.find('input').focus().select();
             }
 
             // Setup redirection

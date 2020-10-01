@@ -11,7 +11,7 @@ const HttpBrowserWindow = require('./type/httpBrowserWindow')
 const localShortcut = require('electron-localshortcut');
 
 // All type of browserWindows handler
-module.exports = class BrowserWindows {
+class BrowserWindows {
    constructor() {
       // Nothing...
    }
@@ -38,17 +38,21 @@ module.exports = class BrowserWindows {
       if (!this.spotlightWindow) {
          this.spotlightWindow = new SpotlightBrowserWindow(this.webbarWindow)
          this.spotlightWindow.browserWindow.on('closed', this._onSpotlightBrowserWindowClosed)
+         this.spotlightWindow.browserWindow.webContents.on('context-menu', this._onSpotlightContextMenu)
          await this.spotlightWindow.loadFile('public/index.html').then(res => {
             // Register localShort for spotlight
             localShortcut.register(this.spotlightWindow.browserWindow, 'Esc', this._onLoadPreviousFocusedWindow)
             localShortcut.register(this.spotlightWindow.browserWindow, 'Ctrl+T', this._shortcutCtrlT)
+            // Add context menu
+            this.spotlightContextMenuBuilder = new ContextMenuBuilder(this.spotlightWindow.browserWindow, true);
          }).catch(e => {
             console.error(e)
          })
       } else {
-         this.spotlightWindow.browserWindow.show()
-         this.spotlightWindow.browserWindow.focus()
+         this.spotlightWindow.browserWindow.setOpacity(1)
       }
+
+      this.spotlightWindow.browserWindow.focus()
    }
 
    loadURL = async function (urlString, windowId = '') {
@@ -83,7 +87,7 @@ module.exports = class BrowserWindows {
             }))
             menu.insert(2, new MenuItem({ type: 'separator' }))
             menu.insert(3, new MenuItem({
-               label: 'Find in page',
+               label: 'Find in Page',
                accelerator: 'CmdOrCtrl+F',
                enabled:
                   this.webbarWindow.focused.browserWindow &&
@@ -112,7 +116,7 @@ module.exports = class BrowserWindows {
          // Register localShort for httpWindow
          this.addShortcutsToWindow(httpWindow.browserWindow)
          // Add context menu
-         httpContextMenuBuilder = new ContextMenuBuilder(httpWindow.browserWindow, true);
+         httpContextMenuBuilder = new ContextMenuBuilder(httpWindow.browserWindow, true)
       }).catch(e => {
          console.error(e)
       })
@@ -144,11 +148,11 @@ module.exports = class BrowserWindows {
          let hasFocus = false
          for (let childWindow of this.webbarWindow.browserWindow.getChildWindows()) {
             if (childWindow.windowId === windowId) {
-               childWindow.show()
+               childWindow.setOpacity(1)
                childWindow.focus()
                hasFocus = true
             } else {
-               childWindow.hide()
+               childWindow.setOpacity(0)
             }
          }
 
@@ -229,11 +233,22 @@ module.exports = class BrowserWindows {
          }
 
          menu.insert(0, new MenuItem({
-            label: 'New tab',
+            label: 'New Tab',
             accelerator: 'CmdOrCtrl+T',
             click: this._shortcutCtrlT
          }))
          menu.insert(1, new MenuItem({ type: 'separator' }))
+         
+         menu.popup(this.webbarWindow.browserWindow)
+      })
+   }.bind(this)
+
+   _onSpotlightContextMenu = function (e, info) {
+      this.spotlightContextMenuBuilder.buildMenuForElement(info).then((menu) => {
+         if (info.isEditable || (info.inputFieldType && info.inputFieldType !== 'none')) {
+            menu.popup(this.webbarWindow.browserWindow)
+            return
+         }
          
          menu.popup(this.webbarWindow.browserWindow)
       })
@@ -279,3 +294,5 @@ module.exports = class BrowserWindows {
       this.webbarWindow.focused.browserWindow.webContents.goForward()
    }.bind(this)
 }
+
+module.exports = BrowserWindows
