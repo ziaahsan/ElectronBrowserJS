@@ -86,8 +86,9 @@ module.exports = class WebbarBrowserWindow extends CustomBrowserWindow {
          let protocol = url.protocol
          let hostname = url.hostname
          url = `${protocol}//${hostname}`
-      } catch {
-         url = 'Omitted, not a valid URL'
+      } catch (e) {
+         url = 'Omitted, not a valid URL or missing focused window.'
+         console.log(e.messsage)
       }
 
       return url

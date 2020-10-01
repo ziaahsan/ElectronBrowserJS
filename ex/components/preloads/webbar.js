@@ -73,12 +73,12 @@ process.once('loaded', () => {
       window.postMessage(response);
    });
 
-   ipcRenderer.on('show-search', (event) => {
+   ipcRenderer.on('show-find-in-page', (event) => {
       let response = { type: 'search', name: 'ng-webbar' };
       window.postMessage(response);
    });
 
-   ipcRenderer.on('show-search-results', (event, result) => {
+   ipcRenderer.on('show-find-in-page-results', (event, result) => {
       let response = { type: 'search-results', name: 'ng-webbar', found: result };
       window.postMessage(response);
    });

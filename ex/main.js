@@ -3,8 +3,6 @@
 const path = require('path')
 // Modules to control application life and create native browser window
 const { app, ipcMain, session, globalShortcut  } = require('electron')
-// Ctx Menus
-const contextMenu = require('electron-context-menu')
 // Setup the browserWindows instance
 const BrowserWindows = require('./components/window/browserWindows');
 let browserWindows = new BrowserWindows()
@@ -18,23 +16,6 @@ const fsPromises = require('fs').promises;
 process.env['WEBBAR_WINDOW_NAME'] = 'webbar'
 process.env['SPOTLIGHT_WINDOW_NAME'] = 'spotlight'
 process.env['MENU_ICONS_PATH'] = path.join(__dirname, 'components/window/icons/menu/')
-
-// Context Menu
-contextMenu({
-   prepend: (defaultActions, params, browserWindow) => [
-      {
-         label: 'Find in page',
-         accelerator: 'CmdOrCtrl+F',
-         enabled:
-            browserWindow.windowId !== process.env['WEBBAR_WINDOW_NAME'] &&
-            browserWindow.windowId !== process.env['SPOTLIGHT_WINDOW_NAME'],
-         icon: `${process.env['MENU_ICONS_PATH']}/search.png`,
-         click: () => {
-            browserWindow.getParentWindow().webContents.send('show-search')
-         }
-      }
-   ]
-})
 
 // Listeners
 ipcMain.on('open-spotlight', (event, url) => browserWindows.loadSpotlight())

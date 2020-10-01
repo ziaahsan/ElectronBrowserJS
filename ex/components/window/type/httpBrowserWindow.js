@@ -6,6 +6,8 @@ const ElectronStore = require('electron-store');
 const storage = new ElectronStore({ accessPropertiesByDotNotation: false, name: 'HttpBrowserWindows' });
 // Parent custom window
 const CustomBrowserWindow = require('../custom/browserWindow')
+// Shortcuts
+const localShortcut = require('electron-localshortcut');
 
 // Simply class for any http browser window
 module.exports = class HttpBrowserWindow extends CustomBrowserWindow {
@@ -140,12 +142,22 @@ module.exports = class HttpBrowserWindow extends CustomBrowserWindow {
       this.webbarWindow
          .browserWindow.webContents.send('window-title', this.browserWindow.windowId, title)
 
+      // Update the focused window with this window since its the same
+      if (this.browserWindow.windowId === this.webbarWindow.focusedBrowserWindow.windowId) {
+         this.webbarWindow
+         .browserWindow.webContents.send('window-focus', this.browserWindow.windowId,
+            this.browserWindow.webContents.getTitle(), this.webbarWindow.makeFocusedWindowURL())
+      }
+
       let stored = storage.get(this.browserWindow.windowId)
       stored.title = title
       storage.set(this.browserWindow.windowId, stored)
    }.bind(this)
 
    _didNavigateInPage = function (event, url, isMainFrame, fromProcessId, frameRoutingId) {
+      this.webbarWindow
+         .browserWindow.webContents.send('window-can-go-back', this.browserWindow.windowId, this.browserWindow.webContents.canGoBack())
+         
       let stored = storage.get(this.browserWindow.windowId)
       stored.url = url
       storage.set(this.browserWindow.windowId, stored)
@@ -162,6 +174,6 @@ module.exports = class HttpBrowserWindow extends CustomBrowserWindow {
 
    _onFoundInPage = function (event, result) {
       this.webbarWindow
-         .browserWindow.webContents.send('show-search-results', result)
+         .browserWindow.webContents.send('show-find-in-page-results', result)
    }.bind(this)
 }

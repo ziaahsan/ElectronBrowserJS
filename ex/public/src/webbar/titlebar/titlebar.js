@@ -29,7 +29,6 @@ angular
             // Route initializer
             $scope.init = function () {
                window.addEventListener('message', $scope._onFocus);
-               window.postMessage({type: 'get-focused-window'})
             }
 
             $scope._onFocus = function (event) {
@@ -48,15 +47,15 @@ angular
             }
 
             $scope.closeWebbarWindow = function () {
-               window.postMessage({type: 'close-webbar-window'})
+               window.postMessage({ type: 'close-webbar-window' })
             }
 
             $scope.maximizeWebbarWindow = function () {
-               window.postMessage({type: 'maximize-webbar-window'})
+               window.postMessage({ type: 'maximize-webbar-window' })
             }
 
             $scope.minimizeWebbarWindow = function () {
-               window.postMessage({type: 'minimize-webbar-window'})
+               window.postMessage({ type: 'minimize-webbar-window' })
             }
 
             // Setup redirection

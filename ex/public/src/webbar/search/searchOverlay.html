@@ -8,10 +8,11 @@
       <span class="label">Search</span>
       <input type="text" />
       <span class="label-results">
-         <!-- <san><i class="las la-angle-down"></i></span>
+         <span><i class="las la-angle-down"></i></span>
          <span><i class="las la-angle-up"></i></span>
-         <span>Aa</span> -->
-         <span>{{result.matches}} Results</span>
+         <span>Aa</span>
+         <span ng-if="result.matches === 0">No Result</span>
+         <span ng-if="result.matches !== 0">{{result.activeMatchOrdinal}}/{{result.matches}} Found</span>
       </span>
    </div>
    <div class="right-icon">

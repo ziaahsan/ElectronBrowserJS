@@ -25,7 +25,8 @@ angular
       function controller() {
          return ['$scope', '$location', function ($scope, $location) {
             $scope.result = {
-               matches: 0
+               matches: 0,
+               activeMatchOrdinal: 0
             }
 
             // Clean up with angularJS
@@ -40,11 +41,12 @@ angular
             // Setup keyUp event
             $scope.keyup = function (event) {
                if (event.keyCode === KEY.ENTER) {
-                  $scope.focus();
                   let searchTerm = $ngSearchOverlay.find('input').val();
                   if (searchTerm === '') {
                      // Send message to disable find in
                      window.postMessage({ type: 'stop-find-in-focused-page', searchTerm: 'clearSelection' });
+                     $scope.result.matches = 0;
+                     $scope.result.activeMatchOrdinal = 0;
                   } else {
                      // Send message to main for creating new http
                      window.postMessage({ type: 'find-in-focused-page', searchTerm: searchTerm });
@@ -60,7 +62,7 @@ angular
                window.addEventListener('message', $scope._onSearchResults);
             }
 
-            // Auto focus input
+            // Focus input val
             $scope.focus = function () {
                $ngSearchOverlay.find('input').focus();
             }
@@ -73,6 +75,7 @@ angular
 
                $scope.$apply(() => {
                   $scope.result.matches = event.data.found.matches;
+                  $scope.result.activeMatchOrdinal = event.data.found.activeMatchOrdinal;
                });
             }
 
