@@ -40,6 +40,7 @@ module.exports = class BrowserWindows {
          this.spotlightWindow.browserWindow.on('closed', this._onSpotlightBrowserWindowClosed)
          await this.spotlightWindow.loadFile('public/index.html').then(res => {
             // Register localShort for spotlight
+            localShortcut.register(this.spotlightWindow.browserWindow, 'Esc', this._onLoadPreviousFocusedWindow)
             localShortcut.register(this.spotlightWindow.browserWindow, 'Ctrl+T', this._shortcutCtrlT)
          }).catch(e => {
             console.error(e)
@@ -68,16 +69,16 @@ module.exports = class BrowserWindows {
                label: 'Back',
                accelerator: 'Alt+Left',
                enabled:
-                  this.webbarWindow.focusedBrowserWindow &&
-                  this.webbarWindow.focusedBrowserWindow.webContents.canGoBack(),
+                  this.webbarWindow.focused.browserWindow &&
+                  this.webbarWindow.focused.browserWindow.webContents.canGoBack(),
                click: this._shortcutAltLeft
             }))
             menu.insert(1, new MenuItem({
                label: 'Forward',
                accelerator: 'Alt+Right',
                enabled:
-                  this.webbarWindow.focusedBrowserWindow &&
-                  this.webbarWindow.focusedBrowserWindow.webContents.canGoForward(),
+                  this.webbarWindow.focused.browserWindow &&
+                  this.webbarWindow.focused.browserWindow.webContents.canGoForward(),
                click: this._shortcutAltRight
             }))
             menu.insert(2, new MenuItem({ type: 'separator' }))
@@ -85,8 +86,8 @@ module.exports = class BrowserWindows {
                label: 'Find in page',
                accelerator: 'CmdOrCtrl+F',
                enabled:
-                  this.webbarWindow.focusedBrowserWindow &&
-                  this.webbarWindow.focusedBrowserWindow.windowId !== process.env['SPOTLIGHT_WINDOW_NAME'],
+                  this.webbarWindow.focused.browserWindow &&
+                  this.webbarWindow.focused.browserWindow.windowId !== process.env['SPOTLIGHT_WINDOW_NAME'],
                click: this._shortcutCtrlF
             }))
             menu.insert(4, new MenuItem({ type: 'separator' }))
@@ -151,11 +152,7 @@ module.exports = class BrowserWindows {
             }
          }
 
-         if (hasFocus) {
-            resolve(true)
-         } else {
-            resolve(false)
-         }
+         resolve(hasFocus)
       })
    }
 
@@ -164,9 +161,10 @@ module.exports = class BrowserWindows {
          for (let childWindow of this.webbarWindow.browserWindow.getChildWindows()) {
             if (childWindow.windowId === windowId) {
                childWindow.destroy()
+               if (this.webbarWindow.focused.browserWindow.windowId === windowId)
+                  this._onLoadPreviousFocusedWindow()
                HttpBrowserWindow.removeStoredWindowById(windowId)
                resolve(true)
-
                return
             }
          }
@@ -179,37 +177,37 @@ module.exports = class BrowserWindows {
    }
 
    loadPreviousPage = async function (windowId) {
-      if (!this.webbarWindow || !this.webbarWindow.focusedBrowserWindow) return
-      if (this.webbarWindow.focusedBrowserWindow.windowId !== windowId) return
+      if (!this.webbarWindow || !this.webbarWindow.focused.browserWindow) return
+      if (this.webbarWindow.focused.browserWindow.windowId !== windowId) return
 
 
-      let focusedChild = this.webbarWindow.focusedBrowserWindow
+      let focusedChild = this.webbarWindow.focused.browserWindow
       if (focusedChild.webContents.canGoBack())
          focusedChild.webContents.goBack()
    }
 
    loadNextPage = function (windowId) {
-      if (!this.webbarWindow || !this.webbarWindow.focusedBrowserWindow) return
-      if (this.webbarWindow.focusedBrowserWindow.windowId !== windowId) return
+      if (!this.webbarWindow || !this.webbarWindow.focused.browserWindow) return
+      if (this.webbarWindow.focused.browserWindow.windowId !== windowId) return
 
-      let focusedChild = this.webbarWindow.focusedBrowserWindow
+      let focusedChild = this.webbarWindow.focused.browserWindow
       if (focusedChild.webContents.canGoForward())
          focusedChild.webContents.goForward()
    }
 
    findInFocusedPage = function (searchTerm) {
-      if (!this.webbarWindow || !this.webbarWindow.focusedBrowserWindow) return
+      if (!this.webbarWindow || !this.webbarWindow.focused.browserWindow) return
       if (searchTerm === '') return
 
-      this.webbarWindow.focusedBrowserWindow.webContents.findInPage(searchTerm)
+      this.webbarWindow.focused.browserWindow.webContents.findInPage(searchTerm)
    }
 
    stopFindInFocusedPage = function (action) {
-      if (!this.webbarWindow || !this.webbarWindow.focusedBrowserWindow) return
+      if (!this.webbarWindow || !this.webbarWindow.focused.browserWindow) return
       if (action === '')
          action = 'clearSelection'
 
-      this.webbarWindow.focusedBrowserWindow.webContents.stopFindInPage(action)
+      this.webbarWindow.focused.browserWindow.webContents.stopFindInPage(action)
    }
 
    addShortcutsToWindow = function (win) {
@@ -252,6 +250,11 @@ module.exports = class BrowserWindows {
       this.loadURL(url)
    }.bind(this)
 
+   _onLoadPreviousFocusedWindow = function () {
+      let windowId = this.webbarWindow.focusedHistory.slice(-2, -1)
+      if (windowId.length === 1) this.laodWindow(windowId[0])
+   }.bind(this)
+
    //<summar>
    // Local Shortcuts
    //</summary>
@@ -269,10 +272,10 @@ module.exports = class BrowserWindows {
    }.bind(this)
 
    _shortcutAltLeft = function () {
-      this.webbarWindow.focusedBrowserWindow.webContents.goBack()
+      this.webbarWindow.focused.browserWindow.webContents.goBack()
    }.bind(this)
 
    _shortcutAltRight = function () {
-      this.webbarWindow.focusedBrowserWindow.webContents.goForward()
+      this.webbarWindow.focused.browserWindow.webContents.goForward()
    }.bind(this)
 }

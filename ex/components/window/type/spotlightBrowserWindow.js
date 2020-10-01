@@ -68,7 +68,7 @@ module.exports = class SpotlightBrowserWindow extends CustomBrowserWindow {
    }.bind(this)
 
    _onBrowserWindowFocus = function () {
-      this.webbarWindow.focusedBrowserWindow = this.browserWindow
+      this.webbarWindow.focused.browserWindow = this.browserWindow
       this.webbarWindow
          .browserWindow.webContents.send('window-focus', this.browserWindow.windowId,
             this.browserWindow.webContents.getTitle(), this.webbarWindow.makeFocusedWindowURL())

@@ -42,7 +42,17 @@ module.exports = class WebbarBrowserWindow extends CustomBrowserWindow {
 
       //Defaults
       this.browserWindow.windowId = name
-      this.focusedBrowserWindow = null
+      this.focusedHistory = []
+      this.focused = {
+         win: null,
+         listener: function (browserWindow) { this.focusedHistory.push(browserWindow.windowId) }.bind(this),
+         set browserWindow(win) {
+            this.win = win
+            this.listener(win)
+         },
+         get browserWindow() { return this.win },
+         register: function (listener) { this.listener = listener }
+      }
 
       // Menu
       this.menu = new Menu()
@@ -82,7 +92,7 @@ module.exports = class WebbarBrowserWindow extends CustomBrowserWindow {
       let url = ''
 
       try {
-         url = new URL(this.focusedBrowserWindow.webContents.getURL())
+         url = new URL(this.focused.browserWindow.webContents.getURL())
          let protocol = url.protocol
          let hostname = url.hostname
          url = `${protocol}//${hostname}`
@@ -104,9 +114,9 @@ module.exports = class WebbarBrowserWindow extends CustomBrowserWindow {
 
    _onGetFocusedWindow = function (event, channel) {
       if (channel !== 'get-focused-window') return
-      if (!this.focusedBrowserWindow) return
-      event.sender.send('window-focus', this.focusedBrowserWindow.windowId,
-         this.focusedBrowserWindow.webContents.getTitle(), this.makeFocusedWindowURL())
+      if (!this.focused.browserWindow) return
+      event.sender.send('window-focus', this.focused.browserWindow.windowId,
+         this.focused.browserWindow.webContents.getTitle(), this.makeFocusedWindowURL())
    }.bind(this)
 
    _onCloseThisWindow = function (event, channel) {

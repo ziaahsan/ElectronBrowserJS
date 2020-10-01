@@ -110,7 +110,7 @@ module.exports = class HttpBrowserWindow extends CustomBrowserWindow {
       let stored = storage.get(this.browserWindow.windowId)
       if (!stored || !stored.title === '') stored.title = 'Untitled'
 
-      this.webbarWindow.focusedBrowserWindow = this.browserWindow
+      this.webbarWindow.focused.browserWindow = this.browserWindow
       this.webbarWindow
          .browserWindow.webContents.send('window-focus', this.browserWindow.windowId,
             this.browserWindow.webContents.getTitle(), this.webbarWindow.makeFocusedWindowURL())
@@ -143,7 +143,7 @@ module.exports = class HttpBrowserWindow extends CustomBrowserWindow {
          .browserWindow.webContents.send('window-title', this.browserWindow.windowId, title)
 
       // Update the focused window with this window since its the same
-      if (this.browserWindow.windowId === this.webbarWindow.focusedBrowserWindow.windowId) {
+      if (this.browserWindow.windowId === this.webbarWindow.focused.browserWindow.windowId) {
          this.webbarWindow
          .browserWindow.webContents.send('window-focus', this.browserWindow.windowId,
             this.browserWindow.webContents.getTitle(), this.webbarWindow.makeFocusedWindowURL())
