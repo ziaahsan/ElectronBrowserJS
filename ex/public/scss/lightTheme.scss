@@ -20,4 +20,6 @@ $primary-highlight-color: #ffffff !default;
 $border-color: rgba(215, 215, 215, $alpha);
 $overlay-border-color: rgba(#333435, 0.1);
 
-@import "_angularSpotlight";
+@media (prefers-color-scheme: light) {
+   @import "_angularSpotlight";
+}

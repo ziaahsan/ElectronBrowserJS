@@ -2,7 +2,7 @@
 // Setup path
 const path = require('path')
 // Modules to control application life and create native browser window
-const { app, ipcMain, session, protocol } = require('electron')
+const { app, ipcMain, session, protocol, nativeTheme } = require('electron')
 // Setup the browserWindows instance
 const BrowserWindows = require('./components/window/browserWindows');
 let browserWindows = new BrowserWindows()
@@ -12,12 +12,14 @@ const fetch = require('cross-fetch')
 // Setup fs promises for ad-blocker caching
 const fsPromises = require('fs').promises;
 
+// Setup native theme
+nativeTheme.themeSource = 'light'
+
 // ENV Variabels
 process.env['PROTOCOL_APP'] = 'app'
 process.env['PROTOCOL_NODE'] = 'node'
 process.env['WEBBAR_WINDOW_NAME'] = 'webbar'
 process.env['SPOTLIGHT_WINDOW_NAME'] = 'spotlight'
-process.env['MENU_ICONS_PATH'] = path.join(__dirname, 'components/window/icons/menu/')
 
 // Listeners
 ipcMain.on('open-spotlight', (event, url) => browserWindows.loadSpotlight())

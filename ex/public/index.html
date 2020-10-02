@@ -18,9 +18,9 @@
             connect-src 'self' app: node: http://localhost:8000;
             script-src  'self' app: node:;
         ">
-
+   
    <title ng-bind="pageTitle">App | Home</title>
-   <link rel="icon" type="image/png" href="app://icons/favicon.png">
+   <link rel="icon" type="image/png" href="app://icons/coloured/favicon.png">
 
    <!-- Required Dependencies -->
    <script src="node://jquery/dist/jquery.min.js"></script>
@@ -35,7 +35,8 @@
    <!-- Main CSS -->
    <link href="app://css/main.min.css" type="text/css" rel="stylesheet">
    <link href="app://css/animations.min.css" type="text/css" rel="stylesheet">
-   <link href="app://css/lightTheme.min.css" type="text/css" rel="stylesheet" id="angular-theme">
+   <link href="app://css/darkTheme.min.css" type="text/css" rel="stylesheet">
+   <link href="app://css/lightTheme.min.css" type="text/css" rel="stylesheet">
 
    <!-- AngularJS -->
    <script src="node://angular/angular.js"></script>
@@ -43,7 +44,6 @@
    <script src="node://angular-animate/angular-animate.min.js"></script>
 
    <script src="app://src/app-config.js"></script>
-   <script src="app://src/app-theme-config.js"></script>
 
    <!-- Angular Components -->
    <script src="app://src/app/login/login.js"></script>

@@ -1,16 +1,18 @@
 "use strict";
 // Menu
-const { Menu, MenuItem } = require('electron')
+const { Menu, MenuItem, nativeTheme } = require('electron')
+// Icon builder
+const getIcon = require('../../lib/getIcon') 
 // Parent custom window
 const CustomBrowserWindow = require('../custom/browserWindow')
-let HttpBrowserWindow = require('./httpBrowserWindow')
+const HttpBrowserWindow = require('./httpBrowserWindow')
 
 // Simply class for webbar
 class WebbarBrowserWindow extends CustomBrowserWindow {
    constructor() {
       let name = process.env['WEBBAR_WINDOW_NAME']
       let options = {
-         backgroundColor: '#e1e1e1',
+         backgroundColor: nativeTheme.shouldUseDarkColors ? '#282828' : '#e1e1e1',
 
          frame: false,
          transparent: false,
@@ -58,21 +60,38 @@ class WebbarBrowserWindow extends CustomBrowserWindow {
       this.menu.append(new MenuItem({ label: 'New Session'}))
       this.menu.append(new MenuItem({ label: 'Switch Session'}))
       this.menu.append(new MenuItem({ type: 'separator' }))
-      this.menu.append(new MenuItem({ label: 'Switch Theme', icon: `${process.env['MENU_ICONS_PATH']}/sun.png` }))
+      this.menu.append(new MenuItem({
+         label: 'Switch Theme',
+         icon: getIcon('moon', 'png', '16'),
+         click: function () {
+            nativeTheme.themeSource = nativeTheme.themeSource === 'dark' ? 'light' : 'dark'
+            this.browserWindow.setBackgroundColor(nativeTheme.shouldUseDarkColors ? '#282828' : '#e1e1e1')
+            this.browserWindow.reload()
+         }.bind(this)
+      }))
       this.menu.append(new MenuItem({ type: 'separator' }))
       this.menu.append(new MenuItem({
-         label: 'Print', accelerator: 'CmdOrCtrl+P',
-         icon: `${process.env['MENU_ICONS_PATH']}/print.png`,
+         label: 'Print',
+         accelerator: 'CmdOrCtrl+P',
+         icon: getIcon('print', 'png', '16'),
          click: () => {
             console.log('time to print stuff')
          }
       }))
       this.menu.append(new MenuItem({ type: 'separator' }))
       this.menu.append(new MenuItem({ label: 'History', accelerator: 'CmdOrCtrl+H' }))
-      this.menu.append(new MenuItem({ label: 'Downloads', accelerator: 'CmdOrCtrl+J', icon: `${process.env['MENU_ICONS_PATH']}/download.png` }))
+      this.menu.append(new MenuItem({
+         label: 'Downloads',
+         accelerator: 'CmdOrCtrl+J',
+         icon: getIcon('download', 'png', '16')
+      }))
       this.menu.append(new MenuItem({ type: 'separator' }))
       this.menu.append(new MenuItem({ label: 'Settings' }))
-      this.menu.append(new MenuItem({ label: 'Help', accelerator: 'F1', icon: `${process.env['MENU_ICONS_PATH']}/question.png` }))
+      this.menu.append(new MenuItem({
+         label: 'Help',
+         accelerator: 'F1',
+         icon: getIcon('print', 'png', '16')
+      }))
       this.menu.append(new MenuItem({ type: 'separator' }))
       this.menu.append(new MenuItem({ label: 'Exit' }))
       this.browserWindow.setMenu(this.menu)

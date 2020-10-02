@@ -5,7 +5,7 @@
          'de.devjs.angular.login',
          'de.devjs.angular.spotlight', 'de.devjs.angular.pins',
          'de.devjs.angular.appstore', 'de.devjs.angular.twofactorauth'])
-      .config((AngularSpotlightProvider, $routeProvider) => {
+      .config(($routeProvider) => {
          // Routing
          $routeProvider
             .when("/", { templateUrl: "app://src/app/spotlight/view.html", pageTitle: 'Explore the web' })
