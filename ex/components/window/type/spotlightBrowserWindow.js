@@ -1,4 +1,7 @@
 "use strict";
+// Eelectron storage
+const ElectronStore = require('electron-store');
+const storage = new ElectronStore({ accessPropertiesByDotNotation: false, name: 'HttpBrowserWindows' });
 // Parent custom window
 const CustomBrowserWindow = require('../custom/browserWindow')
 // Simply class for spotlight
@@ -50,7 +53,13 @@ class SpotlightBrowserWindow extends CustomBrowserWindow {
       this.browserWindow.on('focus', this._onBrowserWindowFocus)
 
       // WebContents listeners
+      this.browserWindow.webContents.on('page-favicon-updated', this._pageFaviconUpdated)
       this.browserWindow.webContents.on('page-title-updated', this._pageTilteUpdated)
+      this.browserWindow.webContents.on('did-navigate-in-page', this._didNavigateInPage)
+      this.browserWindow.webContents.on('did-finish-load', this._didFinishLoad)
+
+      // Initialize the window data to be stored
+      storage.set(this.browserWindow.windowId, {})
    }
 
    //<summar>
@@ -74,10 +83,43 @@ class SpotlightBrowserWindow extends CustomBrowserWindow {
             this.browserWindow.webContents.getTitle(), this.webbarWindow.makeFocusedWindowURL())
    }.bind(this)
 
+   _pageFaviconUpdated = function (event, favicons) {
+      if (favicons.length > 0) {
+         this.webbarWindow
+            .browserWindow.webContents.send('window-favicon', this.browserWindow.windowId, favicons[0])
+
+         let stored = storage.get(this.browserWindow.windowId)
+         stored.favicon = favicons[0]
+         storage.set(this.browserWindow.windowId, stored)
+      }
+   }.bind(this)
+
    _pageTilteUpdated = function (event, title, explicitSet) {
       if (title === '') title = 'Untitled'
       this.webbarWindow
          .browserWindow.webContents.send('window-title', this.browserWindow.windowId, title)
+      
+      let stored = storage.get(this.browserWindow.windowId)
+      stored.title = title
+      storage.set(this.browserWindow.windowId, stored)
+   }.bind(this)
+
+   _didNavigateInPage = function (event, url, isMainFrame, fromProcessId, frameRoutingId) {
+      this.webbarWindow
+         .browserWindow.webContents.send('window-can-go-back', this.browserWindow.windowId, this.browserWindow.webContents.canGoBack())
+         
+      let stored = storage.get(this.browserWindow.windowId)
+      stored.url = url
+      storage.set(this.browserWindow.windowId, stored)
+   }.bind(this)
+
+   _didFinishLoad = function () {
+      this.webbarWindow
+         .browserWindow.webContents.send('window-can-go-back', this.browserWindow.windowId, this.browserWindow.webContents.canGoBack())
+
+      let stored = storage.get(this.browserWindow.windowId)
+      stored.url = this.browserWindow.webContents.getURL()
+      storage.set(this.browserWindow.windowId, stored)
    }.bind(this)
 }
 

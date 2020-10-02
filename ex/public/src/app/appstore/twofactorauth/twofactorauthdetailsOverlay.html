@@ -1,6 +1,6 @@
 <div class="ng-spotlight ng-appstore-overlay">
-    <div ng-include="'src/app/navigation/header.html'"></div>
-    <div ng-if="token === '123456' && !delete" ng-include="'src/app/navigation/loading.html'"></div>
+    <div ng-include="'app://src/app/navigation/header.html'"></div>
+    <div ng-if="token === '123456' && !delete" ng-include="'app://src/app/navigation/loading.html'"></div>
     <div ng-if="token !== '123456' && !delete" class="ng-success-dialog">
         <div class="ng-info">
             <span class="title">{{token}}</span>

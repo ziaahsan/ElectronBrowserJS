@@ -1,8 +1,7 @@
 <div class="ng-webbar">
    <div class="tabs">
       <span class="icon" ng-repeat="(windowId, window) in windows track by windowId" ng-click="openWindow(windowId)"
-         ng-class="{'icon-active' : focusedWindow.windowId === windowId}" ng-if="windowId !== 'spotlight'">
-
+         ng-class="{'icon-active' : focusedWindow.windowId === windowId}">
          <span ng-if="focusedWindow.windowId === windowId">
             <span ng-if="window.isLoading" class="favicon favicon-active">
                <span ng-if="window.canGoBack" class="go-back" ng-click="openPreviousPage(); $event.stopPropagation()">
@@ -11,7 +10,7 @@
                <span ng-if="!window.canGoBack" class="go-back go-back-disabled">
                   <i class="las la-arrow-left"></i>
                </span>
-               <span class="icon icon-active" ng-style="{'background-image': 'url(icons/spinner.gif)'}"></span>
+               <span class="icon icon-active" ng-style="{'background-image': 'url(app://icons/spinner.gif)'}"></span>
                <span class="title">{{focusedWindow.title}}</span>
             </span>
 
@@ -23,7 +22,7 @@
                   <i class="las la-arrow-left"></i>
                </span>
                <span class="icon icon-active" ng-if="!window.favicon || window.favicon === ''"
-                  ng-style="{'background-image': 'url(icons/web.png)'}"></span>
+                  ng-style="{'background-image': 'url(app://icons/web.png)'}"></span>
                <span class="icon icon-active" ng-if="window.favicon && window.favicon !== ''"
                   ng-style="{'background-image': 'url(' + window.favicon + ')'}"></span>
                <span class="title">{{focusedWindow.title}}</span>
@@ -38,11 +37,11 @@
 
          <span ng-if="focusedWindow.windowId !== windowId">
             <span ng-if="window.isLoading" class="favicon">
-               <span class="icon" ng-style="{'background-image': 'url(icons/spinner.gif)'}"></span>
+               <span class="icon" ng-style="{'background-image': 'url(app://icons/spinner.gif)'}"></span>
             </span>
             <span ng-if="!window.isLoading" class="favicon" title="{{window.title}}">
                <span class="icon" ng-if="!window.favicon || window.favicon === ''"
-                  ng-style="{'background-image': 'url(icons/web.png)'}"></span>
+                  ng-style="{'background-image': 'url(app://icons/web.png)'}"></span>
                <span class="icon" ng-if="window.favicon && window.favicon !== ''"
                   ng-style="{'background-image': 'url(' + window.favicon + ')'}"></span>
             </span>
@@ -51,9 +50,9 @@
             </span>
          </span>
       </span>
-      <span class="icon" ng-click="openSpotlight()">
+      <span class="icon" ng-click="openBlankWindow()">
          <span class="favicon favicon-add">
-            <span class="icon" ng-style="{'background-image': 'url(icons/add.png)'}"></span>
+            <span class="icon" ng-style="{'background-image': 'url(app://icons/add.png)'}"></span>
          </span>
       </span>
    </div>

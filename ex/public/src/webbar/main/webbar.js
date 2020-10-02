@@ -12,7 +12,7 @@ angular
          replace: true,
          controller: controller(),
          link: link,
-         templateUrl: 'src/webbar/main/webbarOverlay.html'
+         templateUrl: 'app://src/webbar/main/webbarOverlay.html'
       };
 
       //<summary>
@@ -21,14 +21,7 @@ angular
       function controller() {
          return ['$scope', '$location', function ($scope, $location) {
             // Setup default windows...
-            $scope.windows = {
-               'spotlight': {
-                  title: 'Untitled',
-                  isLoading: false,
-                  url: '',
-                  favicon: ''
-               }
-            }
+            $scope.windows = { }
 
             // Clean up with angularJS
             $scope.$on('$destroy', function () {

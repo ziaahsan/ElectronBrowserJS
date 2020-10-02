@@ -11,7 +11,7 @@ angular
          replace: true,
          controller: controller(),
          link: link,
-         templateUrl: 'src/webbar/titlebar/titlebarOverlay.html'
+         templateUrl: 'app://src/webbar/titlebar/titlebarOverlay.html'
       };
 
       //<summary>
@@ -31,7 +31,7 @@ angular
                window.addEventListener('message', $scope._onFocus);
 
                // Request for focused windows
-               window.postMessage({type: 'get-focused-window'})
+               window.postMessage({ type: 'get-focused-window' })
             }
 
             $scope._onFocus = function (event) {
@@ -45,7 +45,11 @@ angular
                   $scope.focusedWindow.title = event.data.results.title
                   $scope.focusedWindow.windowId = event.data.results.windowId
                   $scope.focusedWindow.url = event.data.results.url
-                  $scope.focusedWindow.isTrusted = event.isTrusted && event.data.results.url.startsWith('https:')
+                  $scope.focusedWindow.isTrusted = 
+                     event.isTrusted && (
+                        event.data.results.url.startsWith('https:') ||
+                        event.data.results.url.startsWith('app:')
+                     )
                });
             }
 

@@ -11,19 +11,20 @@
             minimal-ui
          ">
    <meta http-equiv="Content-Security-Policy" content="
-            default-src 'self';
-            style-src   'self' https://fonts.googleapis.com 'sha256-1PxuDsPyGK6n+LZsMv0gG4lMX3i3XigG6h0CzPIjwrE=';
-            img-src     'self' data:;
-            font-src    'self' https://fonts.gstatic.com;
-            connect-src 'self' http://localhost:8000;
-            script-src  'self';
+            default-src 'self' app: node:;
+            style-src   'self' app: node: https://fonts.googleapis.com 'sha256-1PxuDsPyGK6n+LZsMv0gG4lMX3i3XigG6h0CzPIjwrE=';
+            img-src     'self' app: node: data:;
+            font-src    'self' app: node: https://fonts.gstatic.com;
+            connect-src 'self' app: node: http://localhost:8000;
+            script-src  'self' app: node:;
         ">
 
-   <title ng-bind="pageTitle">App</title>
+   <title ng-bind="pageTitle">App | Home</title>
+   <link rel="icon" type="image/png" href="app://icons/favicon.png">
 
    <!-- Required Dependencies -->
-   <script src="../node_modules/jquery/dist/jquery.min.js"></script>
-   <link href="../node_modules/line-awesome/dist/line-awesome/css/line-awesome.min.css" type="text/css"
+   <script src="node://jquery/dist/jquery.min.js"></script>
+   <link href="node://line-awesome/dist/line-awesome/css/line-awesome.min.css" type="text/css"
       rel="stylesheet">
 
    <!-- Fonts -->
@@ -32,25 +33,24 @@
       type="text/css" rel="stylesheet">
 
    <!-- Main CSS -->
-   <link href="css/main.min.css" type="text/css" rel="stylesheet">
-   <link href="css/animations.min.css" type="text/css" rel="stylesheet">
-   <link href="css/darkTheme.min.css" type="text/css" rel="stylesheet" id="angular-theme">
-   <link href="css/iconsStyleA.min.css" type="text/css" rel="stylesheet" id="angular-icon-theme">
+   <link href="app://css/main.min.css" type="text/css" rel="stylesheet">
+   <link href="app://css/animations.min.css" type="text/css" rel="stylesheet">
+   <link href="app://css/lightTheme.min.css" type="text/css" rel="stylesheet" id="angular-theme">
 
    <!-- AngularJS -->
-   <script src="../node_modules/angular/angular.js"></script>
-   <script src="../node_modules/angular-route/angular-route.min.js"></script>
-   <script src="../node_modules/angular-animate/angular-animate.min.js"></script>
+   <script src="node://angular/angular.js"></script>
+   <script src="node://angular-route/angular-route.min.js"></script>
+   <script src="node://angular-animate/angular-animate.min.js"></script>
 
-   <script src="src/app-config.js"></script>
-   <script src="src/app-theme-config.js"></script>
+   <script src="app://src/app-config.js"></script>
+   <script src="app://src/app-theme-config.js"></script>
 
    <!-- Angular Components -->
-   <script src="src/app/login/login.js"></script>
-   <script src="src/app/pins/pins.js"></script>
-   <script src="src/app/spotlight/spotlight.js"></script>
-   <script src="src/app/appstore/store/appstore.js"></script>
-   <script src="src/app/appstore/twofactorauth/twofactorauth.js"></script>
+   <script src="app://src/app/login/login.js"></script>
+   <script src="app://src/app/pins/pins.js"></script>
+   <script src="app://src/app/spotlight/spotlight.js"></script>
+   <script src="app://src/app/appstore/store/appstore.js"></script>
+   <script src="app://src/app/appstore/twofactorauth/twofactorauth.js"></script>
 </head>
 
 <body>

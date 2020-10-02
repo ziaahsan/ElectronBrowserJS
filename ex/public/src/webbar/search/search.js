@@ -16,7 +16,7 @@ angular
          replace: true,
          controller: controller(),
          link: link,
-         templateUrl: 'src/webbar/search/searchOverlay.html'
+         templateUrl: 'app://src/webbar/search/searchOverlay.html'
       };
 
       //<summary>

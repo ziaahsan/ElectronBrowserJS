@@ -7,7 +7,7 @@
       .config(($routeProvider) => {
          // Routing
          $routeProvider
-            .when("/", { templateUrl: "src/webbar/main/view.html" })
-            .when("/search", { templateUrl: "src/webbar/search/view.html" });
+            .when("/", { templateUrl: "app://src/webbar/main/view.html" })
+            .when("/search", { templateUrl: "app://src/webbar/search/view.html" });
       });
 })();

@@ -2,7 +2,7 @@
 // Setup path
 const path = require('path')
 // Modules to control application life and create native browser window
-const { app, ipcMain, session, globalShortcut } = require('electron')
+const { app, ipcMain, session, protocol } = require('electron')
 // Setup the browserWindows instance
 const BrowserWindows = require('./components/window/browserWindows');
 let browserWindows = new BrowserWindows()
@@ -13,6 +13,8 @@ const fetch = require('cross-fetch')
 const fsPromises = require('fs').promises;
 
 // ENV Variabels
+process.env['PROTOCOL_APP'] = 'app'
+process.env['PROTOCOL_NODE'] = 'node'
 process.env['WEBBAR_WINDOW_NAME'] = 'webbar'
 process.env['SPOTLIGHT_WINDOW_NAME'] = 'spotlight'
 process.env['MENU_ICONS_PATH'] = path.join(__dirname, 'components/window/icons/menu/')
@@ -28,7 +30,18 @@ ipcMain.on('close-window', (event, windowId) => browserWindows.unloadWindow(wind
 ipcMain.on('find-in-focused-page', (event, searchTerm) => browserWindows.findInFocusedPage(searchTerm))
 ipcMain.on('stop-find-in-focused-page', (event, searchTerm) => browserWindows.stopFindInFocusedPage(searchTerm))
 
-// When app's initialized
+// Protocol
+protocol.registerSchemesAsPrivileged([
+   {
+      scheme: process.env['PROTOCOL_APP'],
+      privileges: { standard: false, secure: true, allowServiceWorkers: true, supportFetchAPI: true, corsEnabled: true }
+   },
+   {
+      scheme: process.env['PROTOCOL_NODE'],
+      privileges: { standard: false, secure: true, corsEnabled: true }
+   }
+])
+
 app.on('ready', () => {
    app.userAgentFallback = app.userAgentFallback
       // SingleBox: Fix WhatsApp requires Google Chrome 49+ bug
@@ -48,6 +61,20 @@ app.on('ready', () => {
 })
 
 app.whenReady().then(() => {
+   // Register app:// protocol
+   protocol.registerFileProtocol(process.env['PROTOCOL_APP'], (request, callback) => {
+      let protocolName = `${process.env['PROTOCOL_APP']}://`
+      let url = request.url.substr(protocolName.length).replace(/\/+$/, "")
+      callback({ path: path.normalize(`${__dirname}/public/${url}`) })
+   })
+
+   // Register node:// protocol
+   protocol.registerFileProtocol(process.env['PROTOCOL_NODE'], (request, callback) => {
+      let protocolName = `${process.env['PROTOCOL_NODE']}://`
+      let url = request.url.substr(protocolName.length).replace(/\/+$/, "")
+      callback({ path: path.normalize(`${__dirname}/node_modules/${url}`) })
+   })
+
    // Electron ad-blocker
    ElectronBlocker.fromPrebuiltAdsAndTracking(fetch, {
       path: path.join(app.getPath('userData'), 'adblocker.bin'),

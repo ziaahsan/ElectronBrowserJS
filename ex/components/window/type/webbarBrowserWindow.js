@@ -10,8 +10,7 @@ class WebbarBrowserWindow extends CustomBrowserWindow {
    constructor() {
       let name = process.env['WEBBAR_WINDOW_NAME']
       let options = {
-         backgroundColor: '#282828',
-         // backgroundColor: '#e1e1e1',
+         backgroundColor: '#e1e1e1',
 
          frame: false,
          transparent: false,

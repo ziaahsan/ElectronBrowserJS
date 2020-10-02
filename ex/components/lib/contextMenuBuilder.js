@@ -2,7 +2,7 @@
 /* eslint-disable no-param-reassign */
 /* global Image */
 // Ported from
-// https://github.com/electron-userland/electron-spellchecker/blob/master/src/context-menu-builder.js
+// https://github.com/electron-userland/electron-spellchecker/blob/master/app://src/context-menu-builder.js
 
 const {
    clipboard,

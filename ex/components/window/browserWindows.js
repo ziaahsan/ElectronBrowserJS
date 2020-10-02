@@ -21,7 +21,7 @@ class BrowserWindows {
       this.webbarWindow = new WebbarBrowserWindow()
       this.webbarWindow.browserWindow.webContents.on('context-menu', this._onWebbarContextMenu)
 
-      await this.webbarWindow.loadFile('public/webbar.html').then(res => {
+      await this.webbarWindow.loadHttp(`${process.env['PROTOCOL_APP']}://webbar.html`).then(res => {
          // Register localShort for webbarWindow
          this.addShortcutsToWindow(this.webbarWindow.browserWindow)
          // Add context menu
@@ -39,7 +39,7 @@ class BrowserWindows {
          this.spotlightWindow = new SpotlightBrowserWindow(this.webbarWindow)
          this.spotlightWindow.browserWindow.on('closed', this._onSpotlightBrowserWindowClosed)
          this.spotlightWindow.browserWindow.webContents.on('context-menu', this._onSpotlightContextMenu)
-         await this.spotlightWindow.loadFile('public/index.html').then(res => {
+         await this.spotlightWindow.loadHttp(`${process.env['PROTOCOL_APP']}://index.html`).then(res => {
             // Register localShort for spotlight
             localShortcut.register(this.spotlightWindow.browserWindow, 'Esc', this._onLoadPreviousFocusedWindow)
             localShortcut.register(this.spotlightWindow.browserWindow, 'Ctrl+T', this._shortcutCtrlT)

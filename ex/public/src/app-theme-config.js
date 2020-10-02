@@ -12,10 +12,10 @@ $(function () {
    function getCssForTheme(name) {
       var theme = {
          dark: {
-            style: 'css/darkTheme.min.css',
+            style: 'app://css/darkTheme.min.css',
          },
          light: {
-            style: 'css/lightTheme.min.css',
+            style: 'app://css/lightTheme.min.css',
          }
       };
 
