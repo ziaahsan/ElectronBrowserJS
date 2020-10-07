@@ -11,7 +11,8 @@
       </span>
       <span class="icons">
          <i ng-click="minimizeWebbarWindow()" class="las la-minus"></i>
-         <i ng-click="maximizeWebbarWindow()" class="las la-stop"></i>
+         <i ng-if="!focusedWindow.isMaximized" ng-click="maximizeWebbarWindow()" class="las la-stop"></i>
+         <i ng-if="focusedWindow.isMaximized" ng-click="maximizeWebbarWindow()" class="las la-ebay"></i>
          <i ng-click="closeWebbarWindow()" class="close las la-times"></i>
       </span>
    </span>

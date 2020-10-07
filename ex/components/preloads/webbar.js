@@ -67,6 +67,12 @@ process.once('loaded', () => {
       window.postMessage(response);
    });
 
+   ipcRenderer.on('window-maximized', (event, isMaximized) => {
+      let message = { isMaximized: isMaximized };
+      let response = { type: 'maximized', name: 'ng-webbar', results: message };
+      window.postMessage(response);
+   });
+
    ipcRenderer.on('window-can-go-back', (event, httpWindowId, status) => {
       let message = { windowId: httpWindowId, canGoBack: status };
       let response = { type: 'can-go-back', name: 'ng-webbar', results: message };

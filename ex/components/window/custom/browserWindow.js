@@ -33,7 +33,9 @@ class CustomBrowserWindow {
          maximizable: this.maximizable,
 
          minWidth: 880,
-         minHeight: 790,
+         // Issue #8: minHeight set to same as plain window size
+         minHeight: 768,
+
          width: this.options.width,
          height: this.options.height,
 
@@ -46,7 +48,7 @@ class CustomBrowserWindow {
          hasShadow: this.options.shadow,
 
          webPreferences: {
-            devTools: isDev,
+            devTools: true,
             spellcheck: true,
             sandbox: true,
             plugins: true,

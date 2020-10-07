@@ -67,6 +67,8 @@ app.whenReady().then(() => {
    protocol.registerFileProtocol(process.env['PROTOCOL_APP'], (request, callback) => {
       let protocolName = `${process.env['PROTOCOL_APP']}://`
       let url = request.url.substr(protocolName.length).replace(/\/+$/, "")
+      // Issue #15: Hash-bang prefix
+      url = url.replace('#!', "")
       callback({ path: path.normalize(`${__dirname}/public/${url}`) })
    })
 
@@ -74,6 +76,8 @@ app.whenReady().then(() => {
    protocol.registerFileProtocol(process.env['PROTOCOL_NODE'], (request, callback) => {
       let protocolName = `${process.env['PROTOCOL_NODE']}://`
       let url = request.url.substr(protocolName.length).replace(/\/+$/, "")
+      // Issue #15: Hash-bang prefix
+      url = url.replace('#!', "")
       callback({ path: path.normalize(`${__dirname}/node_modules/${url}`) })
    })
 

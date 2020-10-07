@@ -24,11 +24,13 @@ angular
             // Clean up with angularJS
             $scope.$on('$destroy', function () {
                window.removeEventListener('message', $scope._onFocus);
+               window.removeEventListener('message', $scope._onMaximized);
             });
 
             // Route initializer
             $scope.init = function () {
                window.addEventListener('message', $scope._onFocus);
+               window.addEventListener('message', $scope._onMaximized);
 
                // Request for focused windows
                window.postMessage({ type: 'get-focused-window' })
@@ -50,6 +52,18 @@ angular
                         event.data.results.url.startsWith('https:') ||
                         event.data.results.url.startsWith('app:')
                      )
+               });
+            }
+
+            $scope._onMaximized = function (event) {
+               if (event.source != window ||
+                  !event.data.name || event.data.name != 'ng-webbar') return;
+               if (event.data.type !== 'maximized') return;
+               if (!event.data.results) return;
+               if (!event.data.results.isMaximized) return;
+
+               $scope.$apply(() => {
+                  $scope.focusedWindow.isMaximized = event.data.results.isMaximized
                });
             }
 

@@ -44,13 +44,14 @@ $spotlight-responsive-width: 680px !default;
    background-color: rgba($secondary, 1);
    z-index: 9;
    width: 100%;
-   height: 22px;
+   height: 28px;
+   line-height: 28px;
    font-size: 12px;
    letter-spacing: 0.3px;
    font-family: $font-family;
    overflow: hidden;
    margin: 0 auto;
-   padding: 6px 0;
+   padding: 0;
    border-bottom: 1px solid darken($border-color, 4);
    -webkit-app-region: drag;
    .title {
@@ -61,6 +62,8 @@ $spotlight-responsive-width: 680px !default;
       .favicon {
          float: left;
          padding: 0px 8px;
+         -webkit-app-region: no-drag;
+         user-select: none;
          clear: both;
       }
       .name {
@@ -110,282 +113,289 @@ $spotlight-responsive-width: 680px !default;
       }
    }
 }
-.ng-webbar {
-   position: relative;
-   color: $primary-color;
-   background-color: rgba($primary, 1);
-   z-index: 9;
+.webbar-view {
    width: 100%;
-   height: 42px;
-   font-size: 12px;
-   letter-spacing: 0.3px;
-   font-family: $font-family;
-   overflow: hidden;
-   margin: 0 auto;
-   display: flex;
-   .home {
+   height: calc(100vh - 28px);
+   position: absolute;
+   display: block;
+   background: rgba($primary, 1);
+   .ng-webbar {
       position: relative;
-      width: 44px;
-      display: flex;
-      flex-wrap: nowrap;
-      .icon {
-         font-size: 18px;
-         padding: 0 6px;
-         position: relative;
-         display: inline-block;
-         width: auto;
-         line-height: 42px;
-         text-align: center;
-      }
-      .icon:hover {
-         cursor: pointer;
-      }
-      .fingerprint {
-         position: relative;
-         left: 8px;
-         top: 5px;
-      }
-   }
-   .right-icon {
-      position: relative;
-      max-width: 25%;
-      display: flex;
-      .settings {
-         position: relative;
-         text-align: center;
-         display: inherit;
-         height: 18px;
-         line-height: 18px;
-         padding: 4px;
-         top: 7px;
-         font-weight: 500;
-         font-size: 18px;
-         margin: 0 8px 0 0;
-         .icon {
-            padding: 0 2px;
-         }
-      }
-   }
-   .tabs {
-      position: relative;
+      color: $primary-color;
+      background-color: rgba($primary, 1);
+      z-index: 9;
       width: 100%;
-      margin: 0 0 0 8px;
-      border-right: 1px solid $border-color;
-      padding: 0 8px;
-      display: inline-flex;
-      user-select: none;
-      .icon {
-         font-size: 18px;
-         padding: 4px;
+      height: 42px;
+      font-size: 12px;
+      letter-spacing: 0.3px;
+      font-family: $font-family;
+      overflow: hidden;
+      margin: 0 auto;
+      display: flex;
+      .home {
          position: relative;
-         display: inline-block;
-         width: 22px;
-         text-align: left;
-         top: 0;
-         .title {
-            font-size: 12px;
-            color: #282828;
-            position: absolute;
-            left: 45px;
-            top: 2px;
-            font-weight: 500;
-            max-width: 80px;
-            display: inline-block;
-            text-overflow: ellipsis;
-            overflow: hidden;
-            white-space: nowrap;
-            text-shadow: 0 0 1px #aaa;
-         }
-         .go-back,
-         .go-forward {
-            position: relative;
-            width: 17px;
-            height: 20px;
-            background: $primary-highlight;
-            color: #ffffff;
-            top: -5px;
-            left: -1px;
-            text-align: center;
-            font-size: 12px;
-            display: inline-block;
-            padding: 1px;
-            z-index: 9;
-            border-radius: 4px 0 0 4px;
-            i {
-               position: relative;
-               top: 2px;
-            }
-         }
-         .go-back-disabled {
-            background: $secondary;
-            color: $primary-color;
-         }
-         .close {
-            position: absolute;
-            width: 13px;
-            height: 13px;
-            border-radius: 50%;
-            background: $primary-color-error;
-            color: rgba(255,255,255,0.97);
-            top: 6px;
-            right: 0;
-            text-align: center;
-            font-size: 13px;
-            display: none;
-            z-index: 9;
-            i {
-               position: relative;
-               top: -3px;
-            }
-         }
-         .close-active {
-            display: inline-block;
-         }
-         .indicator {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            border-radius: 2px;
-            background: $primary-color-error;
-            display: inline-block;
-            top: 35px;
-            left: 11px;
-            text-align: center;
-            margin: 0 auto;
-         }
-         .favicon {
-            width: 22px;
-            height: 22px;
+         width: 44px;
+         display: flex;
+         flex-wrap: nowrap;
+         .icon {
+            font-size: 18px;
+            padding: 0 6px;
             position: relative;
             display: inline-block;
+            width: auto;
+            line-height: 42px;
+            text-align: center;
+         }
+         .icon:hover {
+            cursor: pointer;
+         }
+         .fingerprint {
+            position: relative;
+            left: 8px;
+            top: 5px;
+         }
+      }
+      .right-icon {
+         position: relative;
+         max-width: 25%;
+         display: flex;
+         .settings {
+            position: relative;
+            text-align: center;
+            display: inherit;
+            height: 18px;
+            line-height: 18px;
+            padding: 4px;
             top: 7px;
-            margin: 0 auto;
-            border-radius: 4px;
-            background-color: #f7fafc;
-            box-shadow: 0 1px 1px 0 rgba(60, 66, 87, .12), 0 1px 0px 0 rgba(0, 0, 0, .12)!important;
-            border-radius: 4px;
             font-weight: 500;
+            font-size: 18px;
+            margin: 0 8px 0 0;
             .icon {
-               width: 10px;
-               height: 10px;
-               background-size: cover;
-               position: absolute;
-               display: inline-block;
-               top: 2px;
-               left: 2px;
-               background-color: inherit;
-               border-radius: 4px;
-               margin: 0;
-            }
-            .icon-active {
-               left: 22px;
+               padding: 0 2px;
             }
          }
-         .favicon-active {
+      }
+      .tabs {
+         position: relative;
+         width: 100%;
+         margin: 0 0 0 8px;
+         border-right: 1px solid $border-color;
+         padding: 0 8px;
+         display: inline-flex;
+         user-select: none;
+         .icon {
+            font-size: 18px;
+            padding: 4px;
+            position: relative;
+            display: inline-block;
+            width: 22px;
+            text-align: left;
+            top: 0;
+            .title {
+               font-size: 12px;
+               color: #282828;
+               position: absolute;
+               left: 45px;
+               top: 2px;
+               font-weight: 500;
+               max-width: 80px;
+               display: inline-block;
+               text-overflow: ellipsis;
+               overflow: hidden;
+               white-space: nowrap;
+               text-shadow: 0 0 1px #aaa;
+            }
+            .go-back,
+            .go-forward {
+               position: relative;
+               width: 17px;
+               height: 20px;
+               background: $primary-highlight;
+               color: #ffffff;
+               top: -5px;
+               left: -1px;
+               text-align: center;
+               font-size: 12px;
+               display: inline-block;
+               padding: 1px;
+               z-index: 9;
+               border-radius: 4px 0 0 4px;
+               i {
+                  position: relative;
+                  top: 2px;
+               }
+            }
+            .go-back-disabled {
+               background: $secondary;
+               color: $primary-color;
+            }
+            .close {
+               position: absolute;
+               width: 13px;
+               height: 13px;
+               border-radius: 50%;
+               background: $primary-color-error;
+               color: rgba(255, 255, 255, 0.97);
+               top: 6px;
+               right: 0;
+               text-align: center;
+               font-size: 13px;
+               display: none;
+               z-index: 9;
+               i {
+                  position: relative;
+                  top: -3px;
+               }
+            }
+            .close-active {
+               display: inline-block;
+            }
+            .indicator {
+               position: absolute;
+               width: 4px;
+               height: 4px;
+               border-radius: 2px;
+               background: $primary-color-error;
+               display: inline-block;
+               top: 37px;
+               left: 11px;
+               text-align: center;
+               margin: 0 auto;
+            }
+            .favicon {
+               width: 22px;
+               height: 22px;
+               position: relative;
+               display: inline-block;
+               top: 7px;
+               margin: 0 auto;
+               border-radius: 4px;
+               background-color: #f7fafc;
+               box-shadow: 0 1px 1px 0 rgba(60, 66, 87, 0.12), 0 1px 0px 0 rgba(0, 0, 0, 0.12) !important;
+               border-radius: 4px;
+               font-weight: 500;
+               .icon {
+                  width: 10px;
+                  height: 10px;
+                  background-size: cover;
+                  position: absolute;
+                  display: inline-block;
+                  top: 2px;
+                  left: 2px;
+                  background-color: inherit;
+                  border-radius: 4px;
+                  margin: 0;
+               }
+               .icon-active {
+                  left: 22px;
+               }
+            }
+            .favicon-active {
+               width: 134px;
+            }
+            .favicon-add {
+               background-color: $primary-highlight;
+            }
+         }
+         .icon-active {
             width: 134px;
          }
-         .favicon-add {
-            background-color: $primary-highlight;
+         .icon:hover {
+            cursor: pointer;
+         }
+         .icon:hover .close {
+            display: block;
          }
       }
-      .icon-active {
-         width: 134px;
+      .tabs:first-child {
+         padding-left: 0;
       }
-      .icon:hover {
-         cursor: pointer;
-      }
-      .icon:hover .close {
-         display: block
-      }
-   }
-   .tabs:first-child {
-      padding-left: 0;
-   }
-   .search {
-      position: relative;
-      width: 100%;
-      margin: 0 8px;
-      border-left: 1px solid $border-color;
-      border-right: 1px solid $border-color;
-      padding: 0 8px;
-      border-radius: 4px;
-      .label {
-         position: absolute;
-         top: 12px;
-         left: 17px;
-         background: $primary-highlight;
-         color: #ffffff;
-         padding: 1px 4px;
-         border-radius: 2px;
-         font-size: 11px;
-         z-index: 9;
-      }
-      .label-results {
-         position: absolute;
-         top: 12px;
-         right: 17px;
-         background: $primary;
-         padding: 2px 4px;
-         border-radius: 2px;
-         font-size: 11px;
-         z-index: 9;
-         box-shadow: 1px 1px 1px darken($secondary, 3);
-         user-select: none;
-         span {
-            padding: 0 3px;
-            border-radius: 2px;
-         }
-      }
-      input[type="text"] {
+      .search {
          position: relative;
-         top: 4px;
-         padding: 10px 132px 10px 60px;
-         border: 1px solid transparent;
-         height: 12px;
-         text-align: left;
-         color: $primary-color;
-         background-color: $secondary;
-         width: calc(100% - 194px);
-         font-size: 16px;
-         font-weight: 500;
-      }
-      input[type="text"]:focus {
-         outline: 2px solid $primary;
-      }
-   }
-   .menu {
-      position: relative;
-      width: 100%;
-      margin: 0 8px;
-      border-left: 1px solid $border-color;
-      border-right: 1px solid $border-color;
-      padding: 0 8px;
-      ul {
-         height: 42px;
-         display: block;
-         li {
-            display: inline-block;
-            list-style: none;
-            line-height: 24px;
-            padding: 0 7px;
-            text-align: center;
-            margin: 8px 1px;
+         width: 100%;
+         margin: 0 8px;
+         border-left: 1px solid $border-color;
+         border-right: 1px solid $border-color;
+         padding: 0 8px;
+         border-radius: 4px;
+         .label {
+            position: absolute;
+            top: 12px;
+            left: 17px;
+            background: $primary-highlight;
+            color: #ffffff;
+            padding: 1px 4px;
             border-radius: 2px;
-            -webkit-app-region: no-drag;
-            border: 1px solid $border-color;
-            .command {
-               font-size: 11px;
-               font-weight: 600;
-               color: darken($primary-color-dark, 20);
-               text-transform: capitalize;
+            font-size: 11px;
+            z-index: 9;
+         }
+         .label-results {
+            position: absolute;
+            top: 12px;
+            right: 17px;
+            background: $primary;
+            padding: 2px 4px;
+            border-radius: 2px;
+            font-size: 11px;
+            z-index: 9;
+            box-shadow: 1px 1px 1px darken($secondary, 3);
+            user-select: none;
+            span {
+               padding: 0 3px;
+               border-radius: 2px;
             }
          }
-         li.close {
-            color: $primary-color-error;
-         }
-         li:hover {
-            cursor: pointer;
+         input[type="text"] {
+            position: relative;
+            top: 4px;
+            padding: 10px 132px 10px 60px;
+            border: 1px solid transparent;
+            height: 12px;
+            text-align: left;
+            color: $primary-color;
             background-color: $secondary;
+            width: calc(100% - 194px);
+            font-size: 16px;
+            font-weight: 500;
+         }
+         input[type="text"]:focus {
+            outline: 2px solid $primary;
+         }
+      }
+      .menu {
+         position: relative;
+         width: 100%;
+         margin: 0 8px;
+         border-left: 1px solid $border-color;
+         border-right: 1px solid $border-color;
+         padding: 0 8px;
+         ul {
+            height: 42px;
+            display: block;
+            li {
+               display: inline-block;
+               list-style: none;
+               line-height: 24px;
+               padding: 0 7px;
+               text-align: center;
+               margin: 8px 1px;
+               border-radius: 2px;
+               -webkit-app-region: no-drag;
+               border: 1px solid $border-color;
+               .command {
+                  font-size: 11px;
+                  font-weight: 600;
+                  color: darken($primary-color-dark, 20);
+                  text-transform: capitalize;
+               }
+            }
+            li.close {
+               color: $primary-color-error;
+            }
+            li:hover {
+               cursor: pointer;
+               background-color: $secondary;
+            }
          }
       }
    }
@@ -717,7 +727,7 @@ $spotlight-responsive-width: 680px !default;
       border-radius: 6px;
       overflow: hidden;
       top: 25vh;
-      
+
       @media only screen and (min-width: $spotlight-responsive-width) {
          margin: 0 auto;
          margin-bottom: 6px;

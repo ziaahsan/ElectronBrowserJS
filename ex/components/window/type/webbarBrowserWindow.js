@@ -12,7 +12,7 @@ class WebbarBrowserWindow extends CustomBrowserWindow {
    constructor() {
       let name = process.env['WEBBAR_WINDOW_NAME']
       let options = {
-         backgroundColor: nativeTheme.shouldUseDarkColors ? '#282828' : '#e1e1e1',
+         backgroundColor: '#FFFFFF',
 
          frame: false,
          transparent: false,
@@ -27,7 +27,7 @@ class WebbarBrowserWindow extends CustomBrowserWindow {
          width: 1366,
          height: 768,
 
-         webbarHeight: 77,
+         webbarHeight: 73,
          padding: 6,
 
          center: true,
@@ -65,8 +65,6 @@ class WebbarBrowserWindow extends CustomBrowserWindow {
          icon: getIcon('moon', 'png', '16'),
          click: function () {
             nativeTheme.themeSource = nativeTheme.themeSource === 'dark' ? 'light' : 'dark'
-            this.browserWindow.setBackgroundColor(nativeTheme.shouldUseDarkColors ? '#282828' : '#e1e1e1')
-            this.browserWindow.reload()
          }.bind(this)
       }))
       this.menu.append(new MenuItem({ type: 'separator' }))
@@ -94,9 +92,12 @@ class WebbarBrowserWindow extends CustomBrowserWindow {
       }))
       this.menu.append(new MenuItem({ type: 'separator' }))
       this.menu.append(new MenuItem({ label: 'Exit' }))
-      this.browserWindow.setMenu(this.menu)
 
       // Attach listeners
+      nativeTheme.on('updated', this._themeUpdated)
+      // Issue #9: Adding can be maximize and unmaxize check
+      this.browserWindow.on('maximize', this._onMaximized)
+      this.browserWindow.on('unmaximize', this._onUnMaximized)
       this.browserWindow.webContents.on('ipc-message', this._onRestoreHttpWindows)
       this.browserWindow.webContents.on('ipc-message', this._onGetFocusedWindow)
       this.browserWindow.webContents.on('ipc-message', this._onCloseThisWindow)
@@ -110,9 +111,7 @@ class WebbarBrowserWindow extends CustomBrowserWindow {
 
       try {
          url = new URL(this.focused.browserWindow.webContents.getURL())
-         let protocol = url.protocol
-         let hostname = url.hostname
-         url = `${protocol}//${hostname}`
+         url = `${url.protocol}//${url.hostname}`
       } catch (e) {
          url = 'Omitted, not a valid URL or missing focused window.'
          console.log(e.messsage)
@@ -124,6 +123,18 @@ class WebbarBrowserWindow extends CustomBrowserWindow {
    //<summar>
    // All the listeners for this window
    //</summary>
+   _themeUpdated = function() {
+
+   }.bind(this)
+
+   _onMaximized = function () {
+
+   }.bind(this)
+
+   _onUnMaximized = function () {
+
+   }.bind(this)
+
    _onRestoreHttpWindows = function (event, channel) {
       if (channel !== 'restore-http-windows') return
       event.sender.send(channel, HttpBrowserWindow.getStoredWindows())

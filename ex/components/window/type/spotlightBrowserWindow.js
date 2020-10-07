@@ -11,7 +11,7 @@ class SpotlightBrowserWindow extends CustomBrowserWindow {
 
       let name = process.env['SPOTLIGHT_WINDOW_NAME']
       let options = {
-         backgroundColor: '#00000000',
+         backgroundColor: '#00FFFFFF',
 
          frame: false,
          transparent: true,

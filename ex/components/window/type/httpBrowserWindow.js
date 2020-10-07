@@ -14,7 +14,7 @@ class HttpBrowserWindow extends CustomBrowserWindow {
 
       let name = 'http'
       let options = {
-         backgroundColor: '#FFF',
+         backgroundColor: '#FFFFFF',
 
          frame: false,
          transparent: true,

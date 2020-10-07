@@ -4,7 +4,8 @@ angular
    .directive('searchOverlay', ['$timeout', '$http', '$compile', 'Search', function ($timeout, $http, $compile, Search) {
       // Key valus
       const KEY = {
-         ENTER: 13
+         ENTER: 13,
+         ESC: 27
       };
 
       // Root view element to append items to
@@ -51,6 +52,11 @@ angular
                      // Send message to main for creating new http
                      window.postMessage({ type: 'find-in-focused-page', searchTerm: searchTerm });
                   }
+               } else if (event.keyCode === KEY.ESC) {
+                  // Issue #12: Redirect to root on ESC
+                  $scope.$apply(() => {
+                     $location.path('/');
+                  })
                }
             }
 
