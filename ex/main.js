@@ -13,7 +13,7 @@ const fetch = require('cross-fetch')
 const fsPromises = require('fs').promises;
 
 // Setup native theme
-nativeTheme.themeSource = 'light'
+nativeTheme.themeSource = 'dark'
 
 // ENV Variabels
 process.env['PROTOCOL_APP'] = 'app'

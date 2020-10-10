@@ -142,7 +142,8 @@ angular
             }
 
             $scope.openWindow = function (id) {
-               window.postMessage({type: 'open-window', windowId: id})
+               if (id === 'spotlight') $scope.openSpotlight()
+               else window.postMessage({type: 'open-window', windowId: id})
             }
 
             $scope.closeWindow = function (id) {

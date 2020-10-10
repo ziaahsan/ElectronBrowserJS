@@ -92,6 +92,7 @@ class WebbarBrowserWindow extends CustomBrowserWindow {
       }))
       this.menu.append(new MenuItem({ type: 'separator' }))
       this.menu.append(new MenuItem({ label: 'Exit' }))
+      this.browserWindow.setMenu(null)
 
       // Attach listeners
       nativeTheme.on('updated', this._themeUpdated)
