@@ -124,12 +124,13 @@ class BrowserWindows {
 
    loadBlank = async function () {
       // Hide all other windows, and create new URL
-      await this.showWindowByWindowId('').then(result => {
-         this.loadURL('https://google.ca')
+      await this.showWindowByWindowId('').then(hasFocus => {
+         if (!hasFocus)
+            this.loadURL('https://google.ca')
       })
    }
 
-   laodWindow = async function (windowId) {
+   loadWindow = async function (windowId) {
       await this.showWindowByWindowId(windowId).then(result => {
          if (result) return
          let storedWindow = HttpBrowserWindow.getStoredWindowById(windowId)
@@ -219,6 +220,7 @@ class BrowserWindows {
       localShortcut.register(win, 'Alt+Right', this._shortcutAltRight)
       localShortcut.register(win, 'Ctrl+F', this._shortcutCtrlF)
       localShortcut.register(win, 'Ctrl+T', this._shortcutCtrlT)
+      localShortcut.register(win, 'Ctrl+W', this._shortcutCtrlW)
       localShortcut.register(win, 'Ctrl+Space', this._shortcutCtrlSpace)
    }
 
@@ -267,7 +269,7 @@ class BrowserWindows {
 
    _onLoadPreviousFocusedWindow = function () {
       let windowId = this.webbarWindow.focusedHistory.slice(-2, -1)
-      if (windowId.length === 1) this.laodWindow(windowId[0])
+      if (windowId.length === 1) this.loadWindow(windowId[0])
    }.bind(this)
 
    //<summar>
@@ -275,6 +277,10 @@ class BrowserWindows {
    //</summary>
    _shortcutCtrlT = function () {
       this.loadBlank()
+   }.bind(this)
+
+   _shortcutCtrlW = function () {
+      this.unloadWindow(this.webbarWindow.focused.browserWindow.windowId)
    }.bind(this)
 
    _shortcutCtrlF = function () {

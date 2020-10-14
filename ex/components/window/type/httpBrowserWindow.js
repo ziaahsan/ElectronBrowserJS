@@ -44,6 +44,7 @@ class HttpBrowserWindow extends CustomBrowserWindow {
       super(name, options)
 
       // Defaults
+      this.browserWindow.favicon = ''
       this.browserWindow.windowId = windowId === '' ? crypto({ length: 8, type: 'alphanumeric' }) : windowId
       this.browserWindow.setContentSize(size[0] - (webbarWindow.options.padding * 2), size[1] - webbarWindow.options.webbarHeight - webbarWindow.options.padding)
 
@@ -64,9 +65,6 @@ class HttpBrowserWindow extends CustomBrowserWindow {
       this.browserWindow.webContents.on('did-navigate-in-page', this._didNavigateInPage)
       this.browserWindow.webContents.on('did-finish-load', this._didFinishLoad)
       this.browserWindow.webContents.on('found-in-page', this._onFoundInPage)
-
-      // Initialize the window data to be stored
-      storage.set(this.browserWindow.windowId, {})
    }
 
    //<summar>
@@ -105,9 +103,6 @@ class HttpBrowserWindow extends CustomBrowserWindow {
    }.bind(this)
 
    _onBrowserWindowFocus = function () {
-      let stored = storage.get(this.browserWindow.windowId)
-      if (!stored || !stored.title === '') stored.title = 'Untitled'
-
       this.webbarWindow.focused.browserWindow = this.browserWindow
       this.webbarWindow
          .browserWindow.webContents.send('window-focus', this.browserWindow.windowId,
@@ -128,10 +123,7 @@ class HttpBrowserWindow extends CustomBrowserWindow {
       if (favicons.length > 0) {
          this.webbarWindow
             .browserWindow.webContents.send('window-favicon', this.browserWindow.windowId, favicons[0])
-
-         let stored = storage.get(this.browserWindow.windowId)
-         stored.favicon = favicons[0]
-         storage.set(this.browserWindow.windowId, stored)
+         this.browserWindow.favicon = favicons[0]
       }
    }.bind(this)
 
@@ -146,28 +138,16 @@ class HttpBrowserWindow extends CustomBrowserWindow {
          .browserWindow.webContents.send('window-focus', this.browserWindow.windowId,
             this.browserWindow.webContents.getTitle(), this.webbarWindow.makeFocusedWindowURL())
       }
-
-      let stored = storage.get(this.browserWindow.windowId)
-      stored.title = title
-      storage.set(this.browserWindow.windowId, stored)
    }.bind(this)
 
    _didNavigateInPage = function (event, url, isMainFrame, fromProcessId, frameRoutingId) {
       this.webbarWindow
          .browserWindow.webContents.send('window-can-go-back', this.browserWindow.windowId, this.browserWindow.webContents.canGoBack())
-         
-      let stored = storage.get(this.browserWindow.windowId)
-      stored.url = url
-      storage.set(this.browserWindow.windowId, stored)
    }.bind(this)
 
    _didFinishLoad = function () {
       this.webbarWindow
          .browserWindow.webContents.send('window-can-go-back', this.browserWindow.windowId, this.browserWindow.webContents.canGoBack())
-
-      let stored = storage.get(this.browserWindow.windowId)
-      stored.url = this.browserWindow.webContents.getURL()
-      storage.set(this.browserWindow.windowId, stored)
    }.bind(this)
 
    _onFoundInPage = function (event, result) {
