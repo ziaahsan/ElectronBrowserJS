@@ -44,6 +44,8 @@ class CustomBrowserWindow {
 
          titleBarStyle: 'hidden',
          thickFrame: this.options.thickFrame,
+
+         skipTaskbar: this.options.skipTaskbar,
          
          hasShadow: this.options.shadow,
 

@@ -58,7 +58,7 @@ $spotlight-responsive-width: 680px !default;
       position: relative;
       display: block;
       text-align: left;
-      top: 2px;
+      top: 0;
       .favicon {
          float: left;
          padding: 0px 8px;
@@ -118,11 +118,11 @@ $spotlight-responsive-width: 680px !default;
    height: calc(100vh - 28px);
    position: absolute;
    display: block;
-   background: rgba($primary, 1);
+   background: rgba($secondary, 1);
    .ng-webbar {
       position: relative;
       color: $primary-color;
-      background-color: rgba($primary, 1);
+      background-color: rgba($secondary, 1);
       z-index: 9;
       width: 100%;
       height: 42px;

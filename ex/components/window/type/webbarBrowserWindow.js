@@ -34,7 +34,9 @@ class WebbarBrowserWindow extends CustomBrowserWindow {
          parentBrowserWindow: null,
          position: null,
 
-         thickFrame: false,
+         thickFrame: true,
+
+         skipTaskbar: false,
 
          shadow: true
       }

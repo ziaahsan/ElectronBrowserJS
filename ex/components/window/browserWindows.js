@@ -20,7 +20,8 @@ class BrowserWindows {
       // Load webbar
       this.webbarWindow = new WebbarBrowserWindow()
       this.webbarWindow.browserWindow.webContents.on('context-menu', this._onWebbarContextMenu)
-
+      
+      // Load browser
       await this.webbarWindow.loadHttp(`${process.env['PROTOCOL_APP']}://webbar.html`).then(res => {
          // Register localShort for webbarWindow
          this.addShortcutsToWindow(this.webbarWindow.browserWindow)

@@ -51,7 +51,7 @@ app.on('ready', () => {
       .replace(` ${app.name.replace(/ /g, '')}/${app.getVersion()}`, '')
       // Hide Electron from UA to improve compatibility
       // https://github.com/atomery/webcatalog/issues/182
-      .replace(` Electron/${process.versions.electron}`, '');
+      .replace(` Electron/${process.versions.electron}`, '')
 
    // SingleBox: Fix Google prevents signing in because of security concerns
    session.defaultSession.webRequest.onBeforeSendHeaders({
@@ -88,7 +88,7 @@ app.whenReady().then(() => {
       write: fsPromises.writeFile,
    }).then((blocker) => {
       // Setup blocker for session
-      blocker.enableBlockingInSession(session.defaultSession);
+      blocker.enableBlockingInSession(session.defaultSession)
       // Setup windows
       browserWindows.createDefaultWindows()
    })

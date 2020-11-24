@@ -38,6 +38,8 @@ class HttpBrowserWindow extends CustomBrowserWindow {
 
          thickFrame: false,
 
+         skipTaskbar: false,
+         
          shadow: false
       }
 

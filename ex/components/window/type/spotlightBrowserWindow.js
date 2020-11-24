@@ -35,6 +35,8 @@ class SpotlightBrowserWindow extends CustomBrowserWindow {
 
          thickFrame: false,
 
+         skipTaskbar: false,
+
          shadow: false
       }
 

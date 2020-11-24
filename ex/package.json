@@ -14,14 +14,14 @@
   "author": "",
   "license": "",
   "devDependencies": {
-    "electron": "^10.1.3",
+    "electron": "^10.1.6",
     "electron-packager": "^15.1.0"
   },
   "dependencies": {
-    "@cliqz/adblocker-electron": "^1.18.3",
-    "angular": "^1.8.1",
-    "angular-animate": "^1.8.1",
-    "angular-route": "^1.8.1",
+    "@cliqz/adblocker-electron": "^1.18.6",
+    "angular": "^1.8.2",
+    "angular-animate": "^1.8.2",
+    "angular-route": "^1.8.2",
     "cross-fetch": "^3.0.6",
     "crypto-random-string": "^3.3.0",
     "electron-cgi": "^1.0.6",
