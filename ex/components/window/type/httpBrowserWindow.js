@@ -40,6 +40,9 @@ class HttpBrowserWindow extends CustomBrowserWindow {
 
          skipTaskbar: false,
          
+         alwaysOnTop: false,
+         modal: false,
+         
          shadow: false
       }
 

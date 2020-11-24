@@ -27,8 +27,8 @@ class WebbarBrowserWindow extends CustomBrowserWindow {
          width: 1366,
          height: 768,
 
-         webbarHeight: 73,
-         padding: 6,
+         webbarHeight: 77,
+         padding: 4,
 
          center: true,
          parentBrowserWindow: null,
@@ -37,6 +37,9 @@ class WebbarBrowserWindow extends CustomBrowserWindow {
          thickFrame: true,
 
          skipTaskbar: false,
+         
+         alwaysOnTop: false,
+         modal: false,
 
          shadow: true
       }

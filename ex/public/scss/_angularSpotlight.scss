@@ -41,11 +41,11 @@ $spotlight-responsive-width: 680px !default;
 .ng-titlebar {
    position: relative;
    color: $primary-color;
-   background-color: rgba($secondary, 1);
+   background-color: darken(rgba($secondary, 1), 3);
    z-index: 9;
    width: 100%;
-   height: 28px;
-   line-height: 28px;
+   height: 32px;
+   line-height: 32px;
    font-size: 12px;
    letter-spacing: 0.3px;
    font-family: $font-family;
@@ -60,11 +60,31 @@ $spotlight-responsive-width: 680px !default;
       text-align: left;
       top: 0;
       .favicon {
+         position: relative;
          float: left;
          padding: 0px 8px;
          -webkit-app-region: no-drag;
          user-select: none;
          clear: both;
+         .dot {
+            height: 6px;
+            width: 6px;
+            background-color: $primary-color;
+            border-radius: 50%;
+            display: inline-block;
+         }
+         .dot:nth-child(1) {
+            background-color: #4285F4;
+         }
+         .dot:nth-child(2) {
+            background-color: #EA4335;
+         }
+         .dot:nth-child(3) {
+            background-color: #FBBC05;
+         }
+         .dot:nth-child(4) {
+            background-color: #34A853;
+         }
       }
       .name {
          text-shadow: 0px 0px 6px darken($secondary, 10);
@@ -115,7 +135,7 @@ $spotlight-responsive-width: 680px !default;
 }
 .webbar-view {
    width: 100%;
-   height: calc(100vh - 28px);
+   height: calc(100vh - 32px);
    position: absolute;
    display: block;
    background: rgba($secondary, 1);
@@ -226,7 +246,7 @@ $spotlight-responsive-width: 680px !default;
                }
             }
             .go-back-disabled {
-               background: $secondary;
+               background: darken($secondary, 5);
                color: $primary-color;
             }
             .close {

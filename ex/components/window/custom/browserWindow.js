@@ -47,6 +47,9 @@ class CustomBrowserWindow {
 
          skipTaskbar: this.options.skipTaskbar,
          
+         alwaysOnTop: this.options.alwaysOnTop,
+         modal: this.options.modal,
+
          hasShadow: this.options.shadow,
 
          webPreferences: {

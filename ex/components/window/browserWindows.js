@@ -5,6 +5,7 @@ const { MenuItem } = require('electron')
 const ContextMenuBuilder = require('../lib/contextMenuBuilder')
 // Type of custom BrowserWindows
 const WebbarBrowserWindow = require('./type/webbarBrowserWindow')
+const WebbarTooltipBrowserWindow = require('./type/webbarTooltipBrowserWindow')
 const SpotlightBrowserWindow = require('./type/spotlightBrowserWindow')
 const HttpBrowserWindow = require('./type/httpBrowserWindow')
 // Shortcuts for windows
@@ -26,12 +27,25 @@ class BrowserWindows {
          // Register localShort for webbarWindow
          this.addShortcutsToWindow(this.webbarWindow.browserWindow)
          // Add context menu
-         this.webbarContextMenuBuilder = new ContextMenuBuilder(this.webbarWindow.browserWindow, true);
+         this.webbarContextMenuBuilder = new ContextMenuBuilder(this.webbarWindow.browserWindow, true)
          // Load spotlight
          this.loadSpotlight()
+         // Load WebbarDocked
+         // this.loadWebbarTooltipBrowserWindow()
       }).catch(e => {
          console.error(e)
       })
+   }
+
+   loadWebbarTooltipBrowserWindow = async function () {
+      if (!this.webbarDockedWindow) {
+         this.webbarDockedWindow = new WebbarTooltipBrowserWindow(this.webbarWindow)
+         await this.webbarDockedWindow.loadHttp(`${process.env['PROTOCOL_APP']}://webbar.html`).then(res => {
+            // Pass
+         }).catch(e => {
+            console.error(e)
+         })
+      }
    }
 
    loadSpotlight = async function () {
@@ -45,7 +59,7 @@ class BrowserWindows {
             localShortcut.register(this.spotlightWindow.browserWindow, 'Esc', this._onLoadPreviousFocusedWindow)
             localShortcut.register(this.spotlightWindow.browserWindow, 'Ctrl+T', this._shortcutCtrlT)
             // Add context menu
-            this.spotlightContextMenuBuilder = new ContextMenuBuilder(this.spotlightWindow.browserWindow, true);
+            this.spotlightContextMenuBuilder = new ContextMenuBuilder(this.spotlightWindow.browserWindow, true)
          }).catch(e => {
             console.error(e)
          })
