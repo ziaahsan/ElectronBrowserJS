@@ -20,10 +20,8 @@ process.env['PROTOCOL_APP'] = 'app'
 process.env['PROTOCOL_NODE'] = 'node'
 process.env['WEBBAR_WINDOW_NAME'] = 'webbar'
 process.env['WEBBAR_DOCKED_WINDOW_NAME'] = 'webbar-docked'
-process.env['SPOTLIGHT_WINDOW_NAME'] = 'spotlight'
 
 // Listeners
-ipcMain.on('open-spotlight', (event, url) => browserWindows.loadSpotlight())
 ipcMain.on('open-url', (event, url) => browserWindows.loadURL(url))
 ipcMain.on('open-window', (event, windowId) => browserWindows.loadWindow(windowId))
 ipcMain.on('open-blank-window', (event, url) => browserWindows.loadBlank())
@@ -45,7 +43,7 @@ protocol.registerSchemesAsPrivileged([
    }
 ])
 
-app.on('ready', () => {
+app.on('ready', async () => {
    app.userAgentFallback = app.userAgentFallback
       // SingleBox: Fix WhatsApp requires Google Chrome 49+ bug
       // App Name doesn't have white space in user agent. 'Google Chat' app > GoogleChat/8.1.1

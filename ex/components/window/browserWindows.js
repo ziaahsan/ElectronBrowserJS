@@ -6,7 +6,6 @@ const ContextMenuBuilder = require('../lib/contextMenuBuilder')
 // Type of custom BrowserWindows
 const WebbarBrowserWindow = require('./type/webbarBrowserWindow')
 const WebbarTooltipBrowserWindow = require('./type/webbarTooltipBrowserWindow')
-const SpotlightBrowserWindow = require('./type/spotlightBrowserWindow')
 const HttpBrowserWindow = require('./type/httpBrowserWindow')
 // Shortcuts for windows
 const localShortcut = require('electron-localshortcut');
@@ -28,8 +27,7 @@ class BrowserWindows {
          this.addShortcutsToWindow(this.webbarWindow.browserWindow)
          // Add context menu
          this.webbarContextMenuBuilder = new ContextMenuBuilder(this.webbarWindow.browserWindow, true)
-         // Load spotlight
-         this.loadSpotlight()
+         this.loadBlank()
          // Load WebbarDocked
          // this.loadWebbarTooltipBrowserWindow()
       }).catch(e => {
@@ -48,31 +46,9 @@ class BrowserWindows {
       }
    }
 
-   loadSpotlight = async function () {
-      // Load spotlight
-      if (!this.spotlightWindow) {
-         this.spotlightWindow = new SpotlightBrowserWindow(this.webbarWindow)
-         this.spotlightWindow.browserWindow.on('closed', this._onSpotlightBrowserWindowClosed)
-         this.spotlightWindow.browserWindow.webContents.on('context-menu', this._onSpotlightContextMenu)
-         await this.spotlightWindow.loadHttp(`${process.env['PROTOCOL_APP']}://index.html`).then(res => {
-            // Register localShort for spotlight
-            localShortcut.register(this.spotlightWindow.browserWindow, 'Esc', this._onLoadPreviousFocusedWindow)
-            localShortcut.register(this.spotlightWindow.browserWindow, 'Ctrl+T', this._shortcutCtrlT)
-            // Add context menu
-            this.spotlightContextMenuBuilder = new ContextMenuBuilder(this.spotlightWindow.browserWindow, true)
-         }).catch(e => {
-            console.error(e)
-         })
-      } else {
-         this.spotlightWindow.browserWindow.setOpacity(1)
-      }
-
-      this.spotlightWindow.browserWindow.focus()
-   }
-
    loadURL = async function (urlString, windowId = '') {
-      // WebbarWindow, or spotlightWindow was null
-      if (!this.webbarWindow || !this.spotlightWindow) {
+      // WebbarWindow
+      if (!this.webbarWindow) {
          console.error("All default windows must be present.")
          return
       }
@@ -105,8 +81,7 @@ class BrowserWindows {
                label: 'Find in Page',
                accelerator: 'CmdOrCtrl+F',
                enabled:
-                  this.webbarWindow.focused.browserWindow &&
-                  this.webbarWindow.focused.browserWindow.windowId !== process.env['SPOTLIGHT_WINDOW_NAME'],
+                  this.webbarWindow.focused.browserWindow,
                click: this._shortcutCtrlF
             }))
             menu.insert(4, new MenuItem({ type: 'separator' }))
@@ -163,7 +138,7 @@ class BrowserWindows {
       return new Promise(resolve => {
          let hasFocus = false
          for (let childWindow of this.webbarWindow.browserWindow.getChildWindows()) {
-            if (childWindow.windowId === windowId) {
+           if (childWindow.windowId === windowId) {
                childWindow.setOpacity(1)
                childWindow.focus()
                hasFocus = true
@@ -236,7 +211,6 @@ class BrowserWindows {
       localShortcut.register(win, 'Ctrl+F', this._shortcutCtrlF)
       localShortcut.register(win, 'Ctrl+T', this._shortcutCtrlT)
       localShortcut.register(win, 'Ctrl+W', this._shortcutCtrlW)
-      localShortcut.register(win, 'Ctrl+Space', this._shortcutCtrlSpace)
    }
 
    //<summar>
@@ -258,23 +232,6 @@ class BrowserWindows {
          
          menu.popup(this.webbarWindow.browserWindow)
       })
-   }.bind(this)
-
-   _onSpotlightContextMenu = function (e, info) {
-      this.spotlightContextMenuBuilder.buildMenuForElement(info).then((menu) => {
-         if (info.isEditable || (info.inputFieldType && info.inputFieldType !== 'none')) {
-            menu.popup(this.webbarWindow.browserWindow)
-            return
-         }
-         
-         menu.popup(this.webbarWindow.browserWindow)
-      })
-   }.bind(this)
-
-   _onSpotlightBrowserWindowClosed = function () {
-      this.webbarWindow.browserWindow.off('move', this.spotlightWindow._onWebBarBrowserWindowMove)
-      this.webbarWindow.browserWindow.off('resize', this.spotlightWindow._onWebBarBrowserWindowResize)
-      this.spotlightWindow = null
    }.bind(this)
 
    _onNewHttpWindow = function (event, url, frameName, disposition, options, additionalFeatures, referrer, postBody) {
@@ -301,10 +258,6 @@ class BrowserWindows {
    _shortcutCtrlF = function () {
       this.webbarWindow.browserWindow.webContents.focus()
       this.webbarWindow.browserWindow.webContents.send('show-find-in-page')
-   }.bind(this)
-
-   _shortcutCtrlSpace = function () {
-      this.loadSpotlight()
    }.bind(this)
 
    _shortcutAltLeft = function () {

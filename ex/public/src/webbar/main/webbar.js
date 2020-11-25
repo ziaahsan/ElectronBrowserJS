@@ -137,13 +137,8 @@ angular
                window.postMessage({type: 'open-settings-menu'})
             }
 
-            $scope.openSpotlight = function () {
-               window.postMessage({type: 'open-spotlight'})
-            }
-
             $scope.openWindow = function (id) {
-               if (id === 'spotlight') $scope.openSpotlight()
-               else window.postMessage({type: 'open-window', windowId: id})
+               window.postMessage({type: 'open-window', windowId: id})
             }
 
             $scope.closeWindow = function (id) {

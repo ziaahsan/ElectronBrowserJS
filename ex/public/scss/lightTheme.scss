@@ -17,9 +17,9 @@ $primary-color-error: rgba(#e44c3c, $alpha) !default;
 $primary-highlight-color: #ffffff !default;
 
 // Colors for borders
-$border-color: rgba(215, 215, 215, $alpha);
+$border-color: rgba(175, 175, 175, $alpha);
 $overlay-border-color: rgba(#333435, 0.1);
 
 @media (prefers-color-scheme: light) {
-   @import "_angularSpotlight";
+   @import "_angularWebBar";
 }

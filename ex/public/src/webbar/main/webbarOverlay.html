@@ -28,7 +28,7 @@
                <span class="title">{{focusedWindow.title}}</span>
             </span>
 
-            <span ng-if="windowId !== 'spotlight'" class="close close-active" ng-click="closeWindow(windowId); $event.stopPropagation()">
+            <span class="close close-active" ng-click="closeWindow(windowId); $event.stopPropagation()">
                <i class="las la-minus"></i>
             </span>
 
@@ -45,7 +45,7 @@
                <span class="icon" ng-if="window.favicon && window.favicon !== ''"
                   ng-style="{'background-image': 'url(' + window.favicon + ')'}"></span>
             </span>
-            <span ng-if="windowId !== 'spotlight'" class="close" ng-click="closeWindow(windowId); $event.stopPropagation()">
+            <span class="close" ng-click="closeWindow(windowId); $event.stopPropagation()">
                <i class="las la-minus"></i>
             </span>
          </span>

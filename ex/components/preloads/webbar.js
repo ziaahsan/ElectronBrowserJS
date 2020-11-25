@@ -18,7 +18,6 @@ process.once('loaded', () => {
          case 'close-window':
             ipcRenderer.send(event.data.type, event.data.windowId)
             break;
-         case 'open-spotlight':
          case 'open-blank-window':
          case 'restore-http-windows':
          case 'close-webbar-window':

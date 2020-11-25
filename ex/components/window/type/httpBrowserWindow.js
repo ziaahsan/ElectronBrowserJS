@@ -138,6 +138,8 @@ class HttpBrowserWindow extends CustomBrowserWindow {
          .browserWindow.webContents.send('window-title', this.browserWindow.windowId, title)
 
       // Update the focused window with this window since its the same
+      if (this.webbarWindow.focused.browserWindow === undefined || this.webbarWindow.focused.browserWindow === null)
+         return
       if (this.browserWindow.windowId === this.webbarWindow.focused.browserWindow.windowId) {
          this.webbarWindow
          .browserWindow.webContents.send('window-focus', this.browserWindow.windowId,
