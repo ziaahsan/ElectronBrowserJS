@@ -117,7 +117,8 @@ class WebbarBrowserWindow extends CustomBrowserWindow {
 
       try {
          url = new URL(this.focused.browserWindow.webContents.getURL())
-         url = `${url.protocol}//${url.hostname}`
+         // url = `${url.protocol}//${url.hostname}`
+         url = this.focused.browserWindow.webContents.getURL()
       } catch (e) {
          url = 'Omitted, not a valid URL or missing focused window.'
          console.log(e.messsage)

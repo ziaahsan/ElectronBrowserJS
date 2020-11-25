@@ -1,8 +1,0 @@
-# Visual Studio Code
-.vscode
-
-### Dir ###
-config/default.json
-node_modules
-cache/*
-*.log

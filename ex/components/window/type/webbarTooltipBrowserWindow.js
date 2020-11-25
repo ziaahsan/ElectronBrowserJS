@@ -10,7 +10,7 @@ const HttpBrowserWindow = require('./httpBrowserWindow')
 // Simply class for webbar
 class WebbarTooltipBrowserWindow extends CustomBrowserWindow {
    constructor(webbarWindow) {
-      let name = process.env['WEBBAR_DOCKED_WINDOW_NAME']
+      let name = process.env['WEBBAR_TOOLTIP_WINDOW_NAME']
       let options = {
          backgroundColor: '#FFFFFF',
 

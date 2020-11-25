@@ -19,7 +19,7 @@ nativeTheme.themeSource = 'dark'
 process.env['PROTOCOL_APP'] = 'app'
 process.env['PROTOCOL_NODE'] = 'node'
 process.env['WEBBAR_WINDOW_NAME'] = 'webbar'
-process.env['WEBBAR_DOCKED_WINDOW_NAME'] = 'webbar-docked'
+process.env['WEBBAR_TOOLTIP_WINDOW_NAME'] = 'webbar-tooltip'
 
 // Listeners
 ipcMain.on('open-url', (event, url) => browserWindows.loadURL(url))

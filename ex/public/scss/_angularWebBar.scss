@@ -51,83 +51,81 @@ $overlay-border-color: none !default;
    border: 1px solid darken($border-color, 4);
    border-bottom: none;
    -webkit-app-region: drag;
-   .title {
+   .favicon {
       position: relative;
-      display: block;
-      text-align: left;
-      top: 0;
-      .favicon {
-         position: relative;
-         float: left;
-         padding: 0px 8px;
-         -webkit-app-region: no-drag;
-         user-select: none;
-         clear: both;
-         .dot {
-            height: 6px;
-            width: 6px;
-            background-color: $primary-color;
-            border-radius: 50%;
-            display: inline-block;
-         }
-         .dot:nth-child(1) {
-            background-color: #4285F4;
-         }
-         .dot:nth-child(2) {
-            background-color: #EA4335;
-         }
-         .dot:nth-child(3) {
-            background-color: #FBBC05;
-         }
-         .dot:nth-child(4) {
-            background-color: #34A853;
-         }
-      }
-      .name {
-         text-shadow: 0px 0px 6px darken($secondary, 10);
-         font-size: 12px;
-         max-width: 500px;
-         position: relative;
-         text-overflow: ellipsis;
-         overflow: hidden;
-         white-space: nowrap;
+      float: left;
+      padding: 0px 8px;
+      -webkit-app-region: no-drag;
+      user-select: none;
+      clear: both;
+      .dot {
+         height: 6px;
+         width: 6px;
+         background-color: $primary-color;
+         border-radius: 50%;
          display: inline-block;
       }
-      .icons {
-         position: relative;
-         float: right;
-         clear: right;
-         font-size: 16px;
-         padding: 0 8px;
-         -webkit-app-region: no-drag;
-         user-select: none;
-         top: -2px;
-         i {
-            margin: 0 2px;
-            padding: 2px;
-            border-radius: 2px;
-         }
-         i:hover {
-            cursor: pointer;
-            background-color: $primary;
-         }
-         i.close:hover {
-            background: $primary-color-error;
-            color: #ffffff;
-         }
+      .dot:nth-child(3) {
+         background-color: #4285F4;
       }
-      .protocol-trusted {
-         background: #43920f;
-         color: rgba(#ffffff, 0.7);
+      .dot:nth-child(1) {
+         background-color: #EA4335;
+      }
+      .dot:nth-child(2) {
+         background-color: #FBBC05;
+      }
+      .dot:nth-child(4) {
+         background-color: #34A853;
+      }
+   }
+   .url-string {
+      text-shadow: 0px 0px 6px darken($secondary, 10);
+      font-size: 12px;
+      width: calc(100% - 58px);
+      position: relative;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+      display: inline-block;
+      background: darken($secondary, 6);
+      padding: 0 8px;
+      margin: 0 auto;
+      border-left: 1px solid darken($border-color, 4);
+   }
+   .icons {
+      position: relative;
+      float: right;
+      clear: right;
+      font-size: 16px;
+      padding: 0 8px;
+      -webkit-app-region: no-drag;
+      user-select: none;
+      top: -2px;
+      i {
+         margin: 0 2px;
+         padding: 2px;
          border-radius: 2px;
-         padding: 0 2px;
       }
-      .protocol-otherwise {
-         color: rgba(#ffffff, 0.7);
-         background: #c12b1b;
-         border-radius: 2px;
-         padding: 0 2px;
+      i:hover {
+         cursor: pointer;
+         background-color: $primary;
       }
+      i.close:hover {
+         background: $primary-color-error;
+         color: #ffffff;
+      }
+   }
+   .protocol-trusted {
+      background: #43920f;
+      color: rgba(#ffffff, 0.7);
+      border-radius: 2px;
+      padding: 0 2px;
+   }
+   .protocol-otherwise {
+      color: rgba(#ffffff, 0.7);
+      background: #c12b1b;
+      border-radius: 2px;
+      padding: 0 2px;
    }
 }
 .webbar-view {
@@ -135,13 +133,13 @@ $overlay-border-color: none !default;
    height: calc(100vh - 32px);
    position: absolute;
    display: block;
-   background: rgba($secondary, 1);
+   background: darken($secondary, 6);
    border: 1px solid darken($border-color, 4);
    border-top: none;
    .ng-webbar {
       position: relative;
       color: $primary-color;
-      background-color: rgba($secondary, 1);
+      background-color: darken($secondary, 6);
       z-index: 9;
       width: 100%;
       height: 42px;
