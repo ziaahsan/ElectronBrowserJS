@@ -51,13 +51,12 @@ $overlay-border-color: none !default;
    border: 1px solid darken($border-color, 4);
    border-bottom: none;
    -webkit-app-region: drag;
+   display: inline-flex;
    .favicon {
       position: relative;
-      float: left;
       padding: 0px 8px;
-      -webkit-app-region: no-drag;
       user-select: none;
-      clear: both;
+      width: 264px;
       .dot {
          height: 6px;
          width: 6px;
@@ -77,30 +76,54 @@ $overlay-border-color: none !default;
       .dot:nth-child(4) {
          background-color: #34A853;
       }
+      .weather,
+      .microphone {
+         position: relative;
+         padding-left: 10px;
+         border-left: 1px solid darken($border-color, 4);
+         margin-left: 3px;
+      }
    }
    .url-string {
       text-shadow: 0px 0px 6px darken($secondary, 10);
       font-size: 12px;
-      width: calc(100% - 58px);
+      font-weight: 600;
+      width: calc(100% - 238px);
       position: relative;
       text-overflow: ellipsis;
       overflow: hidden;
       white-space: nowrap;
-      display: inline-block;
       background: darken($secondary, 6);
       padding: 0 8px;
       margin: 0 auto;
       border-left: 1px solid darken($border-color, 4);
+      border-right: 1px solid darken($border-color, 4);
+      -webkit-app-region: no-drag;
+      input {
+         position: relative;
+         width: calc(100% - 20px);
+         background-color: transparent;
+         background: transparent;
+         color: $primary-color;
+         outline: none;
+         font-family: $font-family;
+         font-size: 12px;
+         font-weight: 600;
+         border: none;
+         padding: 2px 10px;
+         margin: 6px 0;
+      }
+      input:focus {
+         outline: 1px solid $primary-highlight;
+      }
    }
    .icons {
       position: relative;
-      float: right;
-      clear: right;
       font-size: 16px;
-      padding: 0 8px;
+      padding: 0 4px;
       -webkit-app-region: no-drag;
       user-select: none;
-      top: -2px;
+      width: 93px;
       i {
          margin: 0 2px;
          padding: 2px;
@@ -149,6 +172,7 @@ $overlay-border-color: none !default;
       overflow: hidden;
       margin: 0 auto;
       display: flex;
+      -webkit-app-region: drag;
       .home {
          position: relative;
          width: 44px;
@@ -207,6 +231,7 @@ $overlay-border-color: none !default;
             width: 22px;
             text-align: left;
             top: 0;
+            -webkit-app-region: no-drag;
             .title {
                font-size: 12px;
                color: #282828;

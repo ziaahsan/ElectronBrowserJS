@@ -2,17 +2,21 @@
    <span class="favicon">
       <!-- <span ng-if="focusedWindow.isTrusted" class="protocol-trusted"><i class="las la-shield-alt"></i></span> -->
       <!-- <span ng-if="!focusedWindow.isTrusted" class="protocol-otherwise"><i class="las la-unlock"></i></span> -->
-      <span class="dot" ng-click="closeWebbarWindow()"></span>
-      <span class="dot" ng-click="maximizeWebbarWindow()"></span>
-      <span class="dot" ng-click="minimizeWebbarWindow()"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+      <span class="microphone"><span class="las la-microphone"></span>Say Hi, Google.</span>
+      <span class="weather">Toronto <b>8</b>°C</span>
       <!-- <span class="dot"></span> -->
-      <!-- <span>>> <i>"Type, Open Youtube"</i></span> -->
+      <!-- <span> <i>"Type, Open Youtube"</i></span> -->
    </span>
-   <span class="url-string">{{focusedWindow.url}}</span>
-   <!-- <span class="icons">
+   <span class="url-string">
+      <input value="{{focusedWindow.url}}" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+   </span>
+   <span class="icons">
       <i ng-click="minimizeWebbarWindow()" class="las la-minus"></i>
       <i ng-if="!focusedWindow.isMaximized" ng-click="maximizeWebbarWindow()" class="las la-stop"></i>
       <i ng-if="focusedWindow.isMaximized" ng-click="maximizeWebbarWindow()" class="las la-ebay"></i>
       <i ng-click="closeWebbarWindow()" class="close las la-times"></i>
-   </span> -->
+   </span>
 </div>

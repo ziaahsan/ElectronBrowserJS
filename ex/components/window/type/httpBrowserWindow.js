@@ -51,12 +51,18 @@ class HttpBrowserWindow extends CustomBrowserWindow {
       // Defaults
       this.browserWindow.favicon = ''
       this.browserWindow.windowId = windowId === '' ? crypto({ length: 8, type: 'alphanumeric' }) : windowId
-      this.browserWindow.setContentSize(size[0] - (webbarWindow.options.padding * 2), size[1] - webbarWindow.options.webbarHeight - webbarWindow.options.padding)
 
       // Webbar window object
       this.webbarWindow = webbarWindow
       this.webbarWindow.browserWindow.on('move', this._onWebBarBrowserWindowMove)
       this.webbarWindow.browserWindow.on('resize', this._onWebBarBrowserWindowResize)
+      this.webbarWindow.browserWindow.on('maximize', this._onWebBarBrowserWindowMaximize)
+
+      if (this.webbarWindow.browserWindow.isMaximized()) {
+         this.setMaximizedWindowSize()
+      } else {
+         this.browserWindow.setContentSize(size[0] - (this.webbarWindow.options.padding * 2), size[1] - this.webbarWindow.options.webbarHeight - this.webbarWindow.options.padding)
+      }
 
       // BrowserWindow listeners
       this.browserWindow.on('closed', this._onHttpBrowserWindowClosed)
@@ -70,6 +76,13 @@ class HttpBrowserWindow extends CustomBrowserWindow {
       this.browserWindow.webContents.on('did-navigate-in-page', this._didNavigateInPage)
       this.browserWindow.webContents.on('did-finish-load', this._didFinishLoad)
       this.browserWindow.webContents.on('found-in-page', this._onFoundInPage)
+   }
+
+   setMaximizedWindowSize = function() {
+      let size = this.webbarWindow.browserWindow.getSize()
+      let webbarPosition = this.webbarWindow.browserWindow.getPosition()
+      this.browserWindow.setPosition(webbarPosition[0], webbarPosition[1] + this.webbarWindow.options.webbarHeight + 10)
+      this.browserWindow.setContentSize(size[0], size[1])
    }
 
    //<summar>
@@ -98,6 +111,10 @@ class HttpBrowserWindow extends CustomBrowserWindow {
    _onWebBarBrowserWindowResize = function () {
       let size = this.webbarWindow.browserWindow.getContentSize()
       this.browserWindow.setContentSize(size[0] - (this.webbarWindow.options.padding * 2), size[1] - this.webbarWindow.options.webbarHeight - this.webbarWindow.options.padding)
+   }.bind(this)
+
+   _onWebBarBrowserWindowMaximize = function () {
+      this.setMaximizedWindowSize()
    }.bind(this)
 
    _onHttpBrowserWindowClosed = function () {
