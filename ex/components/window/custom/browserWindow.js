@@ -83,6 +83,13 @@ class CustomBrowserWindow {
    }
 
    //<summar>
+   // All the static methods
+   //</summary>
+   static focusedWindow = function() {
+      return BrowserWindow.getFocusedWindow()
+   }
+
+   //<summar>
    // All the listeners for this window
    //</summary>
    _readyToShowListener = function () {

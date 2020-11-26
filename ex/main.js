@@ -22,7 +22,7 @@ process.env['WEBBAR_WINDOW_NAME'] = 'webbar'
 process.env['WEBBAR_TOOLTIP_WINDOW_NAME'] = 'webbar-tooltip'
 
 // Listeners
-ipcMain.on('open-url', (event, url) => browserWindows.loadURL(url))
+ipcMain.on('open-url', (event, url, windowId) => browserWindows.loadURL(url, windowId))
 ipcMain.on('open-window', (event, windowId) => browserWindows.loadWindow(windowId))
 ipcMain.on('open-blank-window', (event, url) => browserWindows.loadBlank())
 ipcMain.on('open-previous-page', (event, windowId) => browserWindows.loadPreviousPage(windowId))

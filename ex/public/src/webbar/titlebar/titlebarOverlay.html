@@ -11,7 +11,7 @@
       <!-- <span> <i>"Type, Open Youtube"</i></span> -->
    </span>
    <span class="url-string">
-      <input value="{{focusedWindow.url}}" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input ng-model="focusedWindow.url"  autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
    </span>
    <span class="icons">
       <i ng-click="minimizeWebbarWindow()" class="las la-minus"></i>

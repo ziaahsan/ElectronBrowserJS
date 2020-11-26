@@ -12,6 +12,9 @@ process.once('loaded', () => {
 
       // Event emitters to ipcMain
       switch (event.data.type) {
+         case 'open-url':
+            ipcRenderer.send(event.data.type, event.data.url, event.data.windowId);
+            break
          case 'open-window':
          case 'open-previous-page':
          case 'open-next-page':

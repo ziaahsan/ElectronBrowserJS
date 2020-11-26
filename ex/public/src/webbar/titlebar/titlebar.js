@@ -2,6 +2,11 @@
 angular
    .module('de.devjs.angular.titlebar', [])
    .directive('titlebarOverlay', ['$timeout', '$http', '$compile', 'Titlebar', function ($timeout, $http, $compile, Titlebar) {
+      // Key valus
+      const KEY = {
+         ENTER: 13
+      };
+
       // Root view element to append items to
       var $ngTitlebarOverlay;
 
@@ -19,21 +24,37 @@ angular
       //</summary>
       function controller() {
          return ['$scope', '$location', function ($scope, $location) {
-            $scope.focusedWindow = {}
+            $scope.focusedWindow = {};
 
             // Clean up with angularJS
             $scope.$on('$destroy', function () {
                window.removeEventListener('message', $scope._onFocus);
                window.removeEventListener('message', $scope._onMaximized);
+               window.removeEventListener('keyup', $scope.keyup);
             });
+            
+            // Setup keyUp event
+            $scope.keyup = function (event) {
+               if (event.keyCode === KEY.ENTER) {
+                  let searchTerm = $ngTitlebarOverlay.find('input').val();
+                  // Send message to main for creating new http
+                  window.postMessage({type: 'open-url', url: searchTerm, windowId: $scope.focusedWindow.windowId});
+               }
+            }
 
             // Route initializer
             $scope.init = function () {
                window.addEventListener('message', $scope._onFocus);
                window.addEventListener('message', $scope._onMaximized);
+               window.addEventListener('keyup', $scope.keyup);
 
                // Request for focused windows
-               window.postMessage({ type: 'get-focused-window' })
+               window.postMessage({ type: 'get-focused-window' });
+            }
+
+             // Auto focus input
+             $scope.focus = function () {
+               $ngTitlebarOverlay.find('input').focus().select();
             }
 
             $scope._onFocus = function (event) {
@@ -44,14 +65,14 @@ angular
                if (!event.data.results.windowId) return;
 
                $scope.$apply(() => {
-                  $scope.focusedWindow.title = event.data.results.title
-                  $scope.focusedWindow.windowId = event.data.results.windowId
-                  $scope.focusedWindow.url = event.data.results.url
+                  $scope.focusedWindow.title = event.data.results.title;
+                  $scope.focusedWindow.windowId = event.data.results.windowId;
+                  $scope.focusedWindow.url = event.data.results.url;
                   $scope.focusedWindow.isTrusted =
                      event.isTrusted && (
                         event.data.results.url.startsWith('https:') ||
                         event.data.results.url.startsWith('app:')
-                     )
+                     );
                });
             }
 
@@ -68,15 +89,15 @@ angular
             }
 
             $scope.closeWebbarWindow = function () {
-               window.postMessage({ type: 'close-webbar-window' })
+               window.postMessage({ type: 'close-webbar-window' });
             }
 
             $scope.maximizeWebbarWindow = function () {
-               window.postMessage({ type: 'maximize-webbar-window' })
+               window.postMessage({ type: 'maximize-webbar-window' });
             }
 
             $scope.minimizeWebbarWindow = function () {
-               window.postMessage({ type: 'minimize-webbar-window' })
+               window.postMessage({ type: 'minimize-webbar-window' });
             }
 
             // Setup redirection

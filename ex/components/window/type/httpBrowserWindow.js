@@ -81,7 +81,7 @@ class HttpBrowserWindow extends CustomBrowserWindow {
    setMaximizedWindowSize = function() {
       let size = this.webbarWindow.browserWindow.getSize()
       let webbarPosition = this.webbarWindow.browserWindow.getPosition()
-      this.browserWindow.setPosition(webbarPosition[0], webbarPosition[1] + this.webbarWindow.options.webbarHeight + 10)
+      this.browserWindow.setPosition(webbarPosition[0], webbarPosition[1] + this.webbarWindow.options.webbarHeight + 7)
       this.browserWindow.setContentSize(size[0], size[1])
    }
 

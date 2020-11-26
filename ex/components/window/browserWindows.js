@@ -3,6 +3,8 @@
 const { MenuItem } = require('electron')
 // Context Menu
 const ContextMenuBuilder = require('../lib/contextMenuBuilder')
+// Custom browserwindow instance
+const CustomBrowserWindowInstance = require('./custom/browserWindow')
 // Type of custom BrowserWindows
 const WebbarBrowserWindow = require('./type/webbarBrowserWindow')
 const WebbarTooltipBrowserWindow = require('./type/webbarTooltipBrowserWindow')
@@ -53,46 +55,6 @@ class BrowserWindows {
          return
       }
 
-      let httpContextMenuBuilder = null
-
-      let httpWindow = new HttpBrowserWindow(this.webbarWindow, windowId)
-      httpWindow.browserWindow.webContents.on('new-window', this._onNewHttpWindow)
-      httpWindow.browserWindow.webContents.on('context-menu', (e, info) => {
-         if (!httpContextMenuBuilder) return
-         httpContextMenuBuilder.buildMenuForElement(info).then((menu) => {
-            menu.insert(0, new MenuItem({
-               label: 'Back',
-               accelerator: 'Alt+Left',
-               enabled:
-                  this.webbarWindow.focused.browserWindow &&
-                  this.webbarWindow.focused.browserWindow.webContents.canGoBack(),
-               click: this._shortcutAltLeft
-            }))
-            menu.insert(1, new MenuItem({
-               label: 'Forward',
-               accelerator: 'Alt+Right',
-               enabled:
-                  this.webbarWindow.focused.browserWindow &&
-                  this.webbarWindow.focused.browserWindow.webContents.canGoForward(),
-               click: this._shortcutAltRight
-            }))
-            menu.insert(2, new MenuItem({ type: 'separator' }))
-            menu.insert(3, new MenuItem({
-               label: 'Find in Page',
-               accelerator: 'CmdOrCtrl+F',
-               enabled:
-                  this.webbarWindow.focused.browserWindow,
-               click: this._shortcutCtrlF
-            }))
-            menu.insert(4, new MenuItem({ type: 'separator' }))
-
-            // Using electron-localshortcut so disabling accelerator by ignoring setMenu
-            // @Note: This is required to enable/trigger accelerator
-            // httpWindow.browserWindow.setMenu(menu)
-            menu.popup(this.webbarWindow.browserWindow)
-         })
-      })
-
       try {
          // Check and see if URL is valid, proceed
          new URL(urlString)
@@ -101,15 +63,67 @@ class BrowserWindows {
          urlString = `https://www.google.com/search?q=${encodeURIComponent(urlString)}`
       }
 
-      httpWindow.browserWindow.focus()
-      await httpWindow.loadHttp(urlString).then(() => {
-         // Register localShort for httpWindow
-         this.addShortcutsToWindow(httpWindow.browserWindow)
-         // Add context menu
-         httpContextMenuBuilder = new ContextMenuBuilder(httpWindow.browserWindow, true)
-      }).catch(e => {
-         console.error(e)
-      })
+      let httpContextMenuBuilder = null
+      let httpWindow = null
+
+      if (windowId === '') {
+         httpWindow = new HttpBrowserWindow(this.webbarWindow, windowId)
+
+         httpWindow.browserWindow.webContents.on('new-window', this._onNewHttpWindow)
+         httpWindow.browserWindow.webContents.on('context-menu', (e, info) => {
+            if (!httpContextMenuBuilder) return
+            httpContextMenuBuilder.buildMenuForElement(info).then((menu) => {
+               menu.insert(0, new MenuItem({
+                  label: 'Back',
+                  accelerator: 'Alt+Left',
+                  enabled:
+                     this.webbarWindow.focused.browserWindow &&
+                     this.webbarWindow.focused.browserWindow.webContents.canGoBack(),
+                  click: this._shortcutAltLeft
+               }))
+               menu.insert(1, new MenuItem({
+                  label: 'Forward',
+                  accelerator: 'Alt+Right',
+                  enabled:
+                     this.webbarWindow.focused.browserWindow &&
+                     this.webbarWindow.focused.browserWindow.webContents.canGoForward(),
+                  click: this._shortcutAltRight
+               }))
+               menu.insert(2, new MenuItem({ type: 'separator' }))
+               menu.insert(3, new MenuItem({
+                  label: 'Find in Page',
+                  accelerator: 'CmdOrCtrl+F',
+                  enabled:
+                     this.webbarWindow.focused.browserWindow,
+                  click: this._shortcutCtrlF
+               }))
+               menu.insert(4, new MenuItem({ type: 'separator' }))
+
+               // Using electron-localshortcut so disabling accelerator by ignoring setMenu
+               // @Note: This is required to enable/trigger accelerator
+               // httpWindow.browserWindow.setMenu(menu)
+               menu.popup(this.webbarWindow.browserWindow)
+            })
+         })
+
+         httpWindow.browserWindow.focus()
+         await httpWindow.loadHttp(urlString).then(() => {
+            // Register localShort for httpWindow
+            this.addShortcutsToWindow(httpWindow.browserWindow)
+            // Add context menu
+            httpContextMenuBuilder = new ContextMenuBuilder(httpWindow.browserWindow, true)
+         }).catch(e => {
+            console.error(e)
+         })
+      }
+
+      if (windowId !== '') {
+         await this.showWindowByWindowId(windowId)
+         await CustomBrowserWindowInstance.focusedWindow().loadURL(urlString).then(() => {
+         }).catch(e => {
+            console.error(e)
+         })
+      }
    }
 
    loadBlank = async function () {
