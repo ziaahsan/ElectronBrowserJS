@@ -54,9 +54,9 @@ $overlay-border-color: none !default;
    display: inline-flex;
    .favicon {
       position: relative;
-      padding: 0px 8px;
       user-select: none;
-      width: 264px;
+      width: 333px;
+      border-bottom: 1px solid darken($border-color, 4);
       .dot {
          height: 6px;
          width: 6px;
@@ -69,6 +69,7 @@ $overlay-border-color: none !default;
       }
       .dot:nth-child(1) {
          background-color: #EA4335;
+         margin-left: 8px;
       }
       .dot:nth-child(2) {
          background-color: #FBBC05;
@@ -77,28 +78,65 @@ $overlay-border-color: none !default;
          background-color: #34A853;
       }
       .weather,
-      .microphone {
+      .microphone,
+      .stocks {
          position: relative;
-         padding-left: 10px;
          border-left: 1px solid darken($border-color, 4);
-         margin-left: 3px;
+         display: inline-block;
+         width: 112px;
+         text-align: center;
+      }
+      .microphone {
+         margin-left: 6px;
+      }
+      .weather {
+         width: 82px;
+      }
+      .stocks {
+         width: 92px;
       }
    }
    .url-string {
       text-shadow: 0px 0px 6px darken($secondary, 10);
       font-size: 12px;
       font-weight: 600;
-      width: calc(100% - 238px);
+      width: calc(100% - 447px);
       position: relative;
       text-overflow: ellipsis;
       overflow: hidden;
       white-space: nowrap;
       background: darken($secondary, 6);
       padding: 0 8px;
-      margin: 0 auto;
       border-left: 1px solid darken($border-color, 4);
       border-right: 1px solid darken($border-color, 4);
-      -webkit-app-region: no-drag;
+      .url {
+         position: relative;
+         display: block;
+         text-overflow: ellipsis;
+         overflow: hidden;
+         white-space: nowrap;
+         .protocol {
+            color: $primary-color;
+            padding: 2px 5px;
+            background: #43920f;
+            border-radius: 2px;
+            margin-right: 4px;
+         }
+         .protocol-untrusted {
+            color: $primary-color;
+            padding: 2px 5px;
+            background: #c12b1b;
+            border-radius: 2px;
+         }
+         .hostname {
+            color: $primary-color
+         }
+         .pathname,
+         .search {
+            color: darken($primary-color, 15);
+            font-weight: 500;
+         }
+      }
       input {
          position: relative;
          width: calc(100% - 20px);
@@ -112,6 +150,7 @@ $overlay-border-color: none !default;
          border: none;
          padding: 2px 10px;
          margin: 6px 0;
+         -webkit-app-region: no-drag;
       }
       input:focus {
          outline: 1px solid $primary-highlight;
@@ -123,7 +162,8 @@ $overlay-border-color: none !default;
       padding: 0 4px;
       -webkit-app-region: no-drag;
       user-select: none;
-      width: 93px;
+      width: 82px;
+      border-bottom: 1px solid darken($border-color, 4);
       i {
          margin: 0 2px;
          padding: 2px;
@@ -137,18 +177,6 @@ $overlay-border-color: none !default;
          background: $primary-color-error;
          color: #ffffff;
       }
-   }
-   .protocol-trusted {
-      background: #43920f;
-      color: rgba(#ffffff, 0.7);
-      border-radius: 2px;
-      padding: 0 2px;
-   }
-   .protocol-otherwise {
-      color: rgba(#ffffff, 0.7);
-      background: #c12b1b;
-      border-radius: 2px;
-      padding: 0 2px;
    }
 }
 .webbar-view {
@@ -200,6 +228,7 @@ $overlay-border-color: none !default;
          position: relative;
          max-width: 25%;
          display: flex;
+         -webkit-app-region: no-drag;
          .settings {
             position: relative;
             text-align: center;

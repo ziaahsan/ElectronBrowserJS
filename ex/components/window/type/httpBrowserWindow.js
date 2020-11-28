@@ -82,7 +82,7 @@ class HttpBrowserWindow extends CustomBrowserWindow {
       let size = this.webbarWindow.browserWindow.getSize()
       let webbarPosition = this.webbarWindow.browserWindow.getPosition()
       this.browserWindow.setPosition(webbarPosition[0], webbarPosition[1] + this.webbarWindow.options.webbarHeight + 7)
-      this.browserWindow.setContentSize(size[0], size[1])
+      this.browserWindow.setContentSize(size[0] - (this.webbarWindow.options.padding * 2), size[1] - this.webbarWindow.options.webbarHeight - this.webbarWindow.options.padding)
    }
 
    //<summar>
@@ -157,6 +157,7 @@ class HttpBrowserWindow extends CustomBrowserWindow {
       // Update the focused window with this window since its the same
       if (this.webbarWindow.focused.browserWindow === undefined || this.webbarWindow.focused.browserWindow === null)
          return
+      
       if (this.browserWindow.windowId === this.webbarWindow.focused.browserWindow.windowId) {
          this.webbarWindow
          .browserWindow.webContents.send('window-focus', this.browserWindow.windowId,

@@ -33,8 +33,8 @@ class WebbarTooltipBrowserWindow extends CustomBrowserWindow {
          center: true,
          parentBrowserWindow: webbarWindow.browserWindow,
          position: {
-            x: webbarWindow.browserWindow.getPosition()[0],
-            y: webbarWindow.browserWindow.getSize()[1]
+            x: parseInt(webbarWindow.browserWindow.getSize()[0] / 2),
+            y: parseInt(webbarWindow.browserWindow.getSize()[1] / 2)
          },
 
          thickFrame: false,

@@ -7,10 +7,12 @@ const ContextMenuBuilder = require('../lib/contextMenuBuilder')
 const CustomBrowserWindowInstance = require('./custom/browserWindow')
 // Type of custom BrowserWindows
 const WebbarBrowserWindow = require('./type/webbarBrowserWindow')
-const WebbarTooltipBrowserWindow = require('./type/webbarTooltipBrowserWindow')
+const WebbarTabBrowserWindow = require('./type/webbarTabBrowserWindow')
 const HttpBrowserWindow = require('./type/httpBrowserWindow')
 // Shortcuts for windows
 const localShortcut = require('electron-localshortcut');
+const fetch = require('cross-fetch');
+const { async } = require('crypto-random-string');
 
 // All type of browserWindows handler
 class BrowserWindows {
@@ -29,18 +31,32 @@ class BrowserWindows {
          this.addShortcutsToWindow(this.webbarWindow.browserWindow)
          // Add context menu
          this.webbarContextMenuBuilder = new ContextMenuBuilder(this.webbarWindow.browserWindow, true)
-         this.loadBlank()
-         // Load WebbarDocked
-         // this.loadWebbarTooltipBrowserWindow()
+         this.setupMarketWatch()
+         // this.setuphWeatherAPI()
+         // Load WebbarTabs
+         // this.loadWebbarTabBrowserWindow()
       }).catch(e => {
          console.error(e)
       })
    }
 
-   loadWebbarTooltipBrowserWindow = async function () {
-      if (!this.webbarDockedWindow) {
-         this.webbarDockedWindow = new WebbarTooltipBrowserWindow(this.webbarWindow)
-         await this.webbarDockedWindow.loadHttp(`${process.env['PROTOCOL_APP']}://webbar.html`).then(res => {
+   setuphWeatherAPI = async function(term='Toronto', units='metrics') {
+      let url = `https://openweathermap.org/data/2.5/find?q=${term}&appid=439d4b804bc8187953eb36d2a8c26a02&units=${units}`
+      fetch(url).then(res => res.json()).then((out) => {
+         this.webbarWindow.browserWindow.webContents.send('weather', out)
+      }).catch(err => { throw err });
+   }
+
+   setupMarketWatch = async function (symbol='tsla') {
+      if (!this.marketWatch) {
+         this.marketWatch = this.loadURL(`https://www.marketwatch.com/investing/stock/${symbol}`)
+      }
+   }
+
+   loadWebbarTabBrowserWindow = async function () {
+      if (!this.webbarTabWindow) {
+         this.webbarTabWindow = new WebbarTabBrowserWindow(this.webbarWindow)
+         await this.webbarTabWindow.loadHttp(`${process.env['PROTOCOL_APP']}://webbar.html`).then(res => {
             // Pass
          }).catch(e => {
             console.error(e)
@@ -118,8 +134,16 @@ class BrowserWindows {
       }
 
       if (windowId !== '') {
-         await this.showWindowByWindowId(windowId)
-         await CustomBrowserWindowInstance.focusedWindow().loadURL(urlString).then(() => {
+         if (!this.webbarWindow) return
+         if (!this.webbarWindow.focused) return
+         if (!this.webbarWindow.focused.browserWindow) return
+
+         let focusedChild = this.webbarWindow.focused.browserWindow
+         if (!focusedChild.windowId) return
+         if (focusedChild.windowId !== windowId) return
+
+         focusedChild.loadURL(urlString).then(() => {
+            console.log("Loading URL on focused window")
          }).catch(e => {
             console.error(e)
          })
@@ -172,8 +196,10 @@ class BrowserWindows {
                childWindow.destroy()
                if (this.webbarWindow.focused.browserWindow.windowId === windowId)
                   this._onLoadPreviousFocusedWindow()
+               
                HttpBrowserWindow.removeStoredWindowById(windowId)
                resolve(true)
+
                return
             }
          }
@@ -186,33 +212,46 @@ class BrowserWindows {
    }
 
    loadPreviousPage = async function (windowId) {
-      if (!this.webbarWindow || !this.webbarWindow.focused.browserWindow) return
-      if (this.webbarWindow.focused.browserWindow.windowId !== windowId) return
-
+      if (!this.webbarWindow) return
+      if (!this.webbarWindow.focused) return
+      if (!this.webbarWindow.focused.browserWindow) return
 
       let focusedChild = this.webbarWindow.focused.browserWindow
+      if (!focusedChild.windowId) return
+      if (focusedChild.windowId !== windowId) return
+
       if (focusedChild.webContents.canGoBack())
          focusedChild.webContents.goBack()
    }
 
    loadNextPage = function (windowId) {
-      if (!this.webbarWindow || !this.webbarWindow.focused.browserWindow) return
-      if (this.webbarWindow.focused.browserWindow.windowId !== windowId) return
+      if (!this.webbarWindow) return
+      if (!this.webbarWindow.focused) return
+      if (!this.webbarWindow.focused.browserWindow) return
 
       let focusedChild = this.webbarWindow.focused.browserWindow
+      if (!focusedChild.windowId) return
+      if (focusedChild.windowId !== windowId) return
+
       if (focusedChild.webContents.canGoForward())
          focusedChild.webContents.goForward()
    }
 
    findInFocusedPage = function (searchTerm) {
-      if (!this.webbarWindow || !this.webbarWindow.focused.browserWindow) return
       if (searchTerm === '') return
+
+      if (!this.webbarWindow) return
+      if (!this.webbarWindow.focused) return
+      if (!this.webbarWindow.focused.browserWindow) return
 
       this.webbarWindow.focused.browserWindow.webContents.findInPage(searchTerm)
    }
 
    stopFindInFocusedPage = function (action) {
-      if (!this.webbarWindow || !this.webbarWindow.focused.browserWindow) return
+      if (!this.webbarWindow) return
+      if (!this.webbarWindow.focused) return
+      if (!this.webbarWindow.focused.browserWindow) return
+
       if (action === '')
          action = 'clearSelection'
 

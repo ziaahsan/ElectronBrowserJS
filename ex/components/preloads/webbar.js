@@ -6,20 +6,20 @@ process.once('loaded', () => {
    // AngularJs message listeners
    window.addEventListener('message', event => {
       // Check event source
-      if (event.source !== window) return
+      if (event.source !== window) return;
       // Rquests with name are for ng for now
-      if (event.data.type && event.data.name) return
+      if (event.data.type && event.data.name) return;
 
       // Event emitters to ipcMain
       switch (event.data.type) {
          case 'open-url':
             ipcRenderer.send(event.data.type, event.data.url, event.data.windowId);
-            break
+            break;
          case 'open-window':
          case 'open-previous-page':
          case 'open-next-page':
          case 'close-window':
-            ipcRenderer.send(event.data.type, event.data.windowId)
+            ipcRenderer.send(event.data.type, event.data.windowId);
             break;
          case 'open-blank-window':
          case 'restore-http-windows':
@@ -27,17 +27,23 @@ process.once('loaded', () => {
          case 'maximize-webbar-window':
          case 'minimize-webbar-window':
          case 'get-focused-window':
-            ipcRenderer.send(event.data.type)
+            ipcRenderer.send(event.data.type);
             break;
          case 'open-settings-menu':
-            ipcRenderer.send(event.data.type, { x: 0, y: 0 })
+            ipcRenderer.send(event.data.type, { x: 0, y: 0 });
             break;
          case 'find-in-focused-page':
          case 'stop-find-in-focused-page':
-            ipcRenderer.send(event.data.type, event.data.searchTerm)
-            break
+            ipcRenderer.send(event.data.type, event.data.searchTerm);
+            break;
       }
    }, false)
+
+   // API listerners
+   ipcRenderer.on('weather', (event, data) => {
+      let response = { type: 'weather-info', name: 'ng-webbar', results: data };
+      window.postMessage(response);
+   });
 
    // Attaching listeners
    ipcRenderer.on('restore-http-windows', (event, windows) => {

@@ -1,17 +1,19 @@
 <div class="ng-titlebar">
    <span class="favicon">
-      <!-- <span ng-if="focusedWindow.isTrusted" class="protocol-trusted"><i class="las la-shield-alt"></i></span> -->
-      <!-- <span ng-if="!focusedWindow.isTrusted" class="protocol-otherwise"><i class="las la-unlock"></i></span> -->
       <span class="dot"></span>
       <span class="dot"></span>
-      <span class="dot"></span>
+      <!-- <span class="dot"></span> -->
+      <!-- <span class="dot"></span> -->
       <span class="microphone"><span class="las la-microphone"></span>Say Hi, Google.</span>
       <span class="weather">Toronto <b>8</b>°C</span>
-      <!-- <span class="dot"></span> -->
-      <!-- <span> <i>"Type, Open Youtube"</i></span> -->
+      <span class="stocks">Tesla +<b>0.15</b>%</span>
    </span>
    <span class="url-string">
-      <input ng-model="focusedWindow.url"  autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <!-- <input ng-model="focusedWindow.url.href"  autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/> -->
+      <span class="url">
+         <span  ng-class="focusedWindow.url.protocol == 'https:' ? 'protocol' : 'protocol-untrusted'"><span class="las la-lock"></span></span>
+         <span class="hostname">{{focusedWindow.url.hostname}}</span><span class="pathname">{{focusedWindow.url.pathname}}</span><span class="search">{{focusedWindow.url.search}}</span>
+      </span>
    </span>
    <span class="icons">
       <i ng-click="minimizeWebbarWindow()" class="las la-minus"></i>

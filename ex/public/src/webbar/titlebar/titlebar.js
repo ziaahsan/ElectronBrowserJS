@@ -25,9 +25,11 @@ angular
       function controller() {
          return ['$scope', '$location', function ($scope, $location) {
             $scope.focusedWindow = {};
+            $scope.weatherInformation = null;
 
             // Clean up with angularJS
             $scope.$on('$destroy', function () {
+               window.removeEventListener('message', $scope._onWeather);
                window.removeEventListener('message', $scope._onFocus);
                window.removeEventListener('message', $scope._onMaximized);
                window.removeEventListener('keyup', $scope.keyup);
@@ -44,6 +46,7 @@ angular
 
             // Route initializer
             $scope.init = function () {
+               window.addEventListener('message', $scope._onWeather);
                window.addEventListener('message', $scope._onFocus);
                window.addEventListener('message', $scope._onMaximized);
                window.addEventListener('keyup', $scope.keyup);
@@ -57,6 +60,18 @@ angular
                $ngTitlebarOverlay.find('input').focus().select();
             }
 
+            $scope._onWeather = function (event) {
+               if (event.source != window ||
+                  !event.data.name || event.data.name != 'ng-webbar') return;
+               if (event.data.type !== 'weather-info') return;
+               if (!event.data.results) return;
+
+               $scope.$apply(() => {
+                  $scope.weatherInformation = event.data.results;
+                  console.log(event.data.results);
+               });
+            }
+
             $scope._onFocus = function (event) {
                if (event.source != window ||
                   !event.data.name || event.data.name != 'ng-webbar') return;
@@ -67,7 +82,7 @@ angular
                $scope.$apply(() => {
                   $scope.focusedWindow.title = event.data.results.title;
                   $scope.focusedWindow.windowId = event.data.results.windowId;
-                  $scope.focusedWindow.url = event.data.results.url;
+                  $scope.focusedWindow.url = new URL(event.data.results.url)
                   $scope.focusedWindow.isTrusted =
                      event.isTrusted && (
                         event.data.results.url.startsWith('https:') ||

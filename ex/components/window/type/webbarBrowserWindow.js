@@ -48,6 +48,8 @@ class WebbarBrowserWindow extends CustomBrowserWindow {
 
       //Defaults
       this.browserWindow.windowId = name
+
+      // History & Focus
       this.focusedHistory = []
       this.focused = {
          win: null,
