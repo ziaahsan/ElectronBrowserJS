@@ -49,7 +49,7 @@ class BrowserWindows {
 
    setupMarketWatch = async function (symbol='tsla') {
       if (!this.marketWatch) {
-         this.marketWatch = this.loadURL(`https://www.marketwatch.com/investing/stock/${symbol}`)
+         this.marketWatch = this.loadURL(`https://stocktwits.com/symbol/${symbol}`)
       }
    }
 

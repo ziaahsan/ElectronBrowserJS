@@ -76,6 +76,9 @@ class HttpBrowserWindow extends CustomBrowserWindow {
       this.browserWindow.webContents.on('did-navigate-in-page', this._didNavigateInPage)
       this.browserWindow.webContents.on('did-finish-load', this._didFinishLoad)
       this.browserWindow.webContents.on('found-in-page', this._onFoundInPage)
+
+      // Custom API
+      this.browserWindow.webContents.on('ipc-message', this._onStockInfo)
    }
 
    setMaximizedWindowSize = function() {
@@ -178,6 +181,12 @@ class HttpBrowserWindow extends CustomBrowserWindow {
    _onFoundInPage = function (event, result) {
       this.webbarWindow
          .browserWindow.webContents.send('show-find-in-page-results', result)
+   }.bind(this)
+
+   _onStockInfo = function (event, channel, data) {
+      if (channel !== 'stock-info') return
+      this.webbarWindow
+         .browserWindow.webContents.send(channel, data)
    }.bind(this)
 }
 

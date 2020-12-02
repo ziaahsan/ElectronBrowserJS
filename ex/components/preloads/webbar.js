@@ -40,8 +40,8 @@ process.once('loaded', () => {
    }, false)
 
    // API listerners
-   ipcRenderer.on('weather', (event, data) => {
-      let response = { type: 'weather-info', name: 'ng-webbar', results: data };
+   ipcRenderer.on('stock-info', (event, data) => {
+      let response = { type: 'stock-info', name: 'ng-webbar', results: data };
       window.postMessage(response);
    });
 

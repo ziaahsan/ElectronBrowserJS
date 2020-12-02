@@ -25,11 +25,11 @@ angular
       function controller() {
          return ['$scope', '$location', function ($scope, $location) {
             $scope.focusedWindow = {};
-            $scope.weatherInformation = null;
+            $scope.stocksInfo = null;
 
             // Clean up with angularJS
             $scope.$on('$destroy', function () {
-               window.removeEventListener('message', $scope._onWeather);
+               window.removeEventListener('message', $scope._onStocksInfo);
                window.removeEventListener('message', $scope._onFocus);
                window.removeEventListener('message', $scope._onMaximized);
                window.removeEventListener('keyup', $scope.keyup);
@@ -46,7 +46,7 @@ angular
 
             // Route initializer
             $scope.init = function () {
-               window.addEventListener('message', $scope._onWeather);
+               window.addEventListener('message', $scope._onStocksInfo);
                window.addEventListener('message', $scope._onFocus);
                window.addEventListener('message', $scope._onMaximized);
                window.addEventListener('keyup', $scope.keyup);
@@ -60,15 +60,15 @@ angular
                $ngTitlebarOverlay.find('input').focus().select();
             }
 
-            $scope._onWeather = function (event) {
+            $scope._onStocksInfo = function (event) {
                if (event.source != window ||
                   !event.data.name || event.data.name != 'ng-webbar') return;
-               if (event.data.type !== 'weather-info') return;
+               if (event.data.type !== 'stock-info') return;
                if (!event.data.results) return;
 
                $scope.$apply(() => {
-                  $scope.weatherInformation = event.data.results;
-                  console.log(event.data.results);
+                  $scope.stocksInfo = event.data.results;
+                  console.log(event.data.results)
                });
             }
 
