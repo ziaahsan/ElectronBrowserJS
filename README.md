@@ -4,13 +4,11 @@ To clone and run this repository you'll need [Git](https://git-scm.com) and [Nod
 
 ```bash
 # Clone this repository
-git clone https://github.com/ziaahsan/electron-apps
+git clone https://github.com/ziaahsan/ElectronBrowserJS
 # Go into the directories ex and ex-server
-cd ex, cd ex-server
+cd ex
 # Install dependencies
 npm install
-# Run the app server (ex-server)
-npm run dev
 # Run the app client (ex)
 npm start
 ```
