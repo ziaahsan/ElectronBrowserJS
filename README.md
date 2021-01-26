@@ -18,7 +18,8 @@ npm start
 1. A powerful tool to get any information from the webpage and update an external tool with that information. Example case, using a stock page you can monitor the price change in a live or dynamic manner creating a fully fledged local API.
 2. Monitor history, cookies, and session personally for any website. Take it further by using it with RaspberryPi and you can create a local database for training an AI on your dataset
 3. Follow network flow with ease (basically chromium since electronJS runs on it)
-4. See what kind of information website are sending out, and how to manage such information (For example certificate handling, cookies, session, etc)  This is acutally a problem for electronJS as of now. For example using Netflix.com is not as easy as for ElectronJS browser. You need stuff.
+4. See what kind of information website are sending out, and how to manage such information (For example certificate handling, cookies, session, etc)  This is acutally a problem for electronJS as of now. For example using Netflix.com is not as easy as for ElectronJS browser.
+You need stuff (Still waiting on Widevine DRM Certificate been like 6 months) @https://www.electronjs.org/docs/tutorial/testing-widevine-cdm Tried doesn't quite work.
 
 
 ## Browser Interface
